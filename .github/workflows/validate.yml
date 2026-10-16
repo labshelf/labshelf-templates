@@ -33,7 +33,7 @@ jobs:
       - run: node build-index.mjs --commit "$(git log -1 --format=%H -- templates/)"
       - name: Commit index.json
         run: |
-          if git diff --quiet -- index.json; then
+          if [ -z "$(git status --porcelain -- index.json)" ]; then
             echo "index.json is unchanged"
             exit 0
           fi
