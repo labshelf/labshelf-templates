@@ -1,0 +1,10 @@
+schema: 1
+id: cv
+name: One-page CV
+description: Compact one-page curriculum vitae with education, experience, projects and skills, in plain LaTeX.
+category: cv
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

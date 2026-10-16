@@ -1,0 +1,47 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+
+\title{A Clear Title for Your Article}
+\author{First Author \and Second Author}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+State the problem, the approach and the main result in a few sentences.
+Keep it self-contained: a reader should understand the contribution
+without opening the paper.
+\end{abstract}
+
+\section{Introduction}
+Introduce the problem and why it matters. Cite prior work with
+\verb|\cite|, for example~\cite{knuth1984texbook}.
+
+\section{Method}
+Describe what you did. Equations are numbered automatically:
+\begin{equation}
+  \label{eq:euler}
+  e^{i\pi} + 1 = 0.
+\end{equation}
+Refer to them with \verb|\eqref|, as in~\eqref{eq:euler}.
+
+\section{Results}
+Report what you found. Place figures in this folder and include them with
+\verb|\includegraphics|.
+
+\section{Conclusion}
+Summarise the contribution and name the open questions~\cite{lamport1994latex}.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

@@ -1,0 +1,64 @@
+\documentclass[10pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1.8cm]{geometry}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlist[itemize]{leftmargin=1.2em,itemsep=1pt,topsep=2pt}
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
+\titlespacing*{\section}{0pt}{10pt}{5pt}
+
+% \entry{title}{place}{dates}
+\newcommand{\entry}[3]{\textbf{#1}, #2 \hfill #3\par}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries Your Name}\\[3pt]
+  City, Country \quad $\cdot$ \quad
+  \href{mailto:you@example.org}{you@example.org} \quad $\cdot$ \quad
+  \href{https://example.org}{example.org}
+\end{center}
+
+\section{Education}
+\entry{PhD in Computer Science}{University Name}{2021 -- present}
+\begin{itemize}
+  \item Thesis topic in one line; advisor: Prof.\ Name.
+\end{itemize}
+\entry{MSc in Computer Science}{University Name}{2019 -- 2021}
+
+\section{Experience}
+\entry{Research Intern}{Lab or Company}{Summer 2023}
+\begin{itemize}
+  \item Built X, which improved Y by Z\%.
+  \item Wrote the analysis pipeline used by the whole team.
+\end{itemize}
+\entry{Teaching Assistant}{University Name}{2020 -- 2022}
+\begin{itemize}
+  \item Ran weekly sessions for 40 students.
+\end{itemize}
+
+\section{Selected publications}
+\begin{itemize}
+  \item First Author, You, Third Author. \textit{Paper title.} Venue, 2024.
+  \item You, Second Author. \textit{Another paper title.} Venue, 2023.
+\end{itemize}
+
+\section{Projects}
+\entry{Open-source project}{github.com/you/project}{2022 -- present}
+\begin{itemize}
+  \item One line on what it does and who uses it.
+\end{itemize}
+
+\section{Skills}
+\textbf{Languages:} English (native), Portuguese (fluent)\par
+\textbf{Programming:} Python, C++, TypeScript\par
+\textbf{Tools:} \LaTeX, Git, Linux
+
+\end{document}

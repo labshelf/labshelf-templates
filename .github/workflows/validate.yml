@@ -1,0 +1,46 @@
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ['templates/**']
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node validate.mjs
+
+  build-index:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node validate.mjs
+      - run: node build-index.mjs --commit "$(git log -1 --format=%H -- templates/)"
+      - name: Commit index.json
+        run: |
+          if git diff --quiet -- index.json; then
+            echo "index.json is unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.json
+          git commit -m "Update index.json"
+          git push
+      - name: Purge jsDelivr
+        run: curl -fsS https://purge.jsdelivr.net/gh/labshelf/labshelf-templates@main/index.json

@@ -1,0 +1,10 @@
+schema: 1
+id: beamer-slides
+name: Beamer Slides
+description: Clean 16:9 Beamer presentation with a title slide, outline, content frames and a closing slide.
+category: slides
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

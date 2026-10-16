@@ -1,0 +1,71 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\usetheme{default}
+\usecolortheme{seahorse}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}[frame number]
+
+\title{Presentation Title}
+\subtitle{A short subtitle}
+\author{Speaker Name}
+\institute{Institution}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+\section{Motivation}
+
+\begin{frame}{Why this matters}
+  \begin{itemize}
+    \item State the problem in one sentence.
+    \item Say who is affected.
+    \item Say what is missing today.
+  \end{itemize}
+\end{frame}
+
+\section{Approach}
+
+\begin{frame}{Key idea}
+  \begin{block}{Claim}
+    One memorable statement of the idea.
+  \end{block}
+  \begin{alertblock}{Caveat}
+    The assumption the audience should remember.
+  \end{alertblock}
+\end{frame}
+
+\begin{frame}{Equation}
+  \[
+    \hat{\theta} = \arg\min_{\theta} \sum_{i=1}^{n} \ell\bigl(f_\theta(x_i), y_i\bigr)
+  \]
+\end{frame}
+
+\section{Results}
+
+\begin{frame}{Summary}
+  \begin{enumerate}
+    \item First result.
+    \item Second result.
+    \item What comes next.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[plain]
+  \centering
+  \Large Thank you\par
+  \normalsize Questions?
+\end{frame}
+
+\end{document}

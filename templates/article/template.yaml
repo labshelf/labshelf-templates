@@ -1,0 +1,10 @@
+schema: 1
+id: article
+name: Article
+description: Single-column article with title, abstract, numbered sections and a BibTeX bibliography.
+category: article
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]
