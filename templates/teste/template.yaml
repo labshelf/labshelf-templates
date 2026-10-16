@@ -1,0 +1,11 @@
+schema: 1
+id: teste
+name: teste
+description: ""
+category: article
+format: latex
+engine: tectonic
+main: main.tex
+license: MIT
+authors:
+  - lucaanasser
