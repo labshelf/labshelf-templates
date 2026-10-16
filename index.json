@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "commit": "9f81ccf31b4af161e2e64d953a86d0c0530a6a10",
+  "templates": [
+    {
+      "id": "article",
+      "name": "Article",
+      "description": "Single-column article with title, abstract, numbered sections and a BibTeX bibliography.",
+      "category": "article",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 1179,
+          "sha256": "d52e54463dc48314d6508e39e28c035a98d77717ea2d39b06b8837b9b095e498"
+        },
+        {
+          "path": "refs.bib",
+          "size": 332,
+          "sha256": "05c9a28445fa62837e6c271a7f5a88071c079ab2ce8c0ef8d602dabbe67cdf23"
+        }
+      ],
+      "thumbnail": {
+        "size": 78452,
+        "sha256": "007360fa4844f783454df4e2c73e74cd8ec93ebf75d586ff9abbf1f9084e8109"
+      },
+      "sample": {
+        "size": 179426,
+        "sha256": "ce5cf975fa884bb58a2f423afaf2d171d4738a063c1eec3b72dcb335efee43bd"
+      }
+    },
+    {
+      "id": "beamer-slides",
+      "name": "Beamer Slides",
+      "description": "Clean 16:9 Beamer presentation with a title slide, outline, content frames and a closing slide.",
+      "category": "slides",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 1338,
+          "sha256": "2b5d07f5e7080521a07c16d15d682cd4ccd75a0cebc24637b1d6510a81e59720"
+        }
+      ],
+      "thumbnail": {
+        "size": 13851,
+        "sha256": "91cdd05fc78293f8f2930c37c805bbe6e2de1e33c2e2b1b4a1f78b99f8409fe7"
+      },
+      "sample": {
+        "size": 117820,
+        "sha256": "50c3da6223cbf896751320857ea75667c2a9446c26fa2437c6e9122f8dd85b53"
+      }
+    },
+    {
+      "id": "cv",
+      "name": "One-page CV",
+      "description": "Compact one-page curriculum vitae with education, experience, projects and skills, in plain LaTeX.",
+      "category": "cv",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 1886,
+          "sha256": "21d0d348a56bc85ce90cf51512056967f0397e75419211be8a820b28ede5a15b"
+        }
+      ],
+      "thumbnail": {
+        "size": 80780,
+        "sha256": "f9ab44d55f1bbb046aafea6e8959d0c13c8202feea95178ac1fb1045816c7bff"
+      },
+      "sample": {
+        "size": 122229,
+        "sha256": "5819a6930809072e209c1bf1c7e1bf9be8954458b3dcba28bee22e32f63ed041"
+      }
+    }
+  ]
+}
