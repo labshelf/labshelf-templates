@@ -1,0 +1,228 @@
+% Page design for the Modern Thesis: grid, type, headings, running heads,
+% margin captions, boxes, plots and bibliography. Content lives elsewhere.
+\makeatletter
+
+% ---- Type ------------------------------------------------------------------
+% Plex Serif for text, Plex Sans for every heading, caption and table.
+% mathastext takes Latin letters and digits in maths from Plex Serif;
+% newtxmath supplies the symbols.
+\usepackage[T1]{fontenc}
+\usepackage{newtxmath}
+\usepackage{plex-serif}
+\usepackage[semibold, scale=0.94]{plex-sans}
+\usepackage[italic, defaultmathsizes, noendash]{mathastext}
+\usepackage[english]{babel}
+\usepackage[babel]{csquotes}
+\usepackage[final, protrusion=true, expansion=true, tracking=true]{microtype}
+\linespread{1.12}
+\setlength{\emergencystretch}{1.5em}
+\clubpenalty=10000
+\widowpenalty=10000
+
+% Named weights of Plex Sans, used for display type.
+\newcommand{\sansthin}{\sffamily\fontseries{thin}\selectfont}
+\newcommand{\sanslight}{\sffamily\fontseries{l}\selectfont}
+\newcommand{\sansbold}{\sffamily\fontseries{sb}\selectfont}
+% Spaced capitals for labels such as "Part I" or "Definition".
+\DeclareRobustCommand{\spacedcaps}[1]{\textls[120]{\MakeUppercase{#1}}}
+
+\colorlet{accentlight}{accent!7}
+\colorlet{rulegrey}{black!35}
+\colorlet{inkmuted}{black!60}
+
+% ---- Grid ------------------------------------------------------------------
+% A 128 mm measure (about 75 characters) with a wide outer margin that
+% holds figure captions. The running head spans text and margin.
+\usepackage[
+  a4paper, inner=24mm, textwidth=128mm, top=30mm, bottom=38mm,
+  marginparsep=7mm, marginparwidth=44mm,
+  headheight=14pt, headsep=10mm, footskip=14mm,
+]{geometry}
+\setlength{\parindent}{1.2em}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, calc, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{fillbetween}
+\usepackage[strict]{changepage}
+\usepackage{enumitem}
+\usepackage[most]{tcolorbox}
+
+% ---- Headings --------------------------------------------------------------
+\setkomafont{disposition}{\sansbold}
+\addtokomafont{chapter}{\color{black}}
+
+% Chapter openers: a very large thin number in the accent colour, a short
+% accent rule and the title in semibold sans, all flush left.
+\RedeclareSectionCommand[
+  beforeskip=0pt,
+  afterskip=3.5\baselineskip,
+  font=\sansbold\fontsize{24}{29}\selectfont,
+]{chapter}
+\renewcommand*{\chapterformat}{%
+  {\sansthin\fontsize{120}{110}\selectfont\color{accent}\thechapter}}
+\renewcommand*{\chapterlinesformat}[3]{%
+  \Ifstr{#1}{chapter}{%
+    \raggedright
+    \Ifstr{#2}{}{\vspace*{6.5\baselineskip}}{#2\par\nobreak\vspace{2.5ex}}%
+    {\color{accent}\rule{3em}{1.4pt}}\par\nobreak\vspace{2.2ex}%
+    #3\par
+  }{\@hangfrom{#2}{#3}}}
+
+\RedeclareSectionCommand[
+  beforeskip=-2.2\baselineskip plus -0.6\baselineskip minus -0.2\baselineskip,
+  afterskip=0.9\baselineskip,
+  font=\sansbold\large,
+]{section}
+\RedeclareSectionCommand[
+  beforeskip=-1.6\baselineskip plus -0.4\baselineskip,
+  afterskip=0.6\baselineskip,
+  font=\sansbold\normalsize,
+]{subsection}
+\renewcommand*{\sectionformat}{{\color{accent}\thesection}\hspace{0.9em}}
+\renewcommand*{\subsectionformat}{{\color{accent}\thesubsection}\hspace{0.8em}}
+
+% Part pages: spaced capitals over a large light title, with an accent band
+% bleeding off the outer edge.
+\RedeclareSectionCommand[
+  beforeskip=0.28\textheight,
+  afterskip=0pt,
+  font=\sanslight\fontsize{38}{44}\selectfont,
+]{part}
+\renewcommand*{\raggedpart}{\raggedright}
+\setkomafont{partnumber}{\sansbold\normalsize\color{accent}}
+\renewcommand*{\partformat}{\spacedcaps{\partname\ \thepart}}
+\renewcommand*{\partlineswithprefixformat}[3]{%
+  #2\par\nobreak\vspace{3ex}#3}
+
+% ---- Running heads ---------------------------------------------------------
+% Sans small type over a thin rule that spans text and margin: the chapter
+% on left pages, the section on right pages, page numbers outside.
+\usepackage[headsepline=0.4pt, headwidth=textwithmarginpar]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\automark[section]{chapter}
+\renewcommand*{\chaptermarkformat}{\chapapp~\thechapter\hspace{0.8em}}
+\renewcommand*{\sectionmarkformat}{\thesection\hspace{0.8em}}
+\clearpairofpagestyles
+\ihead{\headmark}
+\ohead{\pagemark}
+\ofoot[\pagemark]{}
+\setkomafont{pageheadfoot}{\sffamily\footnotesize\color{inkmuted}}
+\setkomafont{pagenumber}{\sansbold\footnotesize\color{accent}}
+\setkomafont{headsepline}{\color{rulegrey}}
+\DeclareNewLayer[
+  background, hoffset=\paperwidth-16mm, voffset=0pt,
+  width=16mm, height=\paperheight,
+  contents={\color{accent}\rule{\layerwidth}{\layerheight}},
+]{partband}
+\DeclareNewPageStyleByLayers{partpage}{partband}
+\renewcommand*{\partpagestyle}{partpage}
+
+% ---- Contents --------------------------------------------------------------
+\DeclareTOCStyleEntry[
+  beforeskip=1.2em, entryformat=\sansbold, pagenumberformat=\sansbold\color{accent},
+]{tocline}{chapter}
+\DeclareTOCStyleEntry[
+  beforeskip=2em, entryformat=\sanslight\large, pagenumberformat=\sanslight\large,
+]{tocline}{part}
+\DeclareTOCStyleEntries[dynindent, pagenumberformat=\sffamily\small]{tocline}{section,subsection}
+\DeclareTOCStyleEntries[pagenumberformat=\sffamily\small, entrynumberformat=\sffamily]{tocline}{figure,table}
+\renewcommand*{\TOCLineLeaderFill}[1][.]{\hfill}
+
+% ---- Captions --------------------------------------------------------------
+% Sans captions with an accent label. Figures take their caption in the
+% outer margin, aligned with the foot of the figure.
+\setcapindent{0pt}
+\setkomafont{caption}{\sffamily\footnotesize}
+\setkomafont{captionlabel}{\sansbold\color{accent}}
+\renewcommand*{\captionformat}{\enskip}
+\renewcommand*{\tableformat}{\tablename~\thetable}
+\renewcommand*{\figureformat}{\figurename~\thefigure}
+\addtokomafont{caption}{\raggedright}
+% Tables are set in sans. A float resets its font on entry, so the switch
+% goes into that reset rather than an environment hook.
+\g@addto@macro\@floatboxreset{\def\@tempa{table}\ifx\@captype\@tempa\sffamily\small\fi}
+
+% \marginfigure{<drawing>}{<\caption{...}\label{...}>} inside a figure:
+% the drawing fills the measure and the caption sits in the outer margin.
+\NewDocumentCommand{\marginfigure}{+m +m}{%
+  \checkoddpage\par\noindent
+  \ifoddpage
+    \begin{minipage}[b]{\linewidth}\centering #1\end{minipage}%
+    \makebox[0pt][l]{\hspace{\marginparsep}%
+      \begin{minipage}[b]{\marginparwidth}#2\end{minipage}}%
+  \else
+    \makebox[0pt][r]{%
+      \begin{minipage}[b]{\marginparwidth}#2\end{minipage}\hspace{\marginparsep}}%
+    \begin{minipage}[b]{\linewidth}\centering #1\end{minipage}%
+  \fi\par}
+
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+
+% ---- Boxes -----------------------------------------------------------------
+% Definition: a tinted panel with an accent rule on the left.
+% Key result: a hairline frame. Both carry an inline sans label.
+\tcbset{
+  thesisbox/.style={
+    enhanced, breakable, arc=0pt, outer arc=0pt,
+    left=3.5mm, right=3.5mm, top=2.2mm, bottom=2.2mm,
+    before skip=1.4\baselineskip, after skip=1.4\baselineskip,
+    fonttitle=\sansbold\small, coltitle=accent,
+    attach title to upper, separator sign none,
+    description delimiters none, description font=\sffamily\fontseries{m}\selectfont,
+    terminator sign={.\enspace},
+  },
+}
+\newtcbtheorem[number within=chapter]{definition}{Definition}{
+  thesisbox, colback=accentlight, colframe=accent,
+  boxrule=0pt, leftrule=1.5pt,
+}{def}
+\newtcbtheorem[number within=chapter]{keyresult}{Key result}{
+  thesisbox, colback=white, colframe=accent!70,
+  boxrule=0.5pt, arc=1.5pt, outer arc=1.5pt,
+}{kr}
+
+% ---- Lists -----------------------------------------------------------------
+\setlist{itemsep=0.25\baselineskip, topsep=0.5\baselineskip}
+\setlist[itemize]{label={\color{accent}\textbullet}, leftmargin=1.4em}
+% Abbreviations: short form in sans semibold, expansion beside it.
+\newenvironment{abbreviations}
+  {\begin{description}[style=sameline, leftmargin=6em, labelwidth=5em,
+     font=\sansbold\color{accent}, itemsep=0.15\baselineskip]}
+  {\end{description}}
+
+% ---- Plots -----------------------------------------------------------------
+\pgfplotsset{
+  every axis/.append style={
+    axis line style={rulegrey, line width=0.4pt},
+    tick style={rulegrey, line width=0.4pt},
+    tick label style={font=\sffamily\scriptsize},
+    label style={font=\sffamily\footnotesize},
+    legend style={draw=none, fill=none, font=\sffamily\scriptsize},
+    legend cell align=left,
+    axis lines*=left,
+  },
+}
+
+% ---- Bibliography ----------------------------------------------------------
+\usepackage[
+  backend=biber, style=authoryear-comp, maxcitenames=2, uniquelist=false,
+  giveninits=true, uniquename=init, dashed=false,
+  doi=true, url=false, isbn=false,
+]{biblatex}
+\AtBeginBibliography{\small}
+\setlength{\bibitemsep}{0.4\baselineskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink, capitalise, noabbrev]{cleveref}
+\crefname{tcb@cnt@definition}{Definition}{Definitions}
+\crefname{tcb@cnt@keyresult}{Key result}{Key results}
+% PLATFORM: cleveref cannot patch the KOMA \appendix, so chapters after it
+% would be cited as "Chapter A".
+\AddToHook{cmd/appendix/after}{\crefalias{chapter}{appendix}}
+\makeatother

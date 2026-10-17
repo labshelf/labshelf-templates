@@ -1,0 +1,40 @@
+% Thesis proposal for a master's or PhD qualifying review.
+% Edit the proposal details below, the content in sections/ and the
+% references in refs.bib. The design lives in style.tex.
+\documentclass[11pt, a4paper, oneside, parskip=false,
+  toc=flat]{scrreprt}
+
+% ---- Proposal details: edit these --------------------------------------
+\newcommand*{\ProposalTitle}{Learning Where to Look}
+\newcommand*{\ProposalSubtitle}{Adaptive Sparse Sensing for
+  Street-Level Urban Heat Monitoring}
+\newcommand*{\ProposalShortTitle}{Learning Where to Look}
+\newcommand*{\ProposalCandidate}{Marta Okafor-Lindqvist}
+\newcommand*{\ProposalDegree}{Doctor of Philosophy in Environmental Engineering}
+\newcommand*{\ProposalInstitution}{School of Civil and Environmental Engineering,
+  University of Aldmere}
+\newcommand*{\ProposalDate}{17 October 2026}
+
+\input{style}
+\addbibresource{refs.bib}
+\title{\ProposalTitle: \ProposalSubtitle}
+\author{\ProposalCandidate}
+
+\begin{document}
+\input{sections/cover}
+\input{sections/summary}
+
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/questions}
+\input{sections/methods}
+\input{sections/preliminary}
+\input{sections/chapters}
+\input{sections/timeline}
+\input{sections/risks}
+\input{sections/contributions}
+
+\printbibliography[heading=bibintoc, title={References}]
+\end{document}

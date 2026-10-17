@@ -1,0 +1,69 @@
+% Chapter 5: early results, with a pgfplots figure and a small table.
+\chapter{Preliminary results}\label{ch:prelim}
+
+A first version of the model was fitted to the 214 municipal sensors
+operating in Aldmere between 2021 and 2025. Leave-one-out validation on
+summer afternoons gives an RMSE of 0.82\,K and a mean 90\,\% interval
+coverage of 0.88, close to nominal. Figure~\ref{fig:curve} compares
+placement rules in a retrospective simulation: starting from 20 random
+sensors, each rule adds sensors from the remaining pool and the error is
+measured on all withheld sensors, weighted by exposure.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=.92\linewidth, height=58mm,
+  xmin=20, xmax=200, ymin=0.6, ymax=2.0,
+  xlabel={Sensors placed}, ylabel={Weighted RMSE (K)},
+  axis lines=left, axis line style={muted, line width=.4pt},
+  tick style={muted}, tick label style={font=\sffamily\footnotesize},
+  label style={font=\sffamily\small, text=muted},
+  ymajorgrids, grid style={muted!20, line width=.3pt},
+  legend style={draw=none, font=\sffamily\footnotesize, at={(1,1)},
+    anchor=north east, fill=none}, legend cell align=left,
+  every axis plot/.append style={line width=1pt, mark=none, smooth}]
+\addplot[muted!70, dashed] coordinates {(20,1.92) (40,1.66) (60,1.47)
+  (80,1.33) (100,1.22) (120,1.13) (140,1.06) (160,1.00) (180,0.96) (200,0.93)};
+\addlegendentry{Random}
+\addplot[accentdark!55] coordinates {(20,1.92) (40,1.52) (60,1.32)
+  (80,1.19) (100,1.09) (120,1.02) (140,0.97) (160,0.93) (180,0.90) (200,0.88)};
+\addlegendentry{Variance only}
+\addplot[accent, line width=1.6pt] coordinates {(20,1.92) (40,1.36) (60,1.12)
+  (80,0.99) (100,0.91) (120,0.85) (140,0.81) (160,0.78) (180,0.76) (200,0.74)};
+\addlegendentry{Exposure weighted}
+\draw[accent, densely dotted, line width=.5pt] (axis cs:20,1.13) -- (axis cs:200,1.13);
+\fill[accent] (axis cs:70,1.13) circle (1.3pt);
+\fill[muted] (axis cs:120,1.13) circle (1.3pt);
+\node[font=\sffamily\scriptsize, text=accent, anchor=south] at (axis cs:70,1.14) {70};
+\node[font=\sffamily\scriptsize, text=muted, anchor=north] at (axis cs:120,1.12) {120};
+\end{axis}
+\end{tikzpicture}
+\caption{Retrospective placement in Aldmere, mean of 50 random starts.
+The dotted line marks the error random placement reaches with 120
+sensors; the weighted rule reaches it with about 70.}
+\label{fig:curve}
+\end{figure}
+
+Table~\ref{tab:prelim} summarises the same experiment at 100 sensors.
+The weighted rule gives up little unweighted accuracy, which supports
+the trade-off assumed in H1, though the simulation draws only from
+sites that already host a sensor and so understates the choice
+available in a real deployment.
+
+\begin{table}[ht]
+\centering\sffamily\small
+\caption{Placement rules at 100 sensors (Aldmere, summer afternoons).}
+\label{tab:prelim}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+\thead{Rule} & \thead{Weighted RMSE} & \thead{Unweighted RMSE}
+  & \thead{Coverage}\\
+\midrule
+Random            & 1.22 K & 0.97 K & 0.86 \\
+Variance only     & 1.09 K & 0.89 K & 0.88 \\
+\textcolor{accent}{Exposure weighted} & \textcolor{accent}{0.91 K}
+  & 0.92 K & 0.89 \\
+\bottomrule
+\end{tabular}
+\end{table}

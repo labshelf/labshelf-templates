@@ -1,0 +1,31 @@
+% Abstract: one page, unnumbered, listed in the contents.
+\addchap{Abstract}
+
+Stationary lithium-ion batteries now balance a growing share of the
+electricity grid, yet the operators who own them rarely know how much
+of their capacity remains. Laboratory ageing models are calibrated on
+small cells under conditions that a grid container never sees. This thesis asks whether the state of health of grid-scale storage
+can be learned directly from the operational data that every site already
+records.
+
+Part~I assembles the evidence. Three years of telemetry from eleven
+installations across the Low Countries, totalling 214\,MWh of nameplate
+capacity, are aligned with periodic reference capacity tests. Their
+analysis shows that calendar ageing at high state of charge, not cycling
+depth, explains most of the observed fade, and that the commonly used
+equivalent full cycle is a poor proxy for degradation under
+frequency-response duty.
+
+Part~II develops a hybrid estimator that embeds a semi-empirical ageing
+law inside a Gaussian-process correction learned from partial charge
+segments. On held-out sites it estimates capacity to within 0.9\,per cent
+root-mean-square error, and it reports a calibrated uncertainty that widens when a site
+leaves the operating envelope of its training data. A field trial at a
+12\,MWh installation shows that the estimate can safely relax a
+conservative state-of-charge window, recovering 6.4\,per cent of usable
+energy without measurable additional ageing over nine months.
+
+\bigskip\noindent
+{\sansbold\small\color{accent}\spacedcaps{Keywords}}\enspace
+{\sffamily\small lithium-ion batteries, state of health, grid storage,
+Gaussian processes, calendar ageing, frequency response}

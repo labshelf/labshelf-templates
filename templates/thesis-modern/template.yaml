@@ -1,0 +1,10 @@
+schema: 1
+id: thesis-modern
+name: Modern Thesis
+description: Two-sided A4 thesis set in IBM Plex Serif with Plex Sans headings and a single deep green accent. A full-bleed green title block, chapters that open on a huge thin-weight number over a short accent rule, part pages with an accent band on the outer edge, and figure captions in the wide outer margin. Tinted Definition and hairline-framed Key result boxes, sans booktabs tables, pgfplots figures, sans running heads over a hairline, abbreviations, an appendix and a biblatex author-year bibliography.
+category: thesis
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

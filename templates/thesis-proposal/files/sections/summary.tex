@@ -1,0 +1,47 @@
+% One-page summary panel: abstract, keywords and the proposal at a glance.
+\thispagestyle{scrheadings}
+\addchap*{Summary}
+\begin{summarypanel}
+{\sffamily\small\color{accent}\textsc{in one sentence}\par}
+\vspace{.4em}
+{\large\itshape This thesis asks how a city can learn, from a few hundred
+cheap sensors, where to put the next one so that street-level heat is
+mapped well enough to protect the people most exposed to it.\par}
+
+\vspace{1.2em}
+Heat is the deadliest weather hazard in European cities, yet official
+temperature records come from a handful of airport and rooftop stations
+that miss the street canyons, courtyards and bus stops where people
+actually spend hot afternoons. Low-cost sensor networks close part of
+this gap, but they are placed by convenience rather than by need: on
+lampposts that happen to have power, in neighbourhoods that volunteer.
+
+The proposed research treats sensor placement as a sequential learning
+problem. A Gaussian-process model of the urban temperature field, built
+on land-cover and morphology covariates, scores each candidate site by
+how much it would reduce uncertainty where vulnerable residents live.
+The thesis develops this exposure-weighted acquisition rule
+(\ref{rq:acq}), tests whether models trained in one city transfer to
+another (\ref{rq:transfer}), and measures the gain in a live
+deployment of 60 mobile units in Aldmere (\ref{rq:field}).
+
+Preliminary work on 214 existing sensors shows that exposure-weighted
+placement reaches the mapping error of random placement with roughly
+40\,\% fewer sensors.
+
+\vspace{1em}
+{\color{accent!50}\rule{\linewidth}{.3pt}}
+\vspace{.4em}
+
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{30mm}X@{}}
+\fieldlabel{Keywords} & urban heat, Gaussian processes, active learning,
+  sensor networks, environmental justice \\
+\fieldlabel{Questions} & three research questions, Chapter~\ref{ch:questions} \\
+\fieldlabel{Duration} & four years, February 2025 to January 2029 \\
+\fieldlabel{Funding} & Aldmere Doctoral Fellowship; field units from
+  the City of Aldmere Climate Office \\
+\fieldlabel{Data} & 214 municipal sensors (2021--2025), 3 m land cover,
+  LiDAR building heights, census vulnerability index \\
+\end{tabularx}
+\end{summarypanel}
+\clearpage

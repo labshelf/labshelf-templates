@@ -1,0 +1,135 @@
+% Chapter 2.
+\chapter{Ageing in the field}
+\label{ch:data}
+
+\section{Eleven sites, three years}
+\label{sec:sites}
+
+The data come from eleven storage sites commissioned between 2020 and
+2022 in the Netherlands and Belgium (\cref{tab:sites}). All provide
+frequency containment reserve, and four also trade on the intraday
+market in the evenings. Seven use lithium iron phosphate cells and four
+use a nickel manganese cobalt chemistry; capacities range from 6 to
+48\,MWh. Each site logs pack voltage, current and the temperature of
+every module at one-second resolution, and each underwent between four
+and seven reference performance tests during the observation period.
+
+\begin{table}[tb]
+  \caption[The eleven storage sites]{The eleven storage sites. Capacity
+    is the nameplate value at commissioning; fade is the loss in reference
+    capacity per year of operation.}
+  \label{tab:sites}
+  \centering
+  \begin{tabular}{@{}l l r r r r@{}}
+    \toprule
+    Site & Chemistry & Capacity & Mean SoC & Mean temp. & Fade \\
+         &           & (MWh)    &          & (°C)       & (\%/yr) \\
+    \midrule
+    NL-01 & LFP &  12.0 & 0.51 & 24.8 & 1.62 \\
+    NL-02 & LFP &  20.0 & 0.48 & 23.1 & 1.41 \\
+    NL-03 & NMC &  48.0 & 0.55 & 26.4 & 2.87 \\
+    NL-04 & LFP &   6.0 & 0.62 & 25.9 & 2.15 \\
+    NL-05 & NMC &  30.0 & 0.50 & 27.2 & 2.64 \\
+    BE-01 & LFP &  16.0 & 0.47 & 22.6 & 1.33 \\
+    BE-02 & LFP &  18.0 & 0.58 & 24.0 & 1.88 \\
+    BE-03 & NMC &  24.0 & 0.66 & 28.1 & 3.52 \\
+    BE-04 & LFP &  10.0 & 0.50 & 23.7 & 1.49 \\
+    BE-05 & NMC &  18.0 & 0.52 & 25.5 & 2.41 \\
+    BE-06 & LFP &  12.0 & 0.45 & 21.9 & 1.21 \\
+    \midrule
+    Total &     & 214.0 &      &      &      \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Reference capacity tests are the ground truth of this thesis. They were
+performed at a constant current of C/5 between the manufacturer's voltage
+limits, after a rest of at least four hours at 25\,°C ambient
+(\cref{app:protocol}). Because the operators scheduled them around
+market commitments, the tests are unevenly spaced, and two sites missed
+one test each because of inverter faults.
+
+\section{What drives the fade}
+\label{sec:drivers}
+
+\Cref{fig:fade} shows the reference capacity of three representative
+sites. Two features stand out. First, fade is far from linear in
+cycles: site BE-03, which cycles the least of the three, ages the
+fastest. Second, the curves bend downward in their first year and then
+straighten, the signature of a process that slows as the square root of
+time.
+
+\begin{figure}[tb]
+  \marginfigure{%
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.98\linewidth, height=0.62\linewidth,
+        xmin=0, xmax=36, ymin=0.885, ymax=1.005,
+        xtick={0,6,...,36}, ytick={0.90,0.925,0.95,0.975,1.0},
+        yticklabel style={/pgf/number format/.cd, fixed, precision=3},
+        xlabel={Months in service}, ylabel={State of health},
+        legend pos=south west,
+      ]
+      \addplot[accent, line width=1pt, domain=0:36, samples=60]
+        {1 - 0.0118*sqrt(x) - 0.00055*x};
+      \addlegendentry{BE-06 (LFP, low SoC)}
+      \addplot[accent!55, line width=1pt, domain=0:36, samples=60]
+        {1 - 0.0150*sqrt(x) - 0.00095*x};
+      \addlegendentry{NL-04 (LFP, high SoC)}
+      \addplot[black!70, line width=1pt, dashed, domain=0:36, samples=60]
+        {1 - 0.0205*sqrt(x) - 0.0016*x};
+      \addlegendentry{BE-03 (NMC, high SoC)}
+      \addplot[only marks, mark=*, mark size=1.4pt, accent]
+        coordinates {(0,1) (7,0.9653) (13,0.9506) (20,0.9356) (27,0.9241) (35,0.9108)};
+      \addplot[only marks, mark=*, mark size=1.4pt, accent!55]
+        coordinates {(0,1) (6,0.9578) (12,0.9367) (19,0.9177) (25,0.9017) (33,0.8826)};
+      \addplot[only marks, mark=o, mark size=1.6pt, black!70]
+        coordinates {(0,1) (6,0.9395) (14,0.9040) (21,0.8728)};
+    \end{axis}
+  \end{tikzpicture}}{%
+  \caption[Reference capacity of three sites]{Reference capacity of
+    three sites. Markers are reference tests; lines are the fitted ageing
+    law of \cref{eq:ageing}.}
+  \label{fig:fade}}
+\end{figure}
+
+To separate the drivers, the capacity loss of each site is modelled as
+the sum of a calendar term, which depends on time, temperature and state
+of charge, and a cycling term, which depends on charge throughput:
+\begin{equation}
+  1 - \mathrm{SoH}(t) =
+    \underbrace{k_\mathrm{cal}\,
+      e^{-E_a / R T}\, g(\sigma)\, \sqrt{t}}_{\text{calendar}}
+    + \underbrace{k_\mathrm{cyc}\, \Phi(t)}_{\text{cycling}},
+  \label{eq:ageing}
+\end{equation}
+where \(T\) is the mean cell temperature, \(\sigma\) the mean state of
+charge, \(g\) an increasing function of it and \(\Phi\) the cumulative
+charge throughput in equivalent full cycles. The activation energy
+\(E_a\) is fixed at its laboratory value; the two rate constants are fitted
+per chemistry across all sites.
+
+\begin{keyresult}{Calendar ageing dominates}{calendar}
+  Across all eleven sites, the calendar term of \cref{eq:ageing}
+  accounts for 78\,\% of the capacity lost after three years (range
+  64--91\,\%). A site's mean state of charge predicts its fade rate better
+  than its cycle count, with a rank correlation of 0.84 against 0.21.
+\end{keyresult}
+
+The practical consequence is that the equivalent full cycle, the unit in
+which warranties are written, measures the wrong thing for this kind of
+duty. A site that idles at 65\,\% charge in a warm container will exhaust
+its warranty in calendar years long before it reaches its cycle limit.
+
+\subsection{Temperature inside the rack}
+\label{sec:temperature}
+
+Mean temperature hides a gradient. Within a rack, modules near the
+cooling inlet run up to six degrees cooler than those at the top, and the
+reference test measures only the pack, whose capacity is limited by its
+weakest module. Using the hottest module temperature in place of the
+mean improves the fit of \cref{eq:ageing} on every site, reducing the
+residual standard deviation by 18\,\% on average. The remaining residual
+is structured: it correlates with firmware changes and with seasons of
+heavy intraday trading, which motivates the data-driven correction of the
+next chapter.

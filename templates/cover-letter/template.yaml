@@ -1,0 +1,10 @@
+schema: 1
+id: cover-letter
+name: Cover Letter
+description: One-page A4 cover letter for academic jobs and fellowships, set in Libertinus Serif with old-style figures and microtype. A wide letterhead with the name in letterspaced burgundy small caps over an italic role line, a contact block with small FontAwesome icons on the right and a thin burgundy rule. Recipient block with the date opposite, a small-caps subject line, body paragraphs on a measure of about 65 to 70 characters, a TikZ signature placeholder and an Enclosures line at the foot.
+category: other
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

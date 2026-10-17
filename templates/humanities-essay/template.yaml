@@ -1,0 +1,10 @@
+schema: 1
+id: humanities-essay
+name: Humanities Essay
+description: Long-form history or philosophy essay on A4 in Crimson with proportional old-style figures on a book-like measure with generous margins. A centred title and italic subtitle over a short rule, a letterspaced small-caps author, an epigraph and indented block quotations. Sections open with a muted dark-green fleuron, roman numeral and small-caps title, with fleuron breaks between passages. Chicago-style footnote citations, a TikZ figure with a long caption and a bibliography on its own page.
+category: article
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

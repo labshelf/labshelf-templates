@@ -1,0 +1,243 @@
+% Lecture Slides: a 16:9 Beamer deck for one lecture of a university course.
+% The theme (colours, strip, blocks, code style, agenda) lives in
+% beamerthemelecture.sty; this file holds only the lecture.
+% For printable handouts, add `handout' to the class options: every step and
+% the quiz answer then appear on a single page per slide.
+\documentclass[aspectratio=169,11pt,t]{beamer}
+
+\usetheme{lecture}
+\usepackage{amsmath}
+\hypersetup{hidelinks}
+
+% Course and lecture data: the code and number appear on the title slide and
+% in the footer of every slide.
+\course{CS 241}{Data Structures and Algorithms}
+\lecturenumber{7}
+\title[Hash tables]{Hash tables}
+\subtitle{Constant-time lookup, collisions and the load factor}
+\author{Dr.\ Amara Nwosu}
+\institute{School of Computing, Northfield University}
+\date{Tuesday 14 October 2026}
+
+% The parts of today's lecture, in order; the agenda and dividers use this list.
+\lcsections{Hashing,Collisions,Load factor and resizing,Practice}
+
+\begin{document}
+
+% ------------------------------------------------------------------ title
+{\lcstripfalse
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}}
+
+\begin{frame}{Today}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \vspace{2mm}
+      \lcagenda
+    \column{0.46\textwidth}
+      {\color{lcMuted}\lclabel{Learning goals}}\par\vspace{2mm}
+      {\small
+      \begin{enumerate}
+        \item Explain how a hash function maps keys to slots.
+        \item Compare chaining with open addressing.
+        \item Predict the cost of a lookup from the load factor.
+        \item Decide when a table should grow.
+      \end{enumerate}}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ part 1
+\section{Hashing}
+
+\begin{frame}{From keys to slots}
+  \begin{definitionbox}[Hash function]
+    A hash function $h$ maps every key in a universe $U$ to one of $m$ slots,
+    \mbox{$h\colon U \to \{0, 1, \dots, m-1\}$}. A hash table stores key $k$ in slot $h(k)$.
+  \end{definitionbox}
+  \begin{examplebox}[Division method]
+    With $m = 11$ and $h(k) = k \bmod 11$, the key $47$ goes to slot $3$,
+    because $47 = 4 \cdot 11 + 3$.
+  \end{examplebox}
+  {\small\color{lcMuted}A good $h$ spreads keys evenly and is cheap to compute; choose $m$ prime
+  so that patterns in the keys do not line up with the table size.\par}
+\end{frame}
+
+\begin{frame}[fragile]{Separate chaining in Python}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.62\textwidth}
+\begin{lstlisting}[language=Python]
+class ChainedTable:
+    def __init__(self, m=11):
+        self.slots = [[] for _ in range(m)]
+
+    def index(self, key):
+        return hash(key) % len(self.slots)
+
+    def put(self, key, value):
+        chain = self.slots[self.index(key)]
+        for i, (k, _) in enumerate(chain):
+            if k == key:   # overwrite
+                chain[i] = (key, value)
+                return
+        chain.append((key, value))
+\end{lstlisting}
+    \column{0.32\textwidth}
+      \begin{itemize}\small
+        \item Each slot holds a list of the pairs that hash there.
+        \item \texttt{put} scans one chain, never the whole table.
+        \item \texttt{get} walks the same chain and raises \texttt{KeyError} on a miss.
+        \item Cost of a lookup: one hash plus the length of one chain.
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ part 2
+\section{Collisions}
+
+\begin{frame}{Linear probing, one insertion at a time}
+  \framesubtitle{Insert 25, 47, 14, 36 into $m = 11$ slots with $h(k) = k \bmod 11$}
+  \vspace{2mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \begin{enumerate}\small
+        \item<1-> $h(25) = 3$: slot 3 is free, store 25.
+        \item<2-> $h(47) = 3$: taken, probe 4, store 47.
+        \item<3-> $h(14) = 3$: probe 4, then 5, store 14.
+        \item<4-> $h(36) = 3$: three probes, store in 6.
+      \end{enumerate}
+    \column{0.47\textwidth}
+      \vspace{1mm}
+      \begin{tikzpicture}[x=5.4mm,y=5.4mm]
+        \foreach \i in {0,...,10} {
+          \draw[lcRule,fill=white] (\i,0) rectangle ++(1,1);
+          \node[font=\tiny,text=lcMuted] at (\i+0.5,-0.4) {\i};
+        }
+        \foreach \key/\slot/\step in {25/3/1,47/4/2,14/5/3,36/6/4} {
+          \visible<\step->{
+            \fill[lcAccent!14] (\slot,0) rectangle ++(1,1);
+            \draw[lcAccent] (\slot,0) rectangle ++(1,1);
+            \node[font=\scriptsize\bfseries,text=lcSlate] at (\slot+0.5,0.5) {\key};}
+        }
+        \visible<4->{\draw[lcWarning,line width=0.8pt] (3,1.35) -- (7,1.35)
+          node[midway,above,font=\tiny,text=lcWarning] {a cluster of four};}
+      \end{tikzpicture}
+  \end{columns}
+  \vspace{3mm}
+  \uncover<4->{\small Keys that hash near a cluster join it: clusters grow faster the bigger they get.}
+\end{frame}
+
+\begin{frame}{How much does a collision cost?}
+  \begin{theorembox}[Expected probes, uniform hashing]
+    In an open-addressing table with load factor $\alpha = n/m < 1$, an unsuccessful
+    search makes at most $1/(1-\alpha)$ probes in expectation.
+  \end{theorembox}
+  \begin{warningbox}[Deleting under open addressing]
+    Do not empty a slot on delete: a later search would stop there and miss keys
+    stored past it. Mark the slot with a tombstone instead.
+  \end{warningbox}
+\end{frame}
+
+\begin{frame}{Chaining or open addressing?}
+  \vspace{2mm}
+  \centering
+  \begin{tabular}{@{}l l l@{}}
+    \toprule
+    & \textbf{Separate chaining} & \textbf{Open addressing} \\
+    \midrule
+    Where colliding keys go & a list per slot & another slot of the array \\
+    Load factor $\alpha$     & may exceed 1      & must stay below 1 \\
+    Memory per key           & one node and pointer & none beyond the array \\
+    Cache behaviour          & poor, pointers    & good, contiguous \\
+    Deletion                 & remove from list  & needs tombstones \\
+    \bottomrule
+  \end{tabular}\par
+  \vspace{4mm}
+  \raggedright{\small\color{lcMuted}Python's \texttt{dict} uses open addressing; Java's
+  \texttt{HashMap} uses chaining.\par}
+\end{frame}
+
+% ------------------------------------------------------------------ part 3
+\section{Load factor and resizing}
+
+\begin{frame}{Worked example: when should the table grow?}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+      {\small A table with $m = 64$ slots holds $n = 48$ keys. How many probes does a
+      failed lookup expect, and after doubling?\par}
+      \vspace{1mm}
+      {\small
+      \begin{align*}
+        \alpha &= \frac{n}{m} = \frac{48}{64} = 0.75 \\[0.3mm]
+        E[\text{probes}] &\le \frac{1}{1-\alpha} = \frac{1}{0.25} = 4 \\[0.3mm]
+        \alpha' &= \frac{48}{128} = 0.375 \\[0.3mm]
+        E'[\text{probes}] &\le \frac{1}{0.625} = 1.6
+      \end{align*}}
+    \column{0.44\textwidth}
+      \begin{examplebox}[Rule of thumb]
+        Doubling $m$ when $\alpha$ passes $0.75$ keeps lookups under four probes.
+        Each key is rehashed into the new table, so one resize costs $O(n)$.
+      \end{examplebox}
+      \begin{theorembox}[Amortised cost]
+        With doubling, $n$ insertions cost $O(n)$ in total: $O(1)$ each, amortised.
+      \end{theorembox}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ part 4
+\section{Practice}
+
+\begin{frame}{Quick question}
+  \framesubtitle{Take a minute, then compare with your neighbour.}
+  \vspace{1mm}
+  {\small A linear-probing table has $m = 10$ and $\alpha = 0.9$. You insert one more key.
+  What is the expected number of probes for the next failed lookup?\par}
+  \vspace{2.5mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.48\textwidth}
+      \lcoption{A}{About 1, the table is nearly empty}
+      \lcoption{B}{About 2}
+    \column{0.48\textwidth}
+      \lcoption*{C}{No bound: $\alpha = 1$, the table is full}
+      \lcoption{D}{About 10}
+  \end{columns}
+  \vspace{1mm}
+  \uncover<2->{{\small\color{lcMuted}With ten keys in ten slots there is no empty slot to stop
+  a probe sequence: the bound $1/(1-\alpha)$ is undefined. Resize before this happens.\par}}
+\end{frame}
+
+\begin{frame}{Summary}
+  \begin{itemize}
+    \item A hash function turns a key into a slot in $O(1)$; collisions are unavoidable.
+    \item Chaining keeps a list per slot; open addressing probes for another slot.
+    \item The load factor $\alpha = n/m$ sets the cost: about $1/(1-\alpha)$ probes.
+    \item Grow the table, usually by doubling, before $\alpha$ gets close to 1.
+  \end{itemize}
+  \vspace{3mm}
+  \begin{definitionbox}[Key term]
+    \textbf{Load factor} $\alpha$: the number of stored keys divided by the number of slots.
+  \end{definitionbox}
+\end{frame}
+
+\begin{frame}{Next lecture}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+      {\color{lcAccent}\lclabel{Lecture 8\hspace{2mm}Thursday 16 October}}\par\vspace{2mm}
+      {\Large\bfseries\color{lcSlate}Binary search trees\par}
+      \vspace{3mm}
+      {\small Ordered keys, in-order traversal, and why a tree can
+      answer questions a hash table cannot.\par}
+    \column{0.42\textwidth}
+      \begin{tcolorbox}[enhanced, arc=1.6mm, boxrule=0pt, colback=lcCode, left=3mm, right=3mm,
+          top=2.5mm, bottom=2.5mm, boxsep=0pt, fontupper=\small]
+        {\color{lcMuted}\lclabel{Before Thursday}}\par\vspace{1.5mm}
+        \begin{itemize}
+          \item Read chapter 12, sections 12.1 to 12.3
+          \item Problem set 4 is due Friday at 17:00
+          \item Office hours: Wednesday 14:00, room B214
+        \end{itemize}
+      \end{tcolorbox}
+  \end{columns}
+\end{frame}
+
+\end{document}

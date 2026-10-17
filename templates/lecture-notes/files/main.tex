@@ -1,0 +1,384 @@
+% Lecture notes with a wide outer margin for side notes.
+% Edit the course details below; the page design lives in notes-style.tex.
+% Each lecture starts with \lecture{number}{title}{date}.
+\documentclass[11pt]{article}
+
+\newcommand{\CourseCode}{MATH 2410}
+\newcommand{\CourseName}{Fourier Analysis and PDEs}
+\newcommand{\CourseTerm}{Fourier Analysis and PDEs \enspace\textperiodcentered\enspace Autumn 2026 \enspace\textperiodcentered\enspace Dr.\ Mira Okafor}
+
+\input{notes-style}
+
+\hypersetup{pdftitle={MATH 2410 Lecture Notes},pdfauthor={Mira Okafor}}
+
+\begin{document}
+
+% ============================================================================
+\lecture{3}{Fourier series}{Tuesday 6 October}
+
+Last week we separated variables in the heat equation on a ring and found
+solutions of the form $e^{-n^2 t}\cos nx$ and $e^{-n^2 t}\sin nx$. Any finite
+sum of these is again a solution, so the obvious question is whether
+\emph{every} initial temperature profile can be written as such a sum. Fourier
+claimed in 1807 that it can, provided the sum is allowed to be
+infinite.\sidenote{The claim met resistance from Lagrange, who doubted that a
+discontinuous function could be a sum of smooth ones. Both were partly right;
+see \S\ref{sec:gibbs}.} Today we make that claim precise for $2\pi$-periodic
+functions and compute our first series.
+
+\section{Periodic functions and an inner product}
+
+A function $f\colon\mathbb{R}\to\mathbb{R}$ is \emph{$2\pi$-periodic} if
+$f(x+2\pi)=f(x)$ for all $x$. Such a function is determined by its values on
+any interval of length $2\pi$; we use $[-\pi,\pi)$ throughout. Geometry enters
+through the following pairing, which behaves like a dot product with infinitely
+many coordinates.
+
+\begin{definition}{Inner product}{inner}
+For integrable $2\pi$-periodic functions $f$ and $g$, set
+\[
+  \langle f,g\rangle = \frac{1}{\pi}\int_{-\pi}^{\pi} f(x)\,g(x)\,dx,
+  \qquad \|f\| = \langle f,f\rangle^{1/2}.
+\]
+We call $f$ and $g$ \emph{orthogonal} when $\langle f,g\rangle=0$.
+\end{definition}
+
+The factor $1/\pi$ is a convention\margintext[-1.5\baselineskip]{Some texts use
+$\tfrac{1}{2\pi}$ instead; the coefficient formulas then change by a factor of
+two. Check which convention a source uses before copying a result.} chosen so
+that $\cos nx$ and $\sin nx$ have norm one. The next lemma is the whole reason
+the trigonometric functions are a good coordinate system.
+
+\begin{lemma}{Orthogonality}{orth}
+For integers $m,n\ge 1$,
+\[
+  \langle \cos mx, \cos nx\rangle = \langle \sin mx, \sin nx\rangle
+  = \delta_{mn},
+  \qquad
+  \langle \cos mx, \sin nx\rangle = 0,
+\]
+and $\langle 1, 1\rangle = 2$, while $1$ is orthogonal to every $\cos nx$ and
+$\sin nx$.
+\end{lemma}
+
+\begin{proof}
+Use the product formula
+$2\cos mx\cos nx = \cos(m-n)x + \cos(m+n)x$. The integral of $\cos kx$ over a
+full period vanishes unless $k=0$, which happens only for the first term when
+$m=n$. The other two cases follow in the same way from the corresponding
+product formulas.
+\end{proof}
+
+\section{Fourier coefficients}
+
+Suppose for a moment that $f$ really is a sum
+$\tfrac{a_0}{2}+\sum_{n\ge1}(a_n\cos nx + b_n\sin nx)$ and that we may
+integrate term by term. Taking the inner product with $\cos mx$ kills every
+term except one, by Lemma~\ref{lem:orth}. This forces the coefficients and motivates
+the definition.
+
+\begin{definition}{Fourier series}{fs}
+The \emph{Fourier coefficients} of an integrable $2\pi$-periodic $f$ are
+\[
+  a_n = \langle f, \cos nx\rangle, \qquad b_n = \langle f, \sin nx\rangle,
+  \qquad n \ge 0,
+\]
+and its \emph{Fourier series} is the formal sum
+\begin{equation}\label{eq:fs}
+  f(x) \sim \frac{a_0}{2} + \sum_{n=1}^{\infty}\bigl(a_n\cos nx + b_n\sin nx\bigr).
+\end{equation}
+The $N$th \emph{partial sum} $S_N f$ stops the sum at $n=N$.
+\end{definition}
+
+The symbol $\sim$ is deliberate: nothing yet says the series converges, let
+alone to $f$.\sidenote{Lecture~4 answers both questions for piecewise smooth
+functions.} Two shortcuts save most of the work in practice. If $f$ is even,
+every $b_n$ vanishes; if $f$ is odd, every $a_n$ vanishes.
+
+\begin{example}{Square wave}{square}
+Let $f(x)=\operatorname{sgn}(x)$ on $(-\pi,\pi)$, extended periodically.
+Compute its Fourier series.
+\begin{solution}
+The function is odd, so $a_n=0$ for all $n$. For the sine coefficients,
+\[
+  b_n = \frac{2}{\pi}\int_0^{\pi}\sin nx\,dx
+      = \frac{2}{\pi}\cdot\frac{1-\cos n\pi}{n}
+      = \begin{cases} \dfrac{4}{\pi n}, & n \text{ odd},\\[4pt]
+                      0, & n \text{ even}.\end{cases}
+\]
+Hence
+$\operatorname{sgn}(x) \sim \frac{4}{\pi}\bigl(\sin x + \tfrac13\sin 3x
++ \tfrac15\sin 5x + \cdots\bigr)$.
+\end{solution}
+\end{example}
+
+The coefficients decay only like $1/n$, which is slow. That is typical of a
+function with a jump, and Figure~\ref{fig:square} shows what it costs.
+
+\begin{figure}[t]
+\sidecaption{%
+\begin{tikzpicture}
+\begin{axis}[width=\textwidth,height=52mm,
+  axis lines=middle,xmin=-3.4,xmax=3.4,ymin=-1.45,ymax=1.45,
+  xtick={-3.1416,-1.5708,1.5708,3.1416},
+  xticklabels={$-\pi$,$-\frac{\pi}{2}$,$\frac{\pi}{2}$,$\pi$},
+  ytick={1},tick label style={font=\footnotesize},
+  xticklabel style={fill=white,inner sep=1pt,yshift=-2pt},
+  every axis plot/.append style={samples=400,smooth,domain=-3.1416:3.1416},
+  clip=false]
+\addplot[black!25,line width=2.2pt,domain=-3.1416:-0.001] {-1};
+\addplot[black!25,line width=2.2pt,domain=0.001:3.1416] {1};
+\addplot[excol,thin] {4/pi*sin(deg(x))};
+\addplot[thmcol,thin] {4/pi*(sin(deg(x))+sin(deg(3*x))/3+sin(deg(5*x))/5)};
+\addplot[accent,semithick] {4/pi*(sin(deg(x))+sin(deg(3*x))/3+sin(deg(5*x))/5
+  +sin(deg(7*x))/7+sin(deg(9*x))/9+sin(deg(11*x))/11+sin(deg(13*x))/13
+  +sin(deg(15*x))/15+sin(deg(17*x))/17+sin(deg(19*x))/19)};
+\node[font=\scriptsize\sffamily,excol,anchor=west] at (axis cs:-3.0,0.25) {$S_1$};
+\node[font=\scriptsize\sffamily,thmcol,anchor=west] at (axis cs:-2.55,-0.58) {$S_5$};
+\node[font=\scriptsize\sffamily,accent,anchor=south] at (axis cs:1.05,1.22) {$S_{19}$};
+\end{axis}
+\end{tikzpicture}}{%
+\caption{Partial sums of the square-wave series. Away from the jump they
+settle down; next to it each $S_N$ overshoots by about 9\% of the jump.}
+\label{fig:square}}
+\end{figure}
+
+\section{The Gibbs phenomenon}\label{sec:gibbs}
+
+Look closely at the peaks next to $x=0$ in Figure~\ref{fig:square}. As $N$ grows the
+overshoot moves closer to the jump but does not shrink. One can show that
+\[
+  \lim_{N\to\infty}\max_{x} S_N f(x) = \frac{2}{\pi}\int_0^{\pi}\frac{\sin t}{t}\,dt
+  \approx 1.1790,
+\]
+an overshoot of roughly 9\% of the total jump of $2$.\sidenote[-2\baselineskip]{Named after
+J.\,W.\ Gibbs, who described it in 1899, although Wilbraham had found it fifty
+years earlier.}
+
+\begin{keyidea}
+Smoothness of $f$ and decay of its Fourier coefficients are two views of the
+same thing. A jump gives coefficients of size $1/n$ and a persistent
+overshoot; each extra continuous derivative buys one more power of $1/n$.
+\end{keyidea}
+
+\subsection{Computing partial sums.}
+The overshoot is easy to see numerically. The script below evaluates $S_N f$
+on a fine grid and reports the maximum; try doubling \texttt{N} a few times.
+
+\begin{lstlisting}[language=Python]
+import numpy as np
+
+def square_wave_partial_sum(x, N):
+    """S_N of sgn(x): only odd harmonics contribute."""
+    n = np.arange(1, N + 1, 2)               # 1, 3, 5, ...
+    return 4 / np.pi * np.sin(np.outer(x, n)) @ (1 / n)
+
+x = np.linspace(1e-4, 0.5, 20_000)
+for N in (19, 99, 499):
+    print(N, square_wave_partial_sum(x, N).max())   # -> about 1.179
+\end{lstlisting}
+
+Table~\ref{tab:series} collects a few series that recur in the problem sets. Each
+follows from Definition~\ref{def:fs} with one or two integrations by parts.
+
+\begin{table}[!h]
+\sidecaption{%
+\begin{tabular}{@{}l l l@{}}
+\toprule
+\sffamily\small $f(x)$ on $(-\pi,\pi)$ & \sffamily\small Fourier series &
+  \sffamily\small Decay \\
+\midrule
+$\operatorname{sgn} x$ & $\frac{4}{\pi}\sum_{n\ \mathrm{odd}}\frac{\sin nx}{n}$ & $1/n$\\
+$x$ & $2\sum_{n\ge1}(-1)^{n+1}\frac{\sin nx}{n}$ & $1/n$\\
+$|x|$ & $\frac{\pi}{2}-\frac{4}{\pi}\sum_{n\ \mathrm{odd}}\frac{\cos nx}{n^2}$ & $1/n^2$\\
+$x^2$ & $\frac{\pi^2}{3}+4\sum_{n\ge1}(-1)^n\frac{\cos nx}{n^2}$ & $1/n^2$\\
+\bottomrule
+\end{tabular}}{%
+\caption{Common series. Continuous periodic extensions ($|x|$, $x^2$) decay
+faster than those with a jump.}\label{tab:series}}
+\end{table}
+
+\section{The complex form}
+
+Euler's formula $e^{inx}=\cos nx + i\sin nx$ packs each pair of sine and
+cosine terms into two exponentials. The bookkeeping becomes simpler, and the
+formulas extend without change to complex-valued $f$.\sidenote{This is the
+form used in signal processing and in the discrete Fourier transform, where
+the integral becomes a finite sum over samples.}
+
+\begin{definition}{Complex coefficients}{complex}
+For an integrable $2\pi$-periodic $f$ and every integer $n$, set
+\[
+  c_n = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x)\,e^{-inx}\,dx,
+  \qquad
+  f(x) \sim \sum_{n=-\infty}^{\infty} c_n\,e^{inx}.
+\]
+\end{definition}
+
+The two descriptions carry the same information: $c_0=a_0/2$ and
+$c_{\pm n} = (a_n \mp i b_n)/2$ for $n\ge1$. For real $f$ the coefficients
+satisfy $c_{-n}=\overline{c_n}$, so half of them suffice.
+
+\section{Exercises}
+
+\begin{exercise}{}{evenodd}
+Show that if $f$ is even then $b_n=0$ for every $n$, and that
+$a_n=\frac{2}{\pi}\int_0^\pi f(x)\cos nx\,dx$.
+\end{exercise}
+
+\begin{exercise}{Triangle wave}{tri}
+Derive the series for $|x|$ in Table~\ref{tab:series}. Then differentiate it term
+by term and compare the result with Example~\ref{ex:square}. Why is the
+differentiation legitimate here but not for the square wave?
+\end{exercise}
+
+\begin{exercise}{Shifts}{shift}
+Let $g(x)=f(x-h)$. Express the complex coefficients of $g$ in terms of those
+of $f$, and explain why $|c_n|$ does not depend on $h$.
+\end{exercise}
+
+% ============================================================================
+\lecture{4}{Convergence and Parseval}{Thursday 8 October}
+
+We now know how to compute a Fourier series. This lecture answers the two
+questions left open in Lecture~3: when does $S_N f(x)$ converge, and to what?
+The main tool is a closed form for the partial sums.
+
+\section{The Dirichlet kernel}
+
+Substituting the coefficient formulas into $S_N f$ and collecting the cosines
+gives an integral against a single function,
+\begin{equation}\label{eq:dirichlet}
+  S_N f(x) = \frac{1}{2\pi}\int_{-\pi}^{\pi} f(x-t)\,D_N(t)\,dt,
+\end{equation}
+where
+\[
+  D_N(t) = \sum_{n=-N}^{N} e^{int} = \frac{\sin\bigl((N+\tfrac12)t\bigr)}{\sin(t/2)}.
+\]
+The closed form is a geometric sum.\sidenote{Multiply the sum by
+$e^{it/2}-e^{-it/2}$; everything telescopes except two terms.} The kernel has
+total integral $2\pi$ and a tall central peak of height $2N+1$, so $S_N f(x)$
+is a weighted average of $f$ near $x$.
+
+\begin{figure}[h]
+\sidecaption{%
+\begin{tikzpicture}
+\begin{axis}[width=\textwidth,height=46mm,
+  axis x line=middle,axis y line=left,xmin=-3.1416,xmax=3.4,ymin=-5,ymax=23,
+  xtick={-1.5708,1.5708},xticklabels={$-\frac{\pi}{2}$,$\frac{\pi}{2}$},
+  xticklabel style={fill=white,inner sep=1pt,yshift=-2pt},
+  ytick={0,11,21},tick label style={font=\footnotesize},
+  every axis plot/.append style={samples=500,smooth,domain=-3.1416:3.1416}]
+\addplot[thmcol,thin] {sin(deg(5.5*x))/sin(deg(x/2))};
+\addplot[accent,semithick] {sin(deg(10.5*x))/sin(deg(x/2))};
+\end{axis}
+\end{tikzpicture}}{%
+\caption{The Dirichlet kernels $D_5$ and $D_{10}$. The peak grows but the
+side lobes do not die out, which is why $D_N$ is not a good averaging
+kernel.}\label{fig:dirichlet}}
+\end{figure}
+
+Unfortunately $D_N$ takes negative values and its absolute integral grows like
+$\log N$, so \eqref{eq:dirichlet} is not an honest average. Convergence needs
+some regularity of $f$ near $x$.
+
+\section{Pointwise convergence}
+
+\begin{theorem}{Dirichlet}{dirichlet}
+Let $f$ be $2\pi$-periodic and piecewise $C^1$. Then for every $x$,
+\[
+  \lim_{N\to\infty} S_N f(x) = \frac{f(x^+)+f(x^-)}{2}.
+\]
+In particular $S_N f(x)\to f(x)$ wherever $f$ is continuous.
+\end{theorem}
+
+\begin{proof}
+Write $S_N f(x) - f(x^+)$ as an integral of $D_N$ against
+$g(t)=\bigl(f(x-t)-f(x^+)\bigr)/\sin(t/2)$ over $(-\pi,0)$, and similarly for
+$f(x^-)$. Piecewise smoothness makes $g$ bounded near $t=0$, and the
+Riemann--Lebesgue lemma sends both integrals to zero.
+\end{proof}
+
+For the square wave this predicts $S_N f(0)\to 0$, the midpoint of the jump,
+which agrees with every partial sum in Figure~\ref{fig:square}.\margintext[-2\baselineskip]{Note
+the difference from the Gibbs overshoot: the
+\emph{value} at each fixed $x$ converges, but the \emph{maximum} near the jump
+does not. Convergence is pointwise, not uniform.}
+
+\section{Parseval's identity}
+
+The orthogonality relations make the coefficients behave like coordinates in an
+orthonormal basis. The analogue of Pythagoras' theorem holds with infinitely
+many terms.
+
+\begin{theorem}{Parseval}{parseval}
+If $f$ is square integrable on $[-\pi,\pi]$, then
+\[
+  \frac{1}{\pi}\int_{-\pi}^{\pi}|f(x)|^2\,dx
+  = \frac{a_0^2}{2} + \sum_{n=1}^{\infty}\bigl(a_n^2+b_n^2\bigr).
+\]
+\end{theorem}
+
+\begin{keyidea}
+Energy is conserved between the two descriptions of $f$: the mean square of
+the function equals the sum of the squares of its coefficients.
+\end{keyidea}
+
+\begin{example}{The Basel problem}{basel}
+Use Parseval's identity for $f(x)=x$ to evaluate $\sum_{n\ge1}1/n^2$.
+\begin{solution}
+From Table~\ref{tab:series}, $a_n=0$ and $b_n = 2(-1)^{n+1}/n$. The left side is
+$\frac{1}{\pi}\int_{-\pi}^{\pi}x^2\,dx = \frac{2\pi^2}{3}$. Parseval gives
+\[
+  \frac{2\pi^2}{3} = \sum_{n=1}^{\infty}\frac{4}{n^2}
+  \qquad\Longrightarrow\qquad
+  \sum_{n=1}^{\infty}\frac{1}{n^2} = \frac{\pi^2}{6}.
+\]
+This is Euler's 1734 result, here obtained in three lines.
+\end{solution}
+\end{example}
+
+\section{Back to the heat equation}
+
+We can now finish the problem that opened Lecture~3. The temperature
+$u(x,t)$ on a ring of circumference $2\pi$ satisfies $u_t = u_{xx}$ with
+$u(x,0)=f(x)$. Expanding $f$ as in \eqref{eq:fs} and evolving each mode
+separately,
+\begin{align*}
+  u(x,t) &= \frac{a_0}{2} + \sum_{n=1}^{\infty} e^{-n^2 t}
+            \bigl(a_n\cos nx + b_n\sin nx\bigr).
+\end{align*}
+The factor $e^{-n^2t}$ damps high frequencies fastest, so for every $t>0$ the
+coefficients decay faster than any power of $n$ and $u$ is smooth, even when
+$f$ is the square wave.\sidenote{This instant smoothing is special to
+diffusion. The wave equation, in Lecture~6, keeps jumps forever.}
+
+\begin{example}{Cooling a half-heated ring}{ring}
+The ring starts with temperature $1$ on $(0,\pi)$ and $-1$ on $(-\pi,0)$.
+How quickly does it approach equilibrium?
+\begin{solution}
+By Example~\ref{ex:square} only odd sine modes are present, so
+\[
+  u(x,t) = \frac{4}{\pi}\sum_{n\ \mathrm{odd}}\frac{e^{-n^2t}}{n}\sin nx .
+\]
+For $t\ge 1$ the first term dominates, since the next one is smaller by a
+factor $\tfrac13 e^{-8t}<10^{-4}$. The ring therefore relaxes to the mean
+temperature $0$ like $\frac{4}{\pi}e^{-t}\sin x$: one smooth bump that
+fades at unit rate.
+\end{solution}
+\end{example}
+
+\section{Exercises}
+
+\begin{exercise}{}{parsevalx2}
+Apply Parseval's identity to $f(x)=x^2$ and deduce that
+$\sum_{n\ge1}1/n^4 = \pi^4/90$.
+\end{exercise}
+
+\begin{exercise}{Uniform convergence}{uniform}
+Show that if $f$ is continuous, $2\pi$-periodic and piecewise $C^1$, then
+$\sum_n(|a_n|+|b_n|)<\infty$. Conclude that $S_Nf\to f$ uniformly. Which
+hypothesis fails for the square wave?
+\end{exercise}
+
+\end{document}

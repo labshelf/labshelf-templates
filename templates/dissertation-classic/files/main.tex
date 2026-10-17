@@ -1,0 +1,51 @@
+% Classic Dissertation: a traditional one-sided US Letter doctoral dissertation.
+% Edit the details below, then the files in frontmatter/, chapters/ and appendix/.
+\documentclass[12pt,letterpaper,oneside]{report}
+
+\input{style}
+
+% ---- Edit your details here --------------------------------------------
+\newcommand{\thesistitle}{Salt, Silver, and the Shape of Exchange:\\
+  Overland Trade Networks of the Southern Baltic, 1350--1450}
+\newcommand{\thesisauthor}{Margaret Elinor Hale}
+\newcommand{\thesisdegree}{Doctor of Philosophy}
+\newcommand{\thesisfield}{History}
+\newcommand{\thesisuniversity}{Northfield University}
+\newcommand{\thesisyear}{2026}
+\newcommand{\thesisadvisor}{Professor Thomas R.\ Abernathy}
+% -------------------------------------------------------------------------
+
+\addbibresource{refs.bib}
+
+\begin{document}
+
+% Front matter is numbered in lower-case roman, as most graduate schools require.
+\pagenumbering{roman}
+\input{frontmatter/titlepage}
+\input{frontmatter/copyright}
+\input{frontmatter/abstract}
+\input{frontmatter/dedication}
+\input{frontmatter/acknowledgements}
+
+\tableofcontents
+\clearpage
+\phantomsection\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+\clearpage
+\phantomsection\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+% The body restarts at arabic page 1.
+\clearpage
+\pagenumbering{arabic}
+\input{chapters/01-introduction}
+\input{chapters/02-sources-and-method}
+\input{chapters/03-salt-roads}
+
+\appendix
+\input{appendix/a-toll-registers}
+
+% bibintoc gives an unnumbered chapter heading with a contents entry.
+\printbibliography[heading=bibintoc,title=Bibliography]
+
+\end{document}

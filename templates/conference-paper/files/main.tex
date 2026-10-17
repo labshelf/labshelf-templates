@@ -1,0 +1,519 @@
+% Conference Paper -- a compact two-column paper on US Letter.
+% The page design (grid, XCharter and Lato, headings, title block, accent
+% colour) lives in conference.sty; this file holds the content.
+% Edit the title, author grid, abstract and keywords in the metadata block.
+% Build with: latexmk -pdf main.tex
+\documentclass[10pt, twocolumn]{article}
+\usepackage{conference}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, fit, backgrounds}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usepackage{siunitx}
+\sisetup{detect-weight, mode=text, group-minimum-digits=4}
+\usepackage[ruled, vlined, linesnumbered, noend]{algorithm2e}
+\SetAlFnt{\small}
+\SetAlCapFnt{\footnotesize\sffamily}
+\SetAlCapNameFnt{\footnotesize\sffamily}
+\SetKwComment{tcp}{\textcolor{black!50}{// }}{}
+\renewcommand{\CommentSty}[1]{\textcolor{black!55}{\itshape #1}}
+
+% Numeric references in a small size, compressed into ranges.
+\usepackage[backend=biber, style=numeric-comp, sorting=nyt, maxbibnames=3,
+  giveninits=true, doi=false, url=false, isbn=false, eprint=false]{biblatex}
+\addbibresource{refs.bib}
+\renewcommand*{\bibfont}{\footnotesize}
+\setlength{\bibitemsep}{1pt}
+
+\usepackage[colorlinks, allcolors=accent]{hyperref}
+\usepackage[capitalise, noabbrev]{cleveref}
+
+% One look for every plot: grey baselines, the accent for our system.
+\pgfplotsset{every axis/.append style={
+  font=\sffamily\scriptsize, axis line style={black!45}, tick style={black!45},
+  grid=major, grid style={black!8}, every axis plot/.append style={line width=.9pt},
+  legend style={draw=none, fill=none, font=\sffamily\scriptsize}}}
+
+% ---- Metadata --------------------------------------------------------------
+\title{Lantern: Learned Prefetching for Tiered Key-Value Stores}
+\venue{Proceedings of the Workshop on Data Systems, 2026}
+\authorgrid{%
+  \authorcell{Noor Haddad}{University of Toronto}{noor@cs.example.edu}\hfill
+  \authorcell{Mateus Lacerda}{University of Toronto}{mlacerda@cs.example.edu}\hfill
+  \authorcell{Yuki Tanabe}{Kioxia Research}{y.tanabe@example.com}\hfill
+  \authorcell{Rachel Abernethy}{University of Toronto}{rabernethy@cs.example.edu}}
+\ccsconcepts{Information systems $\rightarrow$ Key-value stores;
+  Hierarchical storage management; Computing methodologies $\rightarrow$
+  Supervised learning.}
+\keywords{prefetching, tiered storage, key-value stores, learned systems}
+
+\begin{abstract}
+Key-value stores increasingly place hot data in DRAM and the long tail on
+NVMe flash. Replacement policies decide what to keep in the fast tier, but
+they act only after a miss, and the miss is what costs a flash read. We
+present \sys{}, a prefetcher that predicts, for each key that is
+accessed, the small set of keys likely to follow it within the next
+millisecond and promotes them ahead of demand. A gradient-boosted model
+over co-access features fits in 6\,MB per shard, is retrained online every
+few minutes, and gates every prefetch by a cost-aware threshold so that
+wrong guesses never evict useful data. On four production-derived traces
+\sys{} lowers P99 read latency by 31--47\% over ARC and by 18\%
+over the best sequence-model prefetcher, at under 3\% CPU overhead.
+\end{abstract}
+
+% The teaser spans both columns under the abstract on page one.
+\teaser{%
+  \begin{tikzpicture}[
+      font=\sffamily\footnotesize, >={Stealth[length=4pt]},
+      box/.style={draw=black!45, rounded corners=2pt, fill=white,
+        minimum height=8.5mm, inner xsep=6pt, align=center},
+      hot/.style={box, draw=accent, fill=accent!7, text=accent!80!black},
+      tier/.style={draw=black!25, rounded corners=3pt, fill=black!3, inner sep=7pt}]
+    \node[box] (client) {Client\\[-1pt]{\scriptsize get / put}};
+    \node[box, right=9mm of client] (index) {Shard index\\[-1pt]{\scriptsize hash $\to$ tier}};
+    \node[hot, right=9mm of index] (feat) {Co-access features\\[-1pt]{\scriptsize last $k$ keys, gaps}};
+    \node[hot, right=9mm of feat] (model) {Gradient-boosted\\[-1pt]{\scriptsize successor model}};
+    \node[hot, right=9mm of model] (gate) {Cost gate\\[-1pt]{\scriptsize $p\cdot c_{\mathrm{miss}} > c_{\mathrm{evict}}$}};
+    \node[box, below=10mm of index, minimum width=34mm] (dram) {DRAM tier\\[-1pt]{\scriptsize 64 GB, LRU-K}};
+    \node[box, right=14mm of dram, minimum width=34mm] (nvme) {NVMe tier\\[-1pt]{\scriptsize 2 TB, log-structured}};
+    \begin{scope}[on background layer]
+      \node[tier, fit=(dram)(nvme), label={[font=\sffamily\scriptsize, black!55]left:storage}] {};
+      \node[tier, fill=accent!3, draw=accent!30, fit=(feat)(model)(gate),
+        label={[font=\sffamily\scriptsize\bfseries, accent]above:\sys{}}] {};
+    \end{scope}
+    \draw[->, black!60] (client) -- (index);
+    \draw[->, black!60] (index) -- (feat);
+    \draw[->, accent] (feat) -- (model);
+    \draw[->, accent] (model) -- (gate);
+    \draw[->, black!60] (index) -- (dram);
+    \draw[->, accent, thick] (gate.south) |- node[pos=.75, above, accent] {promote ahead of demand} (nvme.east);
+    \draw[->, black!60] (nvme.west) -- node[above] {miss} (dram.east);
+  \end{tikzpicture}\par\vspace{4pt}
+  \captionof{figure}{\sys{} sits beside the shard index. Every access
+  updates co-access features; the model proposes likely successors and a cost
+  gate promotes only those whose expected saving exceeds the cost of the
+  eviction they cause.}
+  \label{fig:teaser}}
+
+\begin{document}
+\maketitle
+
+
+\section{Introduction}
+
+Large key-value deployments no longer fit in memory. Operators place a few
+percent of the data in DRAM and the rest on NVMe flash, and rely on a
+replacement policy to keep the hot set in the fast tier~\cite{varga2022tiered,
+yang2020twitter}. Replacement has been studied for decades, from LRU-K to
+ARC to learned approximations of Belady's
+algorithm~\cite{oneil1993lruk,megiddo2003arc,song2020lrb}, and modern
+policies capture most of what recency and frequency can explain.
+
+What no replacement policy can do is avoid the first miss. A key that has
+not been accessed recently will be read from flash, at roughly a hundred
+times the latency of DRAM, and on production traces these cold reads
+dominate the tail~\cite{yang2020twitter}. Yet many of them are predictable:
+keys are accessed in groups that follow application logic, such as a user
+record followed by its settings and its recent sessions. A prefetcher that
+learned these groups could promote the followers while the leader is being
+served.
+
+Prefetching for storage is not new, and sequence models trained on access
+logs predict the next key well in the
+laboratory~\cite{hashemi2018,osei2023prefetch}. They are hard to deploy for
+three reasons. They are large and slow to run per request; they drift as
+applications change; and a wrong prefetch is not free, because it evicts a
+key that might have been used. We address each in turn:
+
+\begin{itemize}
+  \item A compact \emph{successor model} built on co-access features and
+    gradient-boosted trees~\cite{ke2019lightgbm}, small enough to run inline
+    (\cref{sec:model}).
+  \item \emph{Online retraining} on a sliding window, which tracks workload
+    drift without an offline pipeline.
+  \item A \emph{cost gate} that admits a prefetch only when its expected
+    saving exceeds the expected cost of the eviction it causes
+    (\cref{sec:gate}).
+\end{itemize}
+
+\noindent \Cref{sec:eval} evaluates \sys{} on four traces and
+shows where it does not help.
+
+\section{Background and Motivation}
+\label{sec:background}
+
+\subsection{Tiered key-value stores}
+A tiered store keeps an index from keys to locations and serves reads from
+DRAM when it can. On a miss it reads the value from flash, returns it, and
+admits it to DRAM, evicting another key. Admission and eviction are the
+policy's two levers; recent work tunes both, for example by filtering
+one-hit wonders with ghost lists~\cite{brandao2024ghost}.
+
+\subsection{Where the misses come from}
+We analysed a week of requests to 32 shards of a social-graph store. After
+ARC has warmed up, 71\% of the remaining DRAM misses are \emph{compulsory
+within the window}: the key was not accessed in the preceding hour. Of
+those, 58\% are accessed within one millisecond of another key with which
+they were co-accessed at least five times in the previous day. This is the
+opportunity \sys{} targets: misses that recency cannot predict but
+co-access history can.
+
+\paragraph{Why not a sequence model?}
+A two-layer LSTM over the last 64 keys predicts the next key with 44\%
+top-10 accuracy on our traces, but costs \SI{38}{\micro\second} per
+inference on a server core, more than the DRAM read it is meant to protect.
+Batched inference amortises the cost but delays the prediction past the
+moment it is useful.
+
+\subsection{Workload characterisation}
+To understand which applications produce learnable successors, we grouped
+the misses of the \emph{Graph} trace by the key prefix that identifies the
+calling service. Three services account for 80\% of the predictable misses:
+profile rendering, which reads a user record and then its settings and
+avatar metadata; feed assembly, which reads a list of post identifiers and
+then the posts; and notification delivery, which reads a device token after
+each user record. In all three the successors are fixed by code rather
+than by user behaviour, which is why they recur so reliably.
+
+The remaining services issue reads whose successors depend on the user, for
+example the next item in a search result. Their co-access counts are low and
+their gaps long, so the model assigns them low probabilities and the gate
+rarely admits them. This division explains a pattern visible throughout our
+results: \sys{} is most effective on traces dominated by a few services
+with fixed read sequences, and least effective on traces whose accesses are
+driven by independent user choices.
+
+Two properties of the traces matter for the design. First, the gap between
+a leader and its successors is short: the median is \SI{140}{\micro\second}
+and the 90th percentile is \SI{610}{\micro\second}, which is why the window
+$\Delta$ is one millisecond and why a prediction is useless if it arrives
+after a batching delay. Second, successor sets are small: 90\% of leaders
+have at most twelve successors with a co-access count above five, so a
+sketch of 32 entries loses little.
+
+\subsection{Design goals}
+These observations set four goals. First, a prediction must be ready before
+the leader's read completes, which on DRAM is a few microseconds; anything
+slower is a prediction about the past. Second, the model must adapt to
+changes in application logic without an offline pipeline, because the
+operators of a storage tier rarely control the applications above it.
+Third, a wrong prediction must cost less than the benefit of a right one,
+on every workload, including those with no structure at all. Fourth, the
+memory spent on metadata must be small compared with the DRAM it protects,
+or the same bytes would be better spent on a larger cache.
+
+The first goal rules out sequence models on the request path, and the
+second rules out models trained once and shipped. The third is the one most
+prior prefetchers do not address: they are evaluated by accuracy, while the
+quantity that matters is the change in tail latency once mistakes are paid
+for. \sys{} is designed backwards from that quantity.
+
+\section{Design}
+\label{sec:model}
+
+\sys{} runs inside each shard and observes every access. It has
+three parts: a feature extractor, a successor model and a cost gate
+(\cref{fig:teaser}).
+
+\subsection{Co-access features}
+For each key $k$ the extractor keeps a bounded \emph{successor sketch}
+$S(k)$: the up to 32 keys that most often followed $k$ within a window
+$\Delta$, with counts and the median gap between the two accesses. Sketches
+are updated in constant time with a space-saving counter and are stored
+next to the index entry, so a lookup costs no extra random access. For a
+candidate pair $(k, j)$ with $j \in S(k)$ the features are the co-access
+count and its decay-weighted variant, the median gap, the recency and
+frequency of $j$, whether $j$ is already in DRAM, and the size of its value.
+
+\subsection{Successor model}
+A single gradient-boosted model per shard scores each candidate with the
+probability $p(j \mid k)$ that $j$ is read within $\Delta$. We use 64 trees
+of depth six, which take \SI{1.9}{\micro\second} to score 32 candidates and
+occupy 6\,MB. The model is retrained every five minutes on labels collected
+from the previous window, which are free: we observe whether each candidate
+was in fact read. Retraining runs on a background core and swaps the model
+atomically.
+
+\subsection{Cost gate}
+\label{sec:gate}
+
+A prefetch is useful only if its expected benefit outweighs the harm it
+does. Promoting $j$ saves a flash read with probability $p(j \mid k)$, but
+it evicts the DRAM victim $v$, which may itself be read soon. Let
+$c_{\mathrm{miss}}$ be the cost of a flash read and $q(v)$ the probability
+that $v$ is read before it would have been evicted anyway, estimated from
+its ARC list position. The gate admits $j$ when
+\begin{equation}
+\label{eq:gate}
+p(j \mid k)\,c_{\mathrm{miss}} \;>\; q(v)\,c_{\mathrm{miss}} + c_{\mathrm{io}},
+\end{equation}
+where $c_{\mathrm{io}}$ charges the flash bandwidth the prefetch consumes.
+Because both sides scale with $c_{\mathrm{miss}}$, the rule reduces to
+$p(j \mid k) - q(v) > c_{\mathrm{io}} / c_{\mathrm{miss}}$, a threshold that
+we set once per device. \Cref{alg:lantern} gives the complete access path.
+
+\begin{algorithm}[t]
+\caption{Access path with \sys{} prefetching.}
+\label{alg:lantern}
+\KwIn{accessed key $k$, shard index $I$, model $M$, threshold $\tau$}
+serve $k$ from DRAM or flash and update $I$\;
+update successor sketches of the last keys with $k$\;
+$C \leftarrow S(k) \setminus \mathrm{DRAM}$ \tcp*{candidates not yet hot}
+\ForEach{$j \in C$ in batches of 32}{
+  $p_j \leftarrow M(\phi(k, j))$\;
+}
+\ForEach{$j \in C$ by decreasing $p_j$}{
+  $v \leftarrow$ next eviction victim in DRAM\;
+  \If{$p_j - q(v) > \tau$}{
+    issue asynchronous read of $j$; promote on completion\;
+  }
+  \lElse{\textbf{break} \tcp*[f]{later candidates score lower}}
+}
+record $(k, C)$ as pending labels for retraining\;
+\end{algorithm}
+
+% Full-width floats appear one page after their source position.
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[group style={group size=3 by 1, horizontal sep=14mm},
+        width=0.34\textwidth, height=44mm]
+      \nextgroupplot[title={Graph: read latency CDF}, xmode=log,
+          xlabel={latency (\si{\micro\second})}, ylabel={fraction of reads},
+          xmin=5, xmax=1000, ymin=0, ymax=1]
+        \addplot[black!35, dashed] coordinates {(5,0) (8,.55) (12,.74) (40,.80) (100,.84) (200,.90) (377,.99) (800,1)};
+        \addplot[black!60] coordinates {(5,0) (8,.58) (12,.80) (40,.85) (100,.89) (200,.95) (262,.99) (700,1)};
+        \addplot[accent] coordinates {(5,0) (8,.61) (12,.86) (40,.90) (100,.94) (160,.98) (201,.99) (600,1)};
+      \nextgroupplot[title={Precision and coverage vs.\ $\tau$},
+          xlabel={gate threshold $\tau$}, ylabel={percent},
+          xmin=0, xmax=0.5, ymin=0, ymax=100,
+          legend style={at={(0.97,0.5)}, anchor=east}]
+        \addplot[accent] coordinates {(0,38) (.05,52) (.1,63) (.15,73) (.2,79) (.3,86) (.4,90) (.5,92)};
+        \addplot[black!60] coordinates {(0,81) (.05,74) (.1,66) (.15,58) (.2,49) (.3,34) (.4,22) (.5,14)};
+        \legend{precision, coverage}
+      \nextgroupplot[title={Recovery after a layout change},
+          xlabel={minutes after change}, ylabel={precision (\%)},
+          xmin=0, xmax=60, ymin=0, ymax=100,
+          legend style={at={(0.97,0.03)}, anchor=south east}]
+        \addplot[black!45, dashed] coordinates {(0,72) (5,40) (10,31) (20,30) (40,29) (60,29)};
+        \addplot[accent] coordinates {(0,72) (5,41) (10,58) (15,69) (20,71) (40,72) (60,73)};
+        \legend{frozen model, online}
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{Left: CDF of read latency on \emph{Graph} for ARC (dashed), ARC
+  with an LSTM prefetcher (grey) and Lantern. Centre: the gate threshold
+  trades coverage of misses for precision of prefetches; the device-derived
+  value is $\tau = 0.15$. Right: precision after the \emph{Shop} catalogue
+  changes layout at minute zero, with a frozen model and with five-minute
+  online retraining.}
+  \label{fig:behaviour}
+\end{figure*}
+
+\section{Implementation}
+\label{sec:impl}
+
+We built \sys{} as a library of about 3{,}400 lines of C++ linked into the
+storage server. Sketches live in a slab next to each hash-index bucket, so
+updating them touches a cache line that the lookup has already loaded. The
+model is compiled to a flat array of split thresholds and evaluated with
+branch-free code, which is what keeps scoring under two microseconds; a
+generic tree library was six times slower on the same model.
+
+Prefetches are issued through the same asynchronous I/O queue as demand
+reads but at a lower priority, so a burst of prefetches can never delay a
+client read. A promoted key enters DRAM at the middle of the ARC recency
+list rather than at its head: if the prediction was wrong the key leaves
+quickly, and if it was right the first real access moves it to the head as
+usual. Labels for retraining are written to a ring buffer of 4 million
+entries per shard, and a background thread fits the next model with the
+same feature code that serves requests, which removes a whole class of
+training--serving skew.
+
+\paragraph{Failure handling}
+If retraining fails or produces a model whose validation precision falls
+below the current one, the shard keeps the current model and logs the
+event. If the I/O queue exceeds a depth limit, the gate raises its
+threshold until the queue drains, so prefetching backs off under load
+instead of adding to it.
+
+\section{Evaluation}
+\label{sec:eval}
+
+\paragraph{Setup}
+We replay traces against a prototype built on a log-structured store with a
+64\,GB DRAM tier and a 2\,TB NVMe tier on a 32-core server. We compare
+against LRU-K and ARC without prefetching~\cite{oneil1993lruk,
+megiddo2003arc}, ARC with a ghost-list admission filter~\cite{brandao2024ghost},
+and ARC with an LSTM prefetcher batched every \SI{200}{\micro\second}, the
+best configuration of~\cite{osei2023prefetch}. Traces are a social-graph
+store (\emph{Graph}), a session cache (\emph{Session}), an e-commerce
+catalogue (\emph{Shop}) and YCSB workload B with Zipfian keys~\cite{cooper2010ycsb}.
+
+\begin{table}[t]
+  \centering
+  \caption{P99 read latency in microseconds and DRAM hit ratio in percent.
+  Lower latency and higher hit ratio are better; the best value in each
+  column is set in bold.}
+  \label{tab:results}
+  \footnotesize
+  \setlength{\tabcolsep}{4.2pt}
+  \begin{tabular}{@{}l S[table-format=3.0] S[table-format=3.0]
+      S[table-format=3.0] S[table-format=3.0] S[table-format=2.1]@{}}
+    \toprule
+    & \multicolumn{4}{c}{P99 latency (\si{\micro\second})} & {Hit} \\
+    \cmidrule(lr){2-5}
+    Policy & {Graph} & {Session} & {Shop} & {YCSB-B} & {(\%)} \\
+    \midrule
+    LRU-K             & 412 & 338 & 501 & 286 & 81.4 \\
+    ARC               & 377 & 305 & 466 & 261 & 83.9 \\
+    ARC + ghost lists & 351 & 297 & 440 & 255 & 85.2 \\
+    ARC + LSTM        & 262 & 248 & 371 & 249 & 88.0 \\
+    \midrule
+    \sys{}  & \best{201} & \best{209} & \best{318}
+                      & \best{246} & \best{91.3} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+\paragraph{Tail latency}
+\Cref{tab:results} reports P99 read latency. \sys{} lowers it by
+47\% over ARC on \emph{Graph}, where co-access groups are strongest, and by
+31\% on \emph{Shop}. On YCSB-B the gain is within noise: keys are drawn
+independently, so there are no successors to learn, and the cost gate
+correctly declines almost every prefetch. The latency CDF in
+\cref{fig:behaviour} shows where the gain comes from: the median is
+unchanged, while the fraction of reads served from flash falls from 26\% to
+14\%. This is the behaviour we want
+from a prefetcher on a workload it cannot help.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[width=\columnwidth, height=42mm,
+        xlabel={DRAM tier as \% of data}, ylabel={hit ratio (\%)},
+        xmin=1, xmax=16, ymin=60, ymax=96, xtick={1,2,4,8,16}, xmode=log,
+        log basis x=2, xticklabels={1,2,4,8,16},
+        legend pos=south east, legend cell align=left]
+      \addplot[black!35, dashed] coordinates {(1,62.1) (2,70.4) (4,77.9) (8,83.9) (16,88.6)};
+      \addplot[black!60] coordinates {(1,68.3) (2,76.0) (4,82.6) (8,88.0) (16,91.4)};
+      \addplot[accent, mark=*, mark size=1.2pt] coordinates {(1,74.8) (2,82.1) (4,87.5) (8,91.3) (16,93.9)};
+      \legend{ARC, ARC + LSTM, \sys{}}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{DRAM hit ratio on \emph{Graph} as the fast tier grows. Prefetching
+  matters most when DRAM is scarce: at 1\% of the data \sys{}
+  matches ARC with four times the memory.}
+  \label{fig:capacity}
+\end{figure}
+
+\paragraph{Memory pressure}
+\Cref{fig:capacity} varies the DRAM tier from 1\% to 16\% of the data. The
+benefit of prefetching shrinks as memory grows, because more successors are
+already resident, but it never turns negative: the gate keeps wrong guesses
+from displacing useful keys. With DRAM at 1\% of the data,
+\sys{} reaches the hit ratio that ARC needs 4\% to achieve.
+
+\paragraph{Accuracy and waste}
+Of the prefetches \sys{} issues on \emph{Graph}, 73\% are read
+within $\Delta$; the LSTM prefetcher, which has no gate, reaches 41\% and
+wastes 2.6 times as much flash bandwidth. Raising the threshold $\tau$ in
+\eqref{eq:gate} trades coverage for precision smoothly; we found the value
+derived from device costs within 5\% of the best setting on every trace
+(\cref{fig:behaviour}, centre).
+
+\paragraph{Overhead}
+Sketch updates and inference add \SI{2.4}{\micro\second} to the median
+request and use 2.7\% of the server's CPU. Retraining takes 11\,s per
+shard every five minutes on a background core. Sketches add 410\,B per hot
+key, or 3.1\% of the DRAM tier.
+
+\begin{table}[t]
+  \centering
+  \caption{Ablation on \emph{Graph}: P99 latency, prefetch precision and the
+  flash bandwidth spent on prefetches that were never read.}
+  \label{tab:ablation}
+  \footnotesize
+  \begin{tabular}{@{}l S[table-format=3.0] S[table-format=2.0]
+      S[table-format=3.0]@{}}
+    \toprule
+    Variant & {P99 (\si{\micro\second})} & {Prec.\ (\%)} & {Waste (MB/s)} \\
+    \midrule
+    Full \sys{}             & \best{201} & \best{73} & \best{18} \\
+    without cost gate       & 236 & 44 & 71 \\
+    without online retraining & 228 & 61 & 29 \\
+    sketch size 8 instead of 32 & 219 & 70 & 21 \\
+    LSTM instead of trees   & 247 & 69 & 24 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Ablation}
+\Cref{tab:ablation} removes one component at a time. The cost gate matters
+most: without it precision drops to 44\% and the wasted bandwidth
+quadruples, which in turn slows demand reads that share the device. Online
+retraining is the second largest contributor. Replacing the trees by the
+LSTM keeps precision almost unchanged but raises latency, because inference
+no longer fits on the request path and predictions arrive late.
+
+\paragraph{Drift}
+When we switch the \emph{Shop} trace to a new catalogue layout halfway
+through, a frozen model loses 60\% of its benefit within an hour, while the
+online model recovers its accuracy within two retraining windows
+(\cref{fig:behaviour}, right).
+
+\section{Discussion and Limitations}
+
+\paragraph{When prefetching cannot help}
+\sys{} learns successors from history, so it helps only where accesses come
+in groups that repeat. Uniform or purely Zipfian workloads, like YCSB-B,
+offer nothing to learn; the gate makes \sys{} nearly inert on them, but it
+still pays the cost of maintaining sketches. A deployment that knows its
+workload has no structure should disable it.
+
+\paragraph{Cross-shard successors}
+Sketches are local to a shard. When an application reads a key on one shard
+and its successor lives on another, \sys{} cannot see the pair. On our
+traces 14\% of co-access pairs cross shards; capturing them requires
+exchanging sketches between shards, which we leave to future work.
+
+\paragraph{Cost model}
+The gate in \eqref{eq:gate} assumes a fixed flash read cost. Under heavy
+load the true cost rises with queue depth, and a prefetch that was cheap at
+idle becomes expensive. The back-off described in \cref{sec:impl} handles
+the extreme case; a gate that reads the current queue depth would handle
+the intermediate ones better.
+
+\section{Related Work}
+
+Replacement policies decide what to keep after an
+access~\cite{oneil1993lruk,megiddo2003arc}, and learned policies approximate
+the optimal offline decision~\cite{song2020lrb}. Admission filters decide
+what to let in~\cite{brandao2024ghost}. \sys{} is complementary:
+it acts \emph{before} an access, and it reuses the policy's own estimate of
+a victim's value in its gate. Learned prefetchers for memory and storage
+predict the next address or key with sequence
+models~\cite{hashemi2018,osei2023prefetch}; we trade some accuracy for a
+model that is cheap enough to run inline and retrain continuously, and we
+add the cost model that makes wrong predictions safe. Placement in tiered
+stores~\cite{varga2022tiered} decides where a key lives in steady state,
+while prefetching responds to the next millisecond.
+
+\section{Conclusion}
+
+Cold reads dominate the tail of tiered key-value stores, and many of them
+are predictable from co-access history. \sys{} predicts them with
+a small model that runs inline, retrains online, and prefetches only when
+the expected saving exceeds the cost of the eviction. It lowers P99 latency
+by up to 47\% and never hurts a workload it cannot help. We plan to share
+sketches across shards for keys whose successors live elsewhere.
+
+\paragraph{Acknowledgements}
+We thank the anonymous reviewers and the operators who shared anonymised
+traces. This work was supported by a fictional research grant.
+
+\printbibliography
+
+\end{document}

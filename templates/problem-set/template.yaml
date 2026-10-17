@@ -1,0 +1,10 @@
+schema: 1
+id: problem-set
+name: Problem Set
+description: A4 homework sheet set in Libertinus Serif with libertinust1math and a single dark rust accent. Header with small-caps course line, large title, due date, hairline name and ID fields and a booktabs points table. Numbered problems carry a point badge in the left margin and (a), (b), (c) parts. One switch at the top shows or hides solutions on a pale rust panel with a rust spine. Includes a TikZ probability tree and aligned derivations.
+category: other
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

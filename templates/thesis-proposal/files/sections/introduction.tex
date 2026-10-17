@@ -1,0 +1,46 @@
+% Chapter 1: motivation and the problem the thesis addresses.
+\chapter{Introduction}\label{ch:intro}
+
+During the July 2022 heatwave, air temperature at Aldmere's official
+airport station peaked at 36.1\,°C. On the same afternoon, volunteer
+sensors in the dense Old Harbour district recorded 39.4\,°C, and a
+hospital two kilometres inland admitted three times its usual number of
+patients with heat stroke \parencite{rautio2023harbour}. The official
+record was not wrong; it simply measured a different place. Urban heat
+varies over tens of metres, with street orientation, tree cover and
+building height, while the networks that inform public warnings resolve
+tens of kilometres \parencite{oke2017urban}.
+
+Cheap connected sensors have made dense street-level networks
+affordable, and many cities now run them
+\parencite{chapman2017crowdsourcing,meier2017crowdsourcing}. Yet where
+those sensors go is rarely a design decision. They are mounted where a
+power outlet exists, where a school agreed to host one or where a
+citizen-science group happens to be active. The result is a network that
+is densest in affluent, well-organised districts and thinnest where
+older residents live alone in top-floor flats, the population most at
+risk \parencite{hsu2021disproportionate}.
+
+\section{Problem statement}
+
+This thesis addresses the question of \emph{where to put the next
+sensor}. Given an existing network, a model of the temperature field and
+a map of who is exposed, which site would most improve the information
+used to protect people? Posed this way, sensor placement becomes an
+instance of active learning: choosing the observation that is most
+valuable under a model, then updating the model and choosing again
+\parencite{krause2008near,settles2012active}.
+
+Two features make the urban case harder than the textbook one. First,
+value is not uniform: an error of one degree over an empty car park
+matters less than the same error over a care home. Second, the model
+must work before much local data exists, because a city deploying its
+first network has nothing to learn from but other cities.
+
+\section{Scope}
+
+The thesis concerns near-surface air temperature during summer
+afternoons and nights in mid-latitude European cities. Surface
+temperature from satellites is used only as a covariate. Humidity and
+thermal comfort indices are outside the main line of work, although the
+field campaign records them for later use.

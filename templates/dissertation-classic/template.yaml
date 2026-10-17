@@ -1,0 +1,10 @@
+schema: 1
+id: dissertation-classic
+name: Classic Dissertation
+description: One-sided US Letter doctoral dissertation in Palatino (newpxtext, old-style figures) at 1.5 spacing with a wide binding margin. Chapters open centred under a letterspaced small-caps "Chapter One" in dark ink blue, the only accent, with a short hairline under the title. Formal title page, copyright, abstract, dedication, acknowledgements, roman-numbered contents and lists; footnotes, equations, a TikZ figure, booktabs tables, an appendix and a biblatex author-year bibliography.
+category: thesis
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

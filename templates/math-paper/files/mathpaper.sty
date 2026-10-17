@@ -1,0 +1,146 @@
+% mathpaper.sty -- page design for the Mathematics Paper template.
+% An amsart-like page on A4: Libertinus text and maths, centred small-caps
+% headings, small-caps theorem heads, addresses at the end, one navy accent.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathpaper}[2026/10/17 Mathematics Paper]
+
+% ---- Page grid -------------------------------------------------------------
+% A measure of about 70 characters: narrower than article's default, wider
+% than amsart's, with a deep foot margin for the folio.
+\RequirePackage[a4paper, textwidth=128mm, textheight=212mm, centering,
+  headheight=12pt, headsep=9mm, footskip=11mm]{geometry}
+
+% ---- Type ------------------------------------------------------------------
+% Libertinus for text, libertinust1math for maths so that letters and digits
+% match in both. Lining figures suit numbered equations and references.
+\RequirePackage[T1]{fontenc}
+\RequirePackage{amsmath}
+\RequirePackage{libertinus}
+\RequirePackage{libertinust1math}
+\RequirePackage[scaled=0.83]{beramono}
+\linespread{1.08}
+\RequirePackage[protrusion=true, expansion=true, tracking=true, final]{microtype}
+\SetTracking{encoding=*, shape=sc}{40}
+\setlength{\parindent}{1.25em}
+\setlength{\emergencystretch}{1em}
+\widowpenalty=10000 \clubpenalty=10000
+
+% ---- Accent ----------------------------------------------------------------
+% Deep navy, used only for the title, theorem heads, the end-of-proof mark
+% and links. Change it here.
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{1B2A4E}
+\colorlet{inkmuted}{black!60}
+
+% ---- Headings --------------------------------------------------------------
+% Sections centred in letterspaced small caps, as in amsart; subsections are
+% run-in so that short ones do not waste a line.
+\RequirePackage{titlesec}
+\titleformat{\section}{\centering\normalfont\scshape}
+  {\thesection.}{0.5em}{}
+\titleformat{\subsection}[runin]{\normalfont\bfseries}
+  {\thesubsection.}{0.5em}{}[.]
+\titlespacing*{\section}{0pt}{3.2ex plus .8ex minus .3ex}{1.6ex plus .3ex}
+\titlespacing*{\subsection}{0pt}{2ex plus .5ex minus .2ex}{0.6em}
+
+% ---- Theorems --------------------------------------------------------------
+% Small-caps heads in the accent; italic statements for results, upright for
+% definitions and remarks, one counter for all of them per section.
+\RequirePackage{amsthm}
+\numberwithin{equation}{section}
+\newtheoremstyle{mp-plain}{1.2ex plus .3ex}{1.2ex plus .3ex}{\itshape}{}
+  {\color{accent}\scshape}{.}{0.5em}{\thmname{#1}\thmnumber{ #2}%
+  \thmnote{\normalfont\color{black}\ (#3)}}
+\newtheoremstyle{mp-definition}{1.2ex plus .3ex}{1.2ex plus .3ex}{\normalfont}{}
+  {\color{accent}\scshape}{.}{0.5em}{\thmname{#1}\thmnumber{ #2}%
+  \thmnote{\normalfont\color{black}\ (#3)}}
+\theoremstyle{mp-plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{maintheorem}{Theorem A}
+\theoremstyle{mp-definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+% Proofs open with an italic head and close with a small navy square.
+\renewcommand{\qedsymbol}{\textcolor{accent}{\ensuremath{\square}}}
+\renewcommand{\proofname}{\itshape Proof}
+
+% ---- Captions and floats ---------------------------------------------------
+\RequirePackage[font=small, labelfont=sc, labelsep=period,
+  justification=justified, singlelinecheck=true, skip=8pt]{caption}
+\setlength{\textfloatsep}{16pt plus 4pt minus 3pt}
+
+% ---- Running heads ---------------------------------------------------------
+% Authors on even pages and the short title on odd pages, both in small caps;
+% folios at the outer edge. Page one carries none.
+\RequirePackage{fancyhdr}
+\newcommand{\mp@shorttitle}{}
+\newcommand{\mp@shortauthors}{}
+\newcommand{\shorttitle}[1]{\renewcommand{\mp@shorttitle}{#1}}
+\newcommand{\shortauthors}[1]{\renewcommand{\mp@shortauthors}{#1}}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[CE]{\footnotesize\scshape\mp@shortauthors}
+\fancyhead[CO]{\footnotesize\scshape\mp@shorttitle}
+\fancyhead[LE,RO]{\footnotesize\thepage}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\footnotesize\thepage}}
+
+% ---- Title block -----------------------------------------------------------
+\newcommand{\mp@authors}{}
+\newcommand{\mp@dedication}{}
+\newcommand{\mp@msc}{}
+\newcommand{\mp@keywords}{}
+\newcommand{\mp@abstract}{}
+\newcommand{\mp@addresses}{}
+\renewcommand{\author}[1]{\renewcommand{\mp@authors}{#1}}
+\newcommand{\subjclass}[1]{\renewcommand{\mp@msc}{#1}}
+\newcommand{\keywords}[1]{\renewcommand{\mp@keywords}{#1}}
+\RenewDocumentEnvironment{abstract}{+b}{\gdef\mp@abstract{#1}}{}
+% \address{Name}{lines}{email} collects one block for the end of the paper.
+\newcommand{\address}[3]{\g@addto@macro\mp@addresses{%
+  \par\addvspace{10pt}{\scshape #1}\par #2\par
+  \textit{Email address}: \texttt{#3}\par}}
+
+\renewcommand{\maketitle}{%
+  \thispagestyle{plain}%
+  \begin{center}
+    {\large\scshape\color{accent}\textls[60]{\@title}\par}
+    \vspace{14pt}
+    {\scshape\mp@authors\par}
+    \vspace{6pt}
+    {\small\itshape\@date\par}
+  \end{center}
+  \vspace{10pt}
+  \mp@abstractblock
+  \vspace{14pt}}
+
+% A narrow indented block as in amsart, closed by the MSC codes and keywords.
+\newcommand{\mp@abstractblock}{%
+  \begin{list}{}{\leftmargin=9mm \rightmargin=9mm \topsep=0pt}
+    \item\relax\small
+      {\scshape Abstract.}\enspace\mp@abstract\par
+      \vspace{6pt}
+      \ifx\mp@msc\@empty\else
+        \noindent{\scshape\footnotesize 2020 Mathematics Subject
+        Classification.}\enspace{\footnotesize\mp@msc}\par
+      \fi
+      \ifx\mp@keywords\@empty\else
+        \noindent{\scshape\footnotesize Key words and phrases.}\enspace
+        {\footnotesize\mp@keywords}\par
+      \fi
+  \end{list}}
+
+% Prints the collected addresses; call it after the bibliography.
+\newcommand{\printaddresses}{%
+  \par\vspace{18pt}{\footnotesize\raggedright\parindent=0pt\mp@addresses\par}}
+
+% ---- Lists -----------------------------------------------------------------
+\RequirePackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt}
+\setlist[enumerate,1]{label=(\roman*), widest=iii}
+
+\endinput

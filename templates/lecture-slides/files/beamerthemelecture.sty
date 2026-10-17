@@ -1,0 +1,221 @@
+% Lecture: a 16:9 Beamer theme for teaching. Lato on white with a slate base,
+% one teal-cyan accent, a slim section strip on the left edge and tinted blocks.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemelecture}[2026/10/17 LabShelf lecture slides theme]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[default,defaultsans]{lato}
+% Math letters and digits in Lato italic and upright, so formulas match the text.
+\RequirePackage[italic,defaultmathsizes,LGRgreek]{mathastext}
+\RequirePackage[scaled=0.92,varqu]{zi4}
+\RequirePackage[letterspace=80]{microtype}
+\RequirePackage{tikz}
+\RequirePackage{booktabs}
+\RequirePackage{listings}
+\RequirePackage[most]{tcolorbox}
+\usetikzlibrary{calc}
+
+% ---------------------------------------------------------------- palette
+% lcAccent recolours the strip, bullets, progress marks and code keywords.
+% The four block tints are independent so each block kind stays recognisable.
+\definecolor{lcAccent}{HTML}{0F8FA0}
+\definecolor{lcSlate}{HTML}{1E293B}
+\definecolor{lcInk}{HTML}{243042}
+\definecolor{lcMuted}{HTML}{64748B}
+\definecolor{lcRule}{HTML}{DCE2EA}
+\definecolor{lcCode}{HTML}{F4F7FA}
+\definecolor{lcDefinition}{HTML}{0F8FA0}
+\definecolor{lcTheorem}{HTML}{4A5FA8}
+\definecolor{lcExample}{HTML}{2F8A57}
+\definecolor{lcWarning}{HTML}{C07A12}
+
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+% Upcoming steps show faintly, so a slide never jumps when the next step appears,
+% and handouts (which print every step) keep the same layout.
+\setbeamercovered{transparent=12}
+
+\setbeamercolor{normal text}{fg=lcInk,bg=white}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{structure}{fg=lcAccent}
+\setbeamercolor{alerted text}{fg=lcAccent!85!black}
+\setbeamercolor{frametitle}{fg=lcSlate}
+\setbeamercolor{itemize item}{fg=lcAccent}
+\setbeamercolor{enumerate item}{fg=lcAccent}
+
+\setbeamerfont{normal text}{size=\normalsize}
+\setbeamerfont{frametitle}{size=\Large,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\small,series=\mdseries}
+\setbeamerfont{alerted text}{series=\bfseries}
+\setbeamersize{text margin left=17mm,text margin right=12mm}
+
+% ---------------------------------------------------------------- course data
+% \course{CS 241}{Data Structures} and \lecturenumber{7} are set in main.tex.
+\newcommand{\course}[2]{\gdef\lc@code{#1}\gdef\lc@course{#2}}
+\newcommand{\lecturenumber}[1]{\gdef\lc@lecture{#1}}
+\newcommand{\insertcoursecode}{\lc@code}
+\newcommand{\insertcoursename}{\lc@course}
+\newcommand{\lcinsertlecture}{\lc@lecture}
+\course{}{}\lecturenumber{}
+
+% Small spaced capitals for labels.
+\newcommand{\lclabel}[1]{{\fontsize{7}{9}\selectfont\bfseries\textls[120]{\MakeUppercase{#1}}}}
+
+% ---------------------------------------------------------------- lists
+\setbeamertemplate{itemize item}{\raisebox{0.25ex}{\tikz\fill[lcAccent] (0,0) circle[radius=0.22em];}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.35ex}{\tikz\draw[lcAccent,line width=0.6pt] (0,0) -- (0.5em,0);}}
+\setbeamertemplate{enumerate item}{\textbf{\insertenumlabel}}
+\setlength{\leftmargini}{1.4em}
+\addtobeamertemplate{itemize/enumerate body begin}{}{\setlength{\itemsep}{0.5em}}
+
+% ---------------------------------------------------------------- section strip
+% Every content slide carries a slim accent strip with the section name running
+% up the left edge. Title and divider slides switch it off with \lcstripfalse.
+\newif\iflcstrip \lcstriptrue
+\setbeamertemplate{background}{%
+  \iflcstrip\ifx\insertsectionhead\empty\else
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,\paperheight);
+    \fill[lcAccent] (0,0) rectangle (6mm,\paperheight);
+    \node[rotate=90,anchor=east,inner sep=0,text=white] at (3mm,\paperheight-8mm)
+      {\lclabel{\insertsectionnumber\hspace{2mm}\insertsectionhead}};
+  \end{tikzpicture}%
+  \fi\fi}
+
+% ---------------------------------------------------------------- frame title
+\setbeamertemplate{frametitle}{%
+  \vspace*{6mm}%
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\raggedright\insertframetitle\par}%
+  \ifx\insertframesubtitle\empty\else
+    \vspace{0.6mm}{\usebeamerfont{framesubtitle}\color{lcMuted}\insertframesubtitle\par}%
+  \fi
+  \vspace*{1mm}%
+}
+
+% ---------------------------------------------------------------- footline
+\setbeamertemplate{footline}{%
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,8mm);
+    \node[anchor=base west,inner sep=0,text=lcMuted,font=\tiny] at (17mm,3.6mm)
+      {\textbf{\insertcoursecode}\hspace{2mm}Lecture \lcinsertlecture\hspace{2mm}\insertshorttitle};
+    \node[anchor=base east,inner sep=0,text=lcMuted,font=\tiny]
+      at ($(\paperwidth,3.6mm)-(12mm,0)$) {\insertframenumber\,/\,\inserttotalframenumber};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- title page
+% Dark slate slide: course tag, lecture number, title, lecturer and date.
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[lcSlate] (current page.south west) rectangle (current page.north east);
+    \fill[lcAccent] (current page.south west) rectangle ($(current page.north west)+(6mm,0)$);
+    \coordinate (O) at ($(current page.north west)+(17mm,-14mm)$);
+    \node[anchor=north west,inner sep=0,text=lcAccent!60!white] at (O)
+      {\lclabel{\insertcoursecode\hspace{3mm}\insertcoursename}};
+    \node[anchor=north west,inner sep=0,text=white,text width=120mm] at ($(O)+(0,-14mm)$) {%
+      {\fontsize{11}{13}\selectfont\color{lcAccent!70!white}\fontseries{l}\selectfont
+        Lecture \lcinsertlecture\par}\vspace{2mm}
+      {\fontsize{30}{34}\selectfont\bfseries\raggedright\inserttitle\par}\vspace{2.5mm}
+      {\fontsize{12}{15}\selectfont\fontseries{l}\selectfont\color{white!78!lcSlate}\insertsubtitle\par}};
+    \draw[white!25!lcSlate,line width=0.4pt] ($(current page.south west)+(17mm,19mm)$) -- ++(131mm,0);
+    \node[anchor=north west,inner sep=0,text=white,font=\small] at ($(current page.south west)+(17mm,15mm)$)
+      {\insertauthor};
+    \node[anchor=north west,inner sep=0,text=white!65!lcSlate,font=\footnotesize]
+      at ($(current page.south west)+(17mm,10mm)$) {\insertinstitute};
+    \node[anchor=north east,inner sep=0,text=white!65!lcSlate,font=\small]
+      at ($(current page.south east)+(-12mm,15mm)$) {\insertdate};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- agenda with progress
+% \lcsections{First,Second,...} lists the parts once; \lcagenda draws them with
+% the finished ones ticked and the current one ringed in the accent.
+\newcommand{\lcsections}[1]{\gdef\lc@sections{#1}}
+\lcsections{}
+\newcommand{\lcagenda}{%
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    \foreach \name [count=\k] in \lc@sections {
+      \pgfmathsetmacro\y{-(\k-1)*10}
+      \ifnum\k>1 \draw[lcRule,line width=0.8pt] (0,\y+10-2.6) -- (0,\y+2.6);\fi
+      \ifnum\k<\value{section}
+        \fill[lcAccent] (0,\y) circle[radius=2.2];
+        \draw[white,line width=0.9pt] (-1,\y) -- (-0.25,\y-0.8) -- (1.15,\y+0.9);
+        \node[anchor=west,text=lcMuted] at (5,\y) {\name};
+      \else\ifnum\k=\value{section}
+        \draw[lcAccent,line width=1.2pt,fill=white] (0,\y) circle[radius=2.2];
+        \fill[lcAccent] (0,\y) circle[radius=0.9];
+        \node[anchor=west,text=lcSlate,font=\bfseries] at (5,\y) {\name};
+      \else
+        \draw[lcRule,line width=1pt,fill=white] (0,\y) circle[radius=2.2];
+        \node[anchor=west,text=lcInk] at (5,\y) {\name};
+      \fi\fi
+    }
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- section divider
+% A wide slate panel with the part number; the agenda on the right shows progress.
+\AtBeginSection[]{%
+  {\lcstripfalse
+  \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[lcSlate] (current page.south west) rectangle ($(current page.north west)+(62mm,0)$);
+      \fill[lcAccent] (current page.south west) rectangle ($(current page.north west)+(6mm,0)$);
+      \node[anchor=north west,inner sep=0,text=lcAccent!60!white]
+        at ($(current page.north west)+(14mm,-16mm)$) {\lclabel{Part \insertsectionnumber}};
+      \node[anchor=south west,inner sep=0,text=white,text width=42mm]
+        at ($(current page.south west)+(14mm,16mm)$)
+        {\fontsize{20}{24}\selectfont\bfseries\raggedright\insertsectionhead\par};
+      \node[anchor=north west,inner sep=0,text=lcMuted]
+        at ($(current page.north west)+(74mm,-16mm)$) {\lclabel{Today}};
+      \node[anchor=north west,inner sep=0] at ($(current page.north west)+(76mm,-25mm)$) {\lcagenda};
+    \end{tikzpicture}
+  \end{frame}}
+}
+
+% ---------------------------------------------------------------- blocks
+% Four soft-tinted, rounded, shadowless boxes. The label sits in the box's own
+% colour; the body stays in the text colour for contrast.
+\tcbset{lcblock/.style={enhanced, breakable=false, arc=1.6mm, outer arc=1.6mm,
+    boxrule=0pt, leftrule=0pt, colback=#1!8!white, colframe=#1!8!white,
+    left=3.2mm, right=3.2mm, top=2mm, bottom=2.4mm, boxsep=0pt,
+    before skip=2mm, after skip=2.5mm, fontupper=\small,
+    coltitle=#1!80!black, colbacktitle=#1!8!white, attach title to upper,
+    fonttitle=\fontsize{7}{9}\selectfont\bfseries, after title={\par\vspace{1mm}},
+    borderline west={1.2pt}{0pt}{#1}}}
+\newtcolorbox{definitionbox}[1][]{lcblock=lcDefinition, title={\textls[120]{DEFINITION}\ifx\relax#1\relax\else\hspace{2mm}{\fontseries{m}\selectfont #1}\fi}}
+\newtcolorbox{theorembox}[1][]{lcblock=lcTheorem, title={\textls[120]{THEOREM}\ifx\relax#1\relax\else\hspace{2mm}{\fontseries{m}\selectfont #1}\fi}}
+\newtcolorbox{examplebox}[1][]{lcblock=lcExample, title={\textls[120]{EXAMPLE}\ifx\relax#1\relax\else\hspace{2mm}{\fontseries{m}\selectfont #1}\fi}}
+\newtcolorbox{warningbox}[1][]{lcblock=lcWarning, title={\textls[120]{WATCH OUT}\ifx\relax#1\relax\else\hspace{2mm}{\fontseries{m}\selectfont #1}\fi}}
+
+% ---------------------------------------------------------------- code
+% Light panel, no frame; keywords in the accent, comments muted.
+\lstdefinestyle{lecture}{
+  basicstyle=\ttfamily\footnotesize\color{lcInk},
+  keywordstyle=\color{lcAccent!80!black}\bfseries,
+  commentstyle=\color{lcMuted},
+  stringstyle=\color{lcWarning!85!black},
+  numbers=left, numberstyle=\tiny\color{lcMuted!70}, numbersep=3mm,
+  backgroundcolor=\color{lcCode}, frame=single, framerule=0pt, rulecolor=\color{lcCode},
+  framesep=2.5mm, xleftmargin=6mm, framexleftmargin=6mm, xrightmargin=2.5mm,
+  aboveskip=1mm, belowskip=1mm,
+  columns=fullflexible, keepspaces=true, showstringspaces=false,
+  upquote=true, tabsize=4}
+\lstset{style=lecture}
+
+% ---------------------------------------------------------------- quiz options
+% \lcoption{A}{text}: a lettered answer; \lcoption*{C}{text} marks the correct one
+% from the second overlay on (handouts show it marked).
+\newcommand{\lc@optionbox}[3]{%
+  \begin{tcolorbox}[enhanced, arc=1.6mm, boxrule=0.6pt, colframe=#1, colback=#2,
+      left=2.4mm, right=2.4mm, top=1.6mm, bottom=1.6mm, boxsep=0pt,
+      before skip=0pt, after skip=1.8mm, fontupper=\small]
+    #3\end{tcolorbox}}
+\NewDocumentCommand{\lcoption}{s m m}{%
+  \IfBooleanTF{#1}
+    {\alt<2-| handout:1>{\lc@optionbox{lcExample}{lcExample!8!white}{\textbf{\color{lcExample}#2}\hspace{3mm}#3}}
+                         {\lc@optionbox{lcRule}{white}{\textbf{\color{lcAccent}#2}\hspace{3mm}#3}}}
+    {\lc@optionbox{lcRule}{white}{\textbf{\color{lcAccent}#2}\hspace{3mm}#3}}}
+
+\endinput

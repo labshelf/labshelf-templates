@@ -1,0 +1,43 @@
+% Chapter 4.
+\chapter{Conclusions}
+\label{ch:conclusions}
+
+\section{What operational data can tell us}
+\label{sec:summary}
+
+This thesis set out to learn the state of health of grid-scale batteries
+from the data their operators already collect. Its central finding is
+that this is possible, provided the learning is anchored to a physical
+ageing law. Purely data-driven models extrapolate badly to ages and
+conditions not seen in training \parencite{severson2019data}; purely physical models carry systematic
+error from the laboratory into the field, however carefully their parameters are tracked \parencite{plett2004ekf}. Together, the physics carries
+the trend and the data correct its shape.
+
+Two results are worth carrying beyond the specific estimator. The first
+is that, under frequency-response duty, batteries age with the calendar
+more than with use (\cref{kr:calendar}), so the warranty unit of
+equivalent full cycles should be supplemented by a measure of time spent
+at high state of charge and temperature. The second is that an estimate
+with honest uncertainty has direct economic value: the field trial
+recovered usable energy without detectable cost in ageing.
+
+\section{Limitations and further work}
+\label{sec:limits}
+
+The conclusions rest on eleven sites and two chemistries over three
+years, a short span against a design life of fifteen. In particular:
+
+\begin{itemize}
+  \item the square-root calendar law may not hold once the
+    interphase growth gives way to other mechanisms late in life, and
+    the estimator has not been tested beyond 12\,\% capacity loss;
+  \item the partial charge features require segments of at least twenty
+    minutes, which sites dedicated to fast frequency response may never
+    provide;
+  \item the field trial ran on a single site, in a mild year, and its
+    economic result depends on market prices that have since fallen.
+\end{itemize}
+
+Each of these points is a question that time and more sites will answer.
+The data set and the estimator are released with this thesis so that
+others can ask them.

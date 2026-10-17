@@ -1,0 +1,62 @@
+% Chapter Two: sources, unit reconciliation and the quantitative model.
+\chapter{Sources and Method}
+\label{ch:sources}
+
+\section{The Toll Registers}
+
+The core evidence for this study consists of eleven toll registers kept between 1352 and 1447 at bridges, gates and river crossings along the roads between Lüneburg, Hamburg, Lübeck and the Mecklenburg ports. Each register records, at minimum, the date, the toll paid and a description of the goods; most also name the carrier and the destination. Table~\ref{tab:registers} summarises the surviving series.
+
+\begin{table}[tbp]
+  \centering
+  \caption{Surviving toll registers used in this study}
+  \label{tab:registers}
+  \begin{tabular}{@{}l l r r@{}}
+    \toprule
+    Station & Years covered & Entries & Named destinations \\
+    \midrule
+    Mölln, bridge         & 1352--1447 & 1{,}204 & 38 \\
+    Lauenburg, ferry      & 1361--1430 &   812 & 27 \\
+    Oldesloe, gate        & 1374--1441 &   655 & 22 \\
+    Ratzeburg, causeway   & 1380--1425 &   493 & 19 \\
+    Boizenburg, crossing  & 1388--1446 &   441 & 17 \\
+    Six minor stations    & various    &   513 & 31 \\
+    \midrule
+    Total                 &            & 4{,}118 & 74 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The registers were not kept for the historian's convenience. They served to record revenue owed to a lord or a town, and their categories reflect fiscal rather than commercial interests.\footnote{At Lauenburg, for example, wagons of herring and wagons of salt paid the same toll and are therefore recorded together until 1392, when the duke raised the rate on salt.} Goods that paid no toll, such as the possessions of clergy or the wares of citizens of privileged towns, are largely invisible.
+
+\section{Merchant Correspondence and Civic Accounts}
+
+The registers show what moved and where; they rarely show why. For motive and organisation I rely on two further bodies of evidence. The first is the correspondence of the Veckinchusen and Castorp firms, some 600 letters in which partners discuss prices, routes and the reliability of carriers \parencite{selzer2003}. The second is the account books of the Lübeck and Lüneburg treasuries, which record payments for road repairs, escorts and the purchase of toll rights.
+
+These sources are uneven. The letters survive in clusters that reflect the accidents of family archives, and the treasury accounts are complete only for Lübeck after 1380. They are used here to interpret patterns found in the registers rather than to establish those patterns independently.\footnote{Where the letters and the registers disagree, as they occasionally do about the volume of a particular shipment, the register is preferred, since its keeper had no reason to exaggerate.}
+
+\section{Reconciling Units of Account}
+
+The registers measure goods in wagons, barrels, \emph{Last} and occasionally in value. To compare them, every entry was converted into an estimated weight in hundredweights. For salt, a Lüneburg barrel held about 140 kilograms, and a wagon carried between eight and twelve barrels \parencite{witthoft1976}. Where a register records only the toll paid, the weight was estimated from the station's published tariff. The resulting series is approximate, but the errors are unlikely to vary systematically between routes, which is what matters for the comparisons below.
+
+\section{A Gravity Model of Overland Trade}
+
+To estimate how strongly distance and tolls discouraged trade, I fit a gravity model of the kind long used in economic history \parencite{tinbergen1962,chilosi2013}. The expected flow of goods $F_{ij}$ between towns $i$ and $j$ is
+\begin{equation}
+  F_{ij} = G \, \frac{M_i^{\alpha} M_j^{\beta}}{d_{ij}^{\gamma}} \, e^{-\delta \tau_{ij}},
+  \label{eq:gravity}
+\end{equation}
+where $M_i$ and $M_j$ are proxies for the economic size of the two towns, $d_{ij}$ is the road distance between them, and $\tau_{ij}$ is the number of toll stations on the cheapest path. Taking logarithms gives a linear model,
+\begin{equation}
+  \ln F_{ij} = \ln G + \alpha \ln M_i + \beta \ln M_j - \gamma \ln d_{ij} - \delta \tau_{ij} + \varepsilon_{ij},
+  \label{eq:loggravity}
+\end{equation}
+which can be estimated by ordinary least squares on the 412 town pairs for which at least one flow is recorded. Town size is proxied by the number of households in the nearest surviving tax list.
+
+\section{Measuring Brokerage}
+
+The gravity model describes flows between pairs of towns. To describe positions within the network as a whole, I use betweenness centrality \parencite{freeman1977}. For a town $v$, it is
+\begin{equation}
+  C_B(v) = \sum_{s \neq v \neq t} \frac{\sigma_{st}(v)}{\sigma_{st}},
+  \label{eq:betweenness}
+\end{equation}
+where $\sigma_{st}$ is the number of shortest paths between towns $s$ and $t$ and $\sigma_{st}(v)$ is the number of those paths that pass through $v$. A town with high betweenness sits on many of the routes that connect others; it is, in the language of network analysis, a broker \parencite{padgett1993}.

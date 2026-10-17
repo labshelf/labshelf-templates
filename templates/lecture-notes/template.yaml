@@ -1,0 +1,10 @@
+schema: 1
+id: lecture-notes
+name: Lecture Notes
+description: A4 course notes in XCharter with old-style figures and matching math, Lato headings and a deep teal accent. A 48 mm outer margin carries numbered side notes and figure and table captions. Each lecture opens with its title beside a large thin numeral and the date in the margin. Definitions, theorems, examples and exercises sit in soft tinted boxes with a thin left bar; key-idea callouts between hairlines, worked solutions, pgfplots figures, a listings code block and a course-code running header.
+category: other
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

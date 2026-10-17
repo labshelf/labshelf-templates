@@ -1,0 +1,45 @@
+% Cover page: a placeholder crest drawn in TikZ, the title and a table
+% of the people involved. Names come from the details in main.tex;
+% edit the committee rows here.
+\begin{titlepage}
+\newgeometry{textwidth=142mm, top=30mm, bottom=26mm, hmarginratio=1:1}
+\raggedright
+\begin{tikzpicture}[baseline=(c.base)]
+  \node[draw=accent, line width=.8pt, circle, minimum size=11mm,
+        inner sep=0pt] (c) {\sffamily\bfseries\color{accent}UA};
+  \draw[accent, line width=.3pt] (c) circle (6.6mm);
+\end{tikzpicture}\hspace{4mm}%
+\parbox[b]{.8\linewidth}{\sffamily\small\color{muted}%
+  University of Aldmere\\School of Civil and Environmental Engineering}
+
+\vspace{40mm}
+{\sffamily\small\color{accent}\textsc{thesis proposal}\enspace
+ \textcolor{muted}{\textperiodcentered\enspace PhD qualifying review}\par}
+\vspace{6mm}
+{\fontsize{34}{38}\selectfont\color{ink}\ProposalTitle\par}
+\vspace{3mm}
+{\Large\itshape\color{accentdark}\ProposalSubtitle\par}
+\vspace{8mm}
+{\color{accent}\rule{28mm}{1.2pt}\par}
+\vspace{10mm}
+
+\renewcommand{\arraystretch}{1.55}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{34mm}X@{}}
+\fieldlabel{Candidate}   & \ProposalCandidate \\
+\fieldlabel{Programme}   & \ProposalDegree \\
+\fieldlabel{Advisor}     & Prof.~Henrik Saldana \\
+\fieldlabel{Co-advisor}  & Dr~Ines Takeda, Aldmere Climate Lab \\
+\midrule[.3pt]
+\fieldlabel{Committee}   & Prof.~Aino Rautio \textcolor{muted}{(chair)} \\
+                         & Dr~Laurent Moreau \textcolor{muted}{(external, Université de Lyre)} \\
+                         & Prof.~Henrik Saldana \textcolor{muted}{(advisor)} \\
+\midrule[.3pt]
+\fieldlabel{Review date} & \ProposalDate \\
+\fieldlabel{Enrolled}    & February 2025 \textcolor{muted}{\textperiodcentered\ semester 4 of 8} \\
+\end{tabularx}
+
+\vfill
+{\sffamily\footnotesize\color{muted}Submitted in partial fulfilment of the
+requirements for admission to doctoral candidacy.\par}
+\restoregeometry
+\end{titlepage}

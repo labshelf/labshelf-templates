@@ -1,0 +1,252 @@
+% Sidebar Résumé: a one-page A4 résumé with a tinted sidebar and a timeline.
+% Body in Lato, name and headings in Raleway. Build with pdflatex (or latexmk).
+% Edit the personal details just below, then the sidebar and main column.
+\RequirePackage{fix-cm}% lets math fonts scale to any size without warnings
+\documentclass[10pt]{article}% each block sets its own size below
+\usepackage[a4paper,left=0pt,right=0pt,top=14mm,bottom=12mm]{geometry}
+\usepackage[T1]{fontenc}
+% Lato for running text: tabular lining figures keep dates and numbers aligned.
+\usepackage[default,tabular,lining]{lato}
+\usepackage[type1]{raleway}
+\renewcommand*{\familydefault}{\sfdefault}
+\usepackage[letterspace=150]{microtype}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{eso-pic}
+\usepackage{fontawesome5}
+\usepackage{enumitem}
+\usepackage{xparse}
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------------------------
+% Personal details: the header, monogram and PDF metadata use these.
+\newcommand{\cvfirst}{Elena}
+\newcommand{\cvlast}{Marsh}
+\newcommand{\cvinitials}{EM}
+\newcommand{\cvrole}{Research Scientist \textperiodcentered{} Machine Learning for Weather \& Energy}
+\hypersetup{pdftitle={\cvfirst\ \cvlast\ -- Résumé},pdfauthor={\cvfirst\ \cvlast}}
+
+% ---------------------------------------------------------------------------
+% Colours: one slate blue-grey family, plus a single warm coral detail
+% (the current-position dot and the short dash under the name).
+\definecolor{slate}{RGB}{62,80,102}
+\definecolor{slatesoft}{RGB}{122,138,158}
+\definecolor{tint}{RGB}{236,240,244}
+\definecolor{hair}{RGB}{196,205,216}
+\definecolor{ink}{RGB}{38,44,52}
+\definecolor{coral}{RGB}{233,111,92}
+% ---------------------------------------------------------------------------
+% Geometry: the sidebar takes 32% of the page; both columns share one top line.
+\newlength{\sidew}\setlength{\sidew}{0.32\paperwidth}
+\newlength{\sidepad}\setlength{\sidepad}{8mm}
+\newlength{\maingap}\setlength{\maingap}{9mm}
+\newlength{\mainright}\setlength{\mainright}{13mm}
+
+% The tinted sidebar is painted behind the page, so it always runs full height.
+\AddToShipoutPictureBG{%
+  \AtPageLowerLeft{\color{tint}\rule{\sidew}{\paperheight}}}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\linespread{1.12}
+\frenchspacing
+\pagestyle{empty}
+\setlist{nosep}
+
+% ---------------------------------------------------------------------------
+% Type roles. \ralewaylt is the light display weight for the name.
+\newcommand{\ralewaylt}{\fontfamily{Raleway-LF}\fontseries{l}\selectfont}
+\newcommand{\ralewaysb}{\fontfamily{Raleway-LF}\fontseries{sb}\selectfont}
+\newcommand{\capsl}[1]{\textls[160]{\MakeUppercase{#1}}}
+\newcommand{\datefont}{\fontsize{7.6}{10}\selectfont\color{slatesoft}}
+\newcommand{\metafont}{\fontsize{8.4}{11}\selectfont\color{slatesoft}}
+
+% Section heading: letterspaced Raleway capitals with a hairline that runs out.
+\newcommand{\mainsection}[1]{%
+  \par\vspace{10pt}%
+  {\fontsize{8.6}{10}\ralewaysb\color{slate}\capsl{#1}}%
+  \hspace{2.5mm}{\color{hair}\leaders\hrule height 0.4pt depth 0pt\hfill}\kern0pt
+  \par\vspace{6pt}}
+\newcommand{\sidesection}[1]{%
+  \par\vspace{12pt}%
+  {\fontsize{8.2}{10}\ralewaysb\color{slate}\capsl{#1}}\par
+  \nointerlineskip\vspace{3pt}{\color{hair}\rule{\linewidth}{0.4pt}}\par\vspace{4pt}}
+
+% ---------------------------------------------------------------------------
+% Timeline: dates on the left, a hairline with dots, the entry on the right.
+% \tlentry[*]{dates}{title}{organisation, place}{details}
+% The starred form ends the line at that entry (use it for the last one).
+% Put \tlnow before an entry to give its dot the coral accent.
+\newlength{\tldatew}\setlength{\tldatew}{17mm}
+\newlength{\tlgap}\setlength{\tlgap}{6pt}
+\newlength{\tlbodyw}
+\newsavebox{\tlbox}
+\newlength{\tldrop}
+\newif\iftlnow
+\newcommand{\tlnow}{\global\tlnowtrue}
+\NewDocumentCommand{\tlentry}{s m m m m}{%
+  \setlength{\tlbodyw}{\dimexpr\linewidth-\tldatew-7mm\relax}%
+  \sbox{\tlbox}{\parbox[t]{\tlbodyw}{%
+      {\bfseries #3}\par
+      {\metafont #4}\par
+      \ifx\relax#5\relax\else\vspace{1.5pt}{\fontsize{8.8}{11.6}\selectfont #5}\fi}}%
+  \setlength{\tldrop}{\dimexpr\dp\tlbox+\tlgap+0.9ex\relax}%
+  \par\noindent
+  \parbox[t]{\tldatew}{\raggedleft\leavevmode\datefont #2}%
+  \hspace{3.5mm}%
+  \begin{tikzpicture}[overlay,baseline=0pt]
+    % INVARIANT: the box is top-aligned, so its depth is everything below line one.
+    \IfBooleanF{#1}{\draw[hair,line width=0.5pt]
+      (0,0.9ex) -- (0,-\tldrop);}
+    \iftlnow
+      \fill[coral] (0,0.55ex) circle (2pt);
+    \else
+      \fill[white] (0,0.55ex) circle (2pt);
+      \draw[slate,line width=0.7pt] (0,0.55ex) circle (1.65pt);
+    \fi
+  \end{tikzpicture}%
+  \global\tlnowfalse
+  \hspace{3.5mm}\usebox{\tlbox}\par
+  \IfBooleanF{#1}{\vspace{\tlgap}}}
+
+% ---------------------------------------------------------------------------
+% Sidebar pieces.
+% \contact{icon}{text}: a fixed icon column so the text lines up.
+\newcommand{\contact}[2]{%
+  \par\noindent\makebox[5mm][l]{\color{slate}\footnotesize #1}%
+  \parbox[t]{\dimexpr\linewidth-5mm}{\raggedright #2}\par\vspace{3pt}}
+% \skill{name}{level 0..1}: a thin proficiency bar under the name.
+\newcommand{\skill}[2]{%
+  \par\noindent{\fontsize{8.6}{10}\selectfont #1}\par
+  % The bar hangs from the label, not from the baseline grid.
+  \nointerlineskip\vspace{3.5pt}%
+  \noindent\begin{tikzpicture}
+    \fill[hair] (0,0) rectangle (\linewidth,1.1pt);
+    \fill[slate] (0,0) rectangle ({#2*\linewidth},1.1pt);
+  \end{tikzpicture}\par\vspace{6.5pt}}
+% \lang{name}{level}: name left, level right in quiet small text.
+\newcommand{\lang}[2]{%
+  \par\noindent{\fontsize{8.6}{10}\selectfont #1}\hfill{\metafont #2}\par\vspace{3pt}}
+
+% \award{year}{name}: tabular year in a narrow column, then the award.
+\newcommand{\award}[2]{%
+  \par\noindent\makebox[9mm][l]{\datefont #1}%
+  \parbox[t]{\dimexpr\linewidth-9mm}{\raggedright #2}\par\vspace{3pt}}
+
+% Monogram placeholder: replace with \includegraphics if you use a photo.
+\newcommand{\monogram}{%
+  \begin{tikzpicture}
+    \fill[white] (0,0) circle (13.5mm);
+    \draw[slatesoft,line width=0.4pt] (0,0) circle (13.5mm);
+    \fill[slate] (0,0) circle (12mm);
+    \node[white,font=\fontsize{24}{24}\ralewaylt] at (0,0)
+      {\textls[60]{\cvinitials}};
+  \end{tikzpicture}}
+
+\begin{document}
+\noindent\hspace{\sidepad}%
+% ============================== SIDEBAR ===================================
+\begin{minipage}[t]{\dimexpr\sidew-2\sidepad}
+  \fontsize{8.8}{12}\selectfont\raggedright\color{ink}
+  \vspace{0pt}
+  \centering\monogram\par
+  \raggedright
+
+  \sidesection{Contact}
+  \contact{\faEnvelope[regular]}{\href{mailto:elena.marsh@example.org}{elena.marsh@example.org}}
+  \contact{\faPhone}{+44 7700 900 418}
+  \contact{\faMapMarker*}{Bristol, United Kingdom}
+  \contact{\faGlobe}{\href{https://elenamarsh.example.org}{elenamarsh.example.org}}
+
+  \sidesection{Skills}
+  \skill{Probabilistic forecasting}{0.95}
+  \skill{Python, PyTorch, JAX}{0.92}
+  \skill{Spatio-temporal deep learning}{0.88}
+  \skill{Data pipelines (Dask, Zarr, Airflow)}{0.80}
+  \skill{Cloud and MLOps (AWS, Docker)}{0.68}
+  \skill{Technical writing and teaching}{0.90}
+
+  \sidesection{Languages}
+  \lang{English}{native}
+  \lang{German}{fluent \textperiodcentered{} C1}
+  \lang{Spanish}{working \textperiodcentered{} B2}
+
+  \sidesection{Links}
+  \contact{\faGithub}{\href{https://github.com/emarsh}{github.com/emarsh}}
+  \contact{\faOrcid}{\href{https://orcid.org/0000-0002-1825-0097}{0000-0002-1825-0097}}
+  \contact{\faLinkedinIn}{\href{https://linkedin.com/in/elenamarsh}{in/elenamarsh}}
+  \contact{\faGraduationCap}{Google Scholar: E.~Marsh}
+
+  \sidesection{Awards}
+  \award{2024}{RMetS L.\,F. Richardson Prize}
+  \award{2022}{Turing Institute Fellowship}
+  \award{2020}{LMU Dissertation Prize}
+
+  \sidesection{Interests}
+  Mountain hydrology, open data for public weather services, mentoring
+  first-generation students, long-distance cycling.
+\end{minipage}%
+\hspace{\dimexpr\sidepad+\maingap}%
+% ============================== MAIN COLUMN ===============================
+\begin{minipage}[t]{\dimexpr\paperwidth-\sidew-\maingap-\mainright}
+  \fontsize{9.3}{12.6}\selectfont\color{ink}
+  \vspace{0pt}
+  % Name: large light Raleway, the last name a step darker for rhythm.
+  {\fontsize{30}{32}\ralewaylt\color{slate}\textls[30]{\cvfirst}~{\ralewaysb\textls[30]{\cvlast}}}\par
+  \vspace{5pt}
+  {\color{coral}\rule{9mm}{1.4pt}}\par
+  \vspace{5pt}
+  {\fontsize{10.4}{13}\ralewaylt\color{ink}\cvrole}\par
+  \vspace{8pt}
+
+  \mainsection{Profile}
+  Atmospheric scientist turned machine-learning researcher. I build
+  probabilistic forecasting models that turn reanalysis and satellite data
+  into decisions for wind and solar operators, and I care about models
+  that are calibrated, explainable and cheap enough to run every hour.
+  Seven years across a university lab and an energy company; looking
+  for a role that keeps one foot in open research.
+
+  \mainsection{Experience}
+  \tlnow
+  \tlentry{2023 -- now}{Senior Research Scientist}{Northwind Forecasting Ltd, Bristol}{%
+    Lead a team of four building the company's day-ahead wind power
+    ensemble; cut the 24-hour error by 18\% against the previous system
+    and brought inference on 1\,200 farms under six minutes.}
+  \tlentry{2020 -- 2023}{Postdoctoral Researcher}{School of Geographical Sciences, University of Bristol}{%
+    Developed graph neural networks for sub-seasonal precipitation;
+    co-supervised three MSc theses and taught the module \emph{Data
+    Science for the Environment}.}
+  \tlentry*{2019}{Research Intern}{European Centre for Medium-Range Weather Forecasts, Reading}{%
+    Prototyped neural post-processing of 2\,m temperature ensembles;
+    the code fed the centre's first machine-learning pilot.}
+
+  \mainsection{Education}
+  \tlentry{2015 -- 2020}{PhD in Atmospheric Physics}{Ludwig-Maximilians-Universität München}{%
+    Thesis: \emph{Learning the error of convection-permitting forecasts}.
+    Summa cum laude; DWD doctoral fellowship.}
+  \tlentry*{2013 -- 2015}{MSc in Physics of the Earth}{University of Edinburgh}{}
+
+  \mainsection{Selected projects}
+  \textbf{skillcurve} \quad{\metafont open-source, 2.1k GitHub stars}\par
+  A Python library for verifying probabilistic forecasts (CRPS, reliability,
+  sharpness) on labelled arrays; used by two national weather services.\par
+  \vspace{5pt}
+  \textbf{Open Solar Nowcast} \quad{\metafont Turing Institute data challenge, 2022}\par
+  Organised an open benchmark for 15-minute solar nowcasting from
+  satellite data; 140 teams from 30 countries took part.
+
+  \mainsection{Selected publications}
+  \begin{list}{}{\leftmargin=4mm\labelwidth=3mm\labelsep=1mm\itemsep=3.5pt\parsep=0pt\topsep=0pt}
+    \item[\color{slatesoft}\textbullet] \textbf{Marsh, E.}, Okoye, T.\ and Lund, P.
+      Calibrated graph networks for sub-seasonal rainfall.
+      \emph{Geophysical Research Letters}, 51, 2024.
+    \item[\color{slatesoft}\textbullet] \textbf{Marsh, E.} and Feld, J.
+      Learning forecast error at the convective scale.
+      \emph{Quarterly Journal of the Royal Meteorological Society}, 147, 2021.
+    \item[\color{slatesoft}\textbullet] Haddad, R., \textbf{Marsh, E.} \emph{et al.}
+      Ensemble wind power forecasting at fleet scale.
+      \emph{NeurIPS Workshop on Climate Change AI}, 2023.
+  \end{list}
+\end{minipage}
+\end{document}

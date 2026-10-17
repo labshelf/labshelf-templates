@@ -1,0 +1,121 @@
+% Chapter 1. Each chapter is its own file; add new ones in main.tex.
+\chapter{Introduction}
+\label{ch:introduction}
+
+\section{Storage that nobody can weigh}
+\label{sec:weigh}
+
+Between 2019 and 2025 the installed capacity of grid-connected battery
+storage in north-western Europe grew more than tenfold
+\parencite{iea2025storage}. Most of these systems earn their keep by
+providing frequency containment reserve: they absorb or inject power
+within seconds whenever the grid frequency drifts from its nominal
+50\,Hz, and they are paid for being available rather than for the energy
+they move. A typical site is a row of shipping containers, each holding
+several thousand cylindrical or prismatic cells, a battery management
+system and an inverter.
+
+Every cell in such a site loses capacity as it ages. The loss is slow,
+a few per cent a year, but it matters twice over. It erodes the energy
+that the operator can bid into the market, and it determines when the
+site must be refurbished, a decision worth several million euros. Yet
+the quantity that governs both, the state of health of the battery, is
+not measured during operation. It can only be inferred.
+
+\begin{definition}{State of health}{soh}
+  The \emph{state of health} of a battery at time \(t\) is the ratio of
+  its present usable capacity to its capacity at commissioning,
+  \begin{equation}
+    \mathrm{SoH}(t) = \frac{Q(t)}{Q_0},
+    \label{eq:soh}
+  \end{equation}
+  where both capacities are measured by a full discharge at a reference
+  current and temperature. A battery is conventionally said to reach its
+  end of life when \(\mathrm{SoH}\) falls below 0.8.
+\end{definition}
+
+The definition is simple, but measuring \(Q(t)\) requires taking the
+site out of service, cycling it fully at low current and putting it back,
+a reference performance test that costs a day of revenue and is therefore
+performed at most once or twice a year. Between tests, operators rely on
+the estimate reported by the battery management system, which is
+typically a coulomb counter corrected by a lookup table supplied by the
+cell manufacturer. Several audits have found these estimates to drift by
+five per cent or more within a year \parencite{halvorsen2023bms}.
+
+\section{Why laboratory models fall short}
+\label{sec:lab}
+
+Battery ageing has been studied for three decades, and the mechanisms are
+well understood at the level of a single cell
+\parencite{birkl2017degradation}. Lithium is consumed by the slow growth
+of the solid electrolyte interphase on the anode; active material
+cracks and loses contact under the mechanical stress of repeated
+lithiation; and at low temperature or high current, metallic lithium can
+plate on the anode surface. Each mechanism has a characteristic
+dependence on temperature, state of charge and current, which
+semi-empirical models capture with a handful of fitted parameters
+\parencite{schmalstieg2014holistic}.
+
+The difficulty is one of transfer. Laboratory campaigns cycle small
+cells at fixed conditions chosen to separate the mechanisms, while a
+frequency-response site holds most of its cells near half charge and
+dithers around that point in shallow, irregular micro-cycles. Cells in
+the middle of a rack run several degrees warmer than those at its edge.
+None of these conditions is represented in the data on which the
+parameters were fitted, and the error that results is not random but
+systematic: it grows with time.
+
+\begin{figure}[tb]
+  \marginfigure{%
+  \begin{tikzpicture}[
+      x=1mm, y=1mm, font=\sffamily\scriptsize,
+      block/.style={draw=accent, line width=0.6pt, fill=accentlight,
+        minimum width=27mm, minimum height=10mm, align=center},
+      plain/.style={draw=rulegrey, line width=0.4pt,
+        minimum width=27mm, minimum height=10mm, align=center},
+      flow/.style={-{Stealth[length=1.8mm]}, line width=0.5pt, rulegrey}]
+    \node[plain] (tele) at (0,24) {Site telemetry\\\textcolor{inkmuted}{1 Hz, 3 years}};
+    \node[plain] (rpt)  at (0,6)  {Reference tests\\\textcolor{inkmuted}{twice a year}};
+    \node[block] (phys) at (46,24) {Ageing law\\\textcolor{inkmuted}{Chapter 2}};
+    \node[block] (gp)   at (46,6)  {GP correction\\\textcolor{inkmuted}{Chapter 3}};
+    \node[plain] (soh)  at (92,15) {State of health\\\textcolor{inkmuted}{with uncertainty}};
+    \draw[flow] (tele) -- (phys);
+    \draw[flow] (tele.east) ++(0,-2) -- (gp.north west);
+    \draw[flow] (rpt) -- (gp);
+    \draw[flow] (phys) -- (gp);
+    \draw[flow] (phys.east) -- (soh.north west);
+    \draw[flow] (gp.east) -- (soh.south west);
+  \end{tikzpicture}}{%
+  \caption[Structure of the hybrid estimator]{Structure of the hybrid
+    estimator. Operational telemetry drives a physical ageing law; a
+    Gaussian process learns its residual from sparse reference tests.}
+  \label{fig:overview}}
+\end{figure}
+
+\section{Approach and contributions}
+\label{sec:contributions}
+
+This thesis takes the opposite route. Rather than transferring a
+laboratory model to the field, it learns from the field directly and uses
+physics only where data are silent. \Cref{fig:overview} shows the
+resulting structure, which the remaining chapters build up in turn. The
+work makes three contributions:
+
+\begin{itemize}
+  \item an open, harmonised data set of operational telemetry and
+    reference tests from eleven grid-scale sites, described in
+    \cref{ch:data};
+  \item evidence that calendar ageing at elevated state of charge, not
+    cycle depth, dominates capacity fade under frequency-response duty
+    (\cref{sec:drivers});
+  \item a hybrid estimator with calibrated uncertainty, and a field trial
+    showing that it can safely enlarge the usable state-of-charge window
+    (\cref{ch:estimation}).
+\end{itemize}
+
+The thesis is organised in two parts. Part~I sets out the problem and the
+data. Part~II presents the estimator, its evaluation and the field trial,
+and closes with the limits of what operational data can reveal.
+\Cref{app:protocol} documents the reference test protocol in enough
+detail to reproduce it.

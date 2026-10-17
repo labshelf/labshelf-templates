@@ -1,0 +1,182 @@
+% Minimal: an editorial 16:9 Beamer theme. White page, Libertinus Serif display
+% titles flush left over a hairline, Libertinus Sans text, one indigo accent.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthememinimal}[2026/10/17 LabShelf minimal slides theme]
+
+\RequirePackage[T1]{fontenc}
+% Old-style figures sit in running text like lowercase letters; tables and the
+% big section numerals switch to lining figures explicitly.
+\RequirePackage[osf]{libertinus}
+\RequirePackage[letterspace=100]{microtype}
+\RequirePackage{tikz}
+\RequirePackage{booktabs}
+\usetikzlibrary{calc}
+
+% ---------------------------------------------------------------- palette
+% mnAccent recolours the whole deck: numerals, rules, chart series, links.
+\definecolor{mnAccent}{HTML}{3B3B98}
+\definecolor{mnInk}{HTML}{18181C}
+\definecolor{mnMuted}{HTML}{75757E}
+\definecolor{mnRule}{HTML}{D6D6DC}
+\colorlet{mnTint}{mnAccent!7!white}
+
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamercovered{invisible}
+
+\setbeamercolor{normal text}{fg=mnInk,bg=white}
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{structure}{fg=mnAccent}
+\setbeamercolor{alerted text}{fg=mnAccent}
+\setbeamercolor{frametitle}{fg=mnInk}
+\setbeamercolor{itemize item}{fg=mnAccent}
+\setbeamercolor{enumerate item}{fg=mnAccent}
+\setbeamercolor{bibliography entry author}{fg=mnInk}
+\setbeamercolor{bibliography entry title}{fg=mnInk}
+\setbeamercolor{bibliography entry location}{fg=mnMuted}
+\setbeamercolor{bibliography entry note}{fg=mnMuted}
+
+% ---------------------------------------------------------------- type
+% Display type: the Libertinus Serif Display cut, set tight and never hyphenated.
+\newcommand{\mndisplay}[1]{\fontsize{#1}{1.12\dimexpr#1pt\relax}%
+  \rmfamily\libertinusDisplay\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000}
+% Letterspaced true small caps for labels, the masthead and the footer.
+% (Small caps rather than \MakeUppercase, which breaks on beamer's \insert... macros.)
+\newcommand{\mnlabel}[1]{{\sffamily\scshape\fontsize{8}{10}\selectfont\textls[70]{#1}}}
+
+\setbeamerfont{normal text}{size=\normalsize}
+\setbeamerfont{frametitle}{size=\fontsize{21}{24}}
+\setbeamerfont{framesubtitle}{size=\small,shape=\itshape,family=\rmfamily}
+\setbeamerfont{item}{size=\normalsize}
+
+\setbeamersize{text margin left=13mm,text margin right=13mm}
+\urlstyle{sf}
+\linespread{1.08}
+
+% ---------------------------------------------------------------- lists
+\setbeamertemplate{itemize item}{\raisebox{0.32ex}{\rule{0.9em}{0.5pt}}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.32ex}{\rule{0.5em}{0.4pt}}}
+\setbeamertemplate{enumerate item}{{\rmfamily\LibertinusSerifLF\insertenumlabel.}}
+\setbeamertemplate{bibliography item}{}
+\setlength{\leftmargini}{1.6em}
+\addtobeamertemplate{itemize/enumerate body begin}{}{\setlength{\itemsep}{0.7em}}
+
+% ---------------------------------------------------------------- frame title
+% Serif title flush left, then a hairline across the measure. The baseline sits
+% at the same height on every slide so titles do not jump when you flick through.
+\setbeamertemplate{frametitle}{%
+  \vspace*{7mm}%
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}%
+   \rmfamily\libertinusDisplay\raggedright\insertframetitle\par}%
+  \ifx\insertframesubtitle\empty\else
+    \vspace{0.6mm}{\usebeamerfont{framesubtitle}\color{mnMuted}\insertframesubtitle\par}%
+  \fi
+  \vspace{2mm}{\color{mnRule}\rule{\linewidth}{0.4pt}}\par
+  \vspace*{-1mm}%
+}
+
+% ---------------------------------------------------------------- footline
+% Short title on the left, a tiny page number on the right; nothing else.
+\setbeamertemplate{footline}{%
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,9mm);
+    \node[anchor=base west,inner sep=0,text=mnMuted] at (13mm,4.5mm)
+      {\mnlabel{\insertshorttitle}};
+    \node[anchor=base east,inner sep=0,text=mnMuted] at ($(\paperwidth,4.5mm)-(13mm,0)$)
+      {\rmfamily\fontsize{8}{8}\selectfont\insertframenumber};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- title page
+% A masthead line (event and date) over a hairline, the title set large,
+% an italic standfirst, and the byline at the foot.
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \coordinate (NW) at ($(current page.north west)+(13mm,-11mm)$);
+    \node[anchor=base west,inner sep=0,text=mnInk] at (NW) {\mnlabel{\insertinstitute}};
+    \node[anchor=base east,inner sep=0,text=mnMuted]
+      at ($(current page.north east)+(-13mm,-11mm)$) {\mnlabel{\insertdate}};
+    \draw[mnInk,line width=0.6pt] ($(NW)+(0,-2.6mm)$) -- ++(134mm,0);
+    \node[anchor=north west,inner sep=0,text width=122mm,text=mnInk]
+      at ($(NW)+(0,-15mm)$) {%
+      {\mndisplay{40}\inserttitle\par}
+      \vspace{4.5mm}
+      {\rmfamily\itshape\fontsize{14}{18}\selectfont\color{mnMuted}\raggedright
+       \hyphenpenalty=10000\insertsubtitle\par}};
+    \fill[mnAccent] ($(current page.south west)+(13mm,20mm)$) rectangle ++(10mm,1.2pt);
+    \node[anchor=north west,inner sep=0,text width=120mm]
+      at ($(current page.south west)+(13mm,16.5mm)$)
+      {{\small\color{mnInk}\insertauthor\par}};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- section slide
+% A huge lining numeral in the accent, the section name set beside it.
+% Unnumbered sections (\section*) get no divider.
+\AtBeginSection[]{%
+  \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=south west,inner sep=0,text=mnAccent]
+        at ($(current page.south west)+(11mm,15mm)$)
+        {\fontsize{150}{150}\rmfamily\libertinusDisplay\fontfamily{LibertinusSerifDisplay-LF}\selectfont\insertsectionnumber};
+      \draw[mnRule,line width=0.4pt] ($(current page.south west)+(74mm,17mm)$) -- ++(0,52mm);
+      \node[anchor=south west,inner sep=0,text width=64mm,text=mnInk]
+        at ($(current page.south west)+(82mm,17mm)$) {%
+        {\color{mnMuted}\mnlabel{Part \insertsectionnumber}}\par\vspace{3mm}
+        {\mndisplay{28}\insertsectionhead\par}};
+    \end{tikzpicture}
+  \end{frame}
+}
+
+% ---------------------------------------------------------------- quote slide
+% \mnquote{quotation}{attribution}{source}: one quotation on an empty page.
+\newcommand{\mnquote}[3]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=north west,inner sep=0,text=mnAccent]
+        at ($(current page.north west)+(11mm,-6mm)$)
+        {\fontsize{120}{120}\rmfamily\libertinusDisplay\selectfont\textquotedblleft};
+      \node[anchor=north west,inner sep=0,text width=118mm,text=mnInk]
+        at ($(current page.north west)+(30mm,-24mm)$) {%
+        {\rmfamily\itshape\fontsize{22}{29}\selectfont\raggedright\hyphenpenalty=10000 #1\par}
+        \vspace{6mm}
+        {\color{mnAccent}\rule{10mm}{1.2pt}}\par\vspace{2.5mm}
+        {\small\color{mnInk}#2\par}\vspace{0.5mm}
+        {\footnotesize\rmfamily\itshape\color{mnMuted}#3\par}};
+    \end{tikzpicture}
+  \end{frame}
+}
+
+% ---------------------------------------------------------------- image placeholder
+% \mnplaceholder{width}{height}{label}: a drawn stand-in for a photograph.
+% Replace it with \includegraphics[width=...]{your-image} when you have one.
+\newcommand{\mnplaceholder}[3]{%
+  \begin{tikzpicture}
+    \fill[mnTint] (0,0) rectangle (#1,#2);
+    \begin{scope}
+      \clip (0,0) rectangle (#1,#2);
+      \fill[mnAccent!14!white] (0,0) -- (0.28*#1,0.48*#2) -- (0.46*#1,0.26*#2)
+        -- (0.68*#1,0.62*#2) -- (#1,0.2*#2) -- (#1,0) -- cycle;
+      \fill[mnAccent!26!white] (0,0) -- (0.18*#1,0.2*#2) -- (0.36*#1,0.08*#2)
+        -- (0.6*#1,0.3*#2) -- (0.84*#1,0.1*#2) -- (#1,0.16*#2) -- (#1,0) -- cycle;
+      \fill[white] (0.76*#1,0.74*#2) circle[radius=0.07*#2];
+    \end{scope}
+    \draw[mnAccent!30!white,line width=0.4pt] (0,0) rectangle (#1,#2);
+    \node[anchor=south west,inner sep=2.2mm,text=mnAccent] at (0,0) {\mnlabel{#3}};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- charts
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18,
+  mnaxis/.style={
+    axis lines=left, axis line style={mnInk,line width=0.4pt},
+    tick style={mnInk,line width=0.4pt}, major tick length=1mm,
+    tick label style={font=\scriptsize\LibertinusSansLF,text=mnMuted},
+    label style={font=\scriptsize,text=mnMuted},
+    ymajorgrids, major grid style={mnRule!70,line width=0.3pt},
+    every axis plot/.append style={line width=1.1pt},
+    scale only axis, clip=false}}
+
+\endinput

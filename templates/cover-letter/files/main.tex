@@ -1,0 +1,134 @@
+% Cover Letter: a one-page A4 application letter for academic posts and fellowships.
+% Set in Libertinus Serif with one deep burgundy accent. Build with pdflatex.
+% Edit the sender, recipient and subject below; the letter body follows.
+\RequirePackage{fix-cm}% lets the 17 pt name scale cleanly
+\documentclass[11pt]{article}
+% The text block is about 120 mm wide: 65 to 70 characters per line.
+\usepackage[a4paper,top=18mm,bottom=18mm,left=45mm,right=45mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[osf]{libertinus}
+\usepackage[letterspace=200]{microtype}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{fontawesome5}
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------------------------------
+% Sender: the letterhead and PDF metadata use these.
+\newcommand{\sendername}{Tomás Ferreira Lindqvist}
+\newcommand{\senderrole}{Postdoctoral Research Fellow in Palaeoclimate Modelling}
+\newcommand{\senderemail}{t.lindqvist@example.org}
+\newcommand{\senderphone}{+46 70 123 45 67}
+\newcommand{\senderweb}{tlindqvist.example.org}
+\newcommand{\senderplace}{Uppsala, Sweden}
+\hypersetup{pdftitle={Letter of application -- \sendername},pdfauthor={\sendername}}
+
+% Colours: one deep burgundy accent, a warm grey for secondary text.
+\definecolor{accent}{RGB}{110,24,40}
+\definecolor{quiet}{RGB}{105,98,96}
+\definecolor{ink}{RGB}{30,26,26}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.62\baselineskip}
+\linespread{1.08}
+\pagestyle{empty}
+
+% Contact line entry: a small accent icon before each item.
+\newcommand{\contactitem}[2]{{\color{accent}\scriptsize #1}\,\,#2}
+
+\begin{document}
+\color{ink}
+% ============================== LETTERHEAD ================================
+% The letterhead runs wider than the body, so it frames the letter.
+\noindent\makebox[\textwidth][c]{%
+  \begin{minipage}[b]{\dimexpr\textwidth+50mm}
+    \begin{minipage}[b]{0.64\linewidth}
+      \raggedright
+      {\fontsize{17}{20}\selectfont\color{accent}\textls[150]{\scshape\MakeLowercase{\sendername}}}\par
+      \vspace{3pt}
+      {\small\itshape\color{quiet}\senderrole}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[b]{0.34\linewidth}
+      \raggedleft\footnotesize\color{quiet}\linespread{1.25}\selectfont
+      \contactitem{\faEnvelope[regular]}{\href{mailto:\senderemail}{\senderemail}}\\
+      \contactitem{\faPhone}{\senderphone}\\
+      \contactitem{\faGlobe}{\href{https://\senderweb}{\senderweb}}\\
+      \contactitem{\faMapMarker*}{\senderplace}
+    \end{minipage}\par
+    \vspace{6pt}
+    {\color{accent}\rule{\linewidth}{0.5pt}}
+  \end{minipage}}
+\par\vspace{10mm}
+
+% ============================== RECIPIENT AND DATE =========================
+\begin{minipage}[t]{0.62\textwidth}
+  \linespread{1.12}\selectfont
+  Professor Ingrid Halvorsen\\
+  Chair, Search Committee\\
+  Department of Earth Sciences\\
+  University of Bergen\\
+  Allégaten 41, 5007 Bergen, Norway
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{0.3\textwidth}
+  \raggedleft 3 March 2026
+\end{minipage}
+\par\vspace{7mm}
+
+% Subject line: letterspaced small caps in the accent colour.
+{\color{accent}\textls[60]{\scshape re: associate professor in climate dynamics, ref.\ 2026/1184}}
+\par\vspace{2mm}
+
+% ============================== BODY =====================================
+Dear Professor Halvorsen,
+
+I am writing to apply for the Associate Professorship in Climate
+Dynamics advertised by the Department of Earth Sciences. I am a
+postdoctoral fellow at the Bolin Centre in Uppsala, where I study how
+the Atlantic overturning circulation responded to abrupt warming during
+the last deglaciation, and how those events can constrain the models we
+use to project the coming century.
+
+My research joins three strands that rarely meet in one person: proxy
+records from marine sediment cores, idealised ocean models, and the
+statistical tools that link the two. In the past four years this work
+has produced eleven peer-reviewed papers, including a 2025 article in
+\emph{Nature Geoscience} showing that two rival reconstructions of the
+Younger Dryas are consistent once seasonal bias in the proxies is
+modelled explicitly. Bergen's strengths in ocean observation and the
+Bjerknes Centre's modelling groups are exactly the setting in which
+this programme can grow.
+
+Teaching is a part of the job I look forward to. I have designed and
+taught a graduate course on palaeoclimate data analysis, supervised two
+master's theses to completion, and co-supervise a doctoral student. I
+would be glad to contribute to the department's courses in physical
+oceanography and to build a seminar that brings model and proxy
+students into the same room.
+
+I enclose my curriculum vitae, a research statement, a teaching
+statement and three representative publications. Thank you for your
+time and consideration; I would welcome the chance to discuss how my
+work could support the department's plans.
+
+% ============================== CLOSING ==================================
+\vspace{1mm}
+Yours sincerely,\par
+\vspace{1mm}
+% Signature placeholder: a TikZ squiggle. Replace with a scanned signature
+% via \includegraphics[height=12mm]{signature} if you have one.
+\begin{tikzpicture}[x=1mm,y=1mm,line cap=round,line join=round]
+  \draw[ink!85,line width=0.75pt] plot[smooth,tension=0.7] coordinates
+    {(0,2) (2,8) (4,3) (5,0) (6,5) (9,9) (10,4) (11,1) (14,6) (16,3)
+     (19,5) (22,2) (25,6) (27,3) (31,5) (36,4)};
+  \draw[ink!85,line width=0.6pt] plot[smooth,tension=0.8] coordinates
+    {(3,-1.5) (15,-0.5) (28,-1) (40,0.5)};
+\end{tikzpicture}\par
+\vspace{1mm}
+\sendername
+
+\vfill
+{\footnotesize\color{quiet}\textls[60]{\scshape enclosures}\enspace
+Curriculum vitae; research statement; teaching statement; three publications.}
+\end{document}

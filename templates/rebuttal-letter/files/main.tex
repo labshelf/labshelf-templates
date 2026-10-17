@@ -1,0 +1,289 @@
+% Response to Reviewers: a point-by-point rebuttal letter for a journal revision.
+% Edit the "Manuscript details" block below, then write one \reviewer section
+% per referee with \revcomment, \response and \change. Compile with pdflatex.
+\documentclass[10pt,a4paper]{article}
+
+% ---- Page and type -------------------------------------------------------
+% A ~31 pc measure keeps Plex Serif (a wide face) near 75 characters a line.
+\usepackage[a4paper,top=24mm,bottom=28mm,inner=31mm,outer=31mm,
+            headheight=12pt,footskip=12mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{plex-serif}                     % IBM Plex Serif for the text
+\usepackage[scale=0.9,semibold]{plex-sans}  % Plex Sans for labels; bold = semibold
+\linespread{1.12}                           % Plex has a large x-height: open the leading
+\usepackage[protrusion=true,expansion=true,tracking=true]{microtype}
+\usepackage{needspace,xcolor,tcolorbox,booktabs,tabularx,array,enumitem,titlesec,fancyhdr,lastpage}
+\tcbuselibrary{skins,breakable}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55\baselineskip}
+\frenchspacing
+\widowpenalty=10000 \clubpenalty=10000
+
+% ---- Colours: change the accent here --------------------------------------
+\definecolor{accent}{HTML}{4B3A9E}     % deep blue-violet
+\definecolor{ink}{HTML}{22212A}        % near-black text
+\definecolor{muted}{HTML}{6E6A73}      % labels, references, footer
+\definecolor{warmgrey}{HTML}{F3F0EB}   % reviewer comment tint
+\definecolor{hair}{HTML}{CFCAC2}       % hairline rules
+\color{ink}
+
+\usepackage[hidelinks]{hyperref}       % comment references link without boxes
+\hypersetup{pdftitle={Response to Reviewers},pdfauthor={E. Marchetti et al.}}
+
+% ---- Manuscript details: edit these ----------------------------------------
+\newcommand\journal{Journal of Mountain Hydrology}
+\newcommand\manuscriptid{JMH-2026-0418}
+\newcommand\revisionno{Revision 1}
+\newcommand\papertitle{Snowmelt onset from Sentinel-1 backscatter across 41 Alpine
+  catchments: a seven-year validation against in situ snow sensors}
+\newcommand\paperauthors{Elena Marchetti, Tobias Wyss and Ana Ribeiro}
+\newcommand\letterdate{17 October 2026}
+
+% ---- Small typographic helpers -------------------------------------------
+% Letterspaced sans capitals for every label, so labels never compete with text.
+\newcommand\labelfont{\sffamily\bfseries\footnotesize}
+\newcommand\caps[1]{{\sffamily\footnotesize\textls[90]{\MakeUppercase{#1}}}}
+
+% Section headings: sans, accent, with a hairline under them.
+\titleformat{\section}{\sffamily\bfseries\large\color{accent}}{}{0pt}{}
+  [{\vspace{2pt}\color{hair}\titlerule[0.4pt]}]
+\titlespacing*{\section}{0pt}{1.6\baselineskip}{0.6\baselineskip}
+
+% Footer: manuscript id left, page of total right.
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[L]{\color{muted}\sffamily\footnotesize Response to Reviewers\enspace·\enspace\manuscriptid}
+\fancyfoot[R]{\color{muted}\sffamily\footnotesize \thepage\,/\,\pageref{LastPage}}
+
+% ---- Rebuttal macros -------------------------------------------------------
+% \reviewer{Note}          starts "Reviewer N" and restarts comment numbering.
+% \revcomment[key]{Text}   a numbered comment box (R1.3); key lets \ref{key} link to it.
+%                          (Named \revcomment because \comment is taken by the comment package.)
+% \response                starts the authors' reply; plain text follows.
+% \change{p.~6, ll.~2--9}{Text}  quotes revised manuscript text with its location.
+\newcounter{reviewer}
+\newcounter{rcomment}[reviewer]
+\renewcommand\thercomment{R\arabic{reviewer}.\arabic{rcomment}}
+
+\newcommand\reviewer[1]{%
+  \needspace{14\baselineskip}% never strand a heading and its first comment at a page foot
+  \refstepcounter{reviewer}%
+  \section{Reviewer \arabic{reviewer}}
+  {\color{muted}\small\itshape #1\par}}
+
+\newtcolorbox{commentbox}[1]{enhanced,breakable,colback=warmgrey,colframe=warmgrey,
+  boxrule=0pt,arc=1.5pt,left=10pt,right=10pt,top=7pt,bottom=8pt,
+  before skip=1.1\baselineskip,after skip=0.5\baselineskip,
+  fontupper=\small\color{ink},
+  before upper={{\labelfont\color{accent}#1}\hspace{0.8em}}}
+
+\newcommand\revcomment[2][]{%
+  \needspace{7\baselineskip}% keep a comment and the start of its reply together
+  \refstepcounter{rcomment}%
+  \if\relax\detokenize{#1}\relax\else\label{#1}\fi
+  \begin{commentbox}{\thercomment}#2\end{commentbox}\nopagebreak}
+
+\newcommand\response{{\labelfont\color{accent}Response.}\enspace}
+
+% Quoted changes: accent bar on the left, accent text, location above.
+\newtcolorbox{changebox}{enhanced,breakable,frame hidden,colback=white,
+  borderline west={1.6pt}{0pt}{accent},sharp corners,
+  left=11pt,right=0pt,top=1pt,bottom=1pt,
+  before skip=0.4\baselineskip,after skip=0.7\baselineskip,
+  fontupper=\small\color{accent}}
+
+\newcommand\change[2]{%
+  \begin{changebox}%
+    {\sffamily\footnotesize\color{muted}Revised manuscript, #1}\par\smallskip
+    #2%
+  \end{changebox}}
+
+\begin{document}
+
+% ---- Letterhead ----------------------------------------------------------
+{\color{accent}\rule{28pt}{2.4pt}}\par\vspace{6pt}
+\begin{minipage}[b]{0.58\textwidth}
+  {\fontsize{22}{26}\selectfont Response to Reviewers}
+\end{minipage}\hfill
+\begin{minipage}[b]{0.38\textwidth}\raggedleft
+  \sffamily\footnotesize\color{muted}\linespread{1.25}\selectfont
+  \journal\\ Manuscript \manuscriptid\enspace·\enspace\revisionno\\ \letterdate
+\end{minipage}\par
+\vspace{8pt}{\color{hair}\rule{\textwidth}{0.4pt}}\par\vspace{4pt}
+{\itshape \papertitle}\par\vspace{-4pt}
+{\small\color{muted}\paperauthors}\par
+\vspace{0.6\baselineskip}
+
+% ---- Letter to the editor ------------------------------------------------
+Dear Dr Lindqvist,
+
+Thank you for handling our manuscript and for the opportunity to submit a
+revised version. We are grateful to both reviewers for their careful reading.
+Their comments led us to extend the validation from five to seven melt seasons,
+to separate wet-snow detection from the onset date itself, and to report how the
+method behaves under forest cover, which we had previously left implicit.
+
+The main changes are summarised in the table below. In the point-by-point
+replies that follow, each reviewer comment is shown in a tinted box, our response
+follows it, and every passage quoted from the revised manuscript is marked with a
+coloured bar together with its page and line numbers. A version with tracked
+changes is uploaded as a supplementary file.
+
+We hope that the revised manuscript is now suitable for publication in the
+\emph{\journal}.
+
+Yours sincerely,\\[2pt]
+Elena Marchetti, on behalf of all authors\\
+{\small\color{muted}Institute for Snow and Water Research, Bolzano}
+
+% ---- Summary of changes --------------------------------------------------
+\section{Summary of changes}
+{\small
+\renewcommand\arraystretch{1.25}
+\begin{tabularx}{\textwidth}{@{}l>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+\caps{Section} & \caps{Change} & \caps{Raised in} \\
+\midrule
+2.2 Data      & Validation extended to seven seasons (2019--2025) and 63 stations & \ref{c:r1-period} \\
+3.1 Method    & Onset defined as three consecutive wet-snow acquisitions, not one & \ref{c:r1-onset}, \ref{c:r2-def} \\
+3.3 Method    & Threshold sensitivity from $-1$ to $-4$\,dB added (new Fig.~5) & \ref{c:r2-thresh} \\
+4.2 Results   & Forest-cover stratification of errors (new Table~3) & \ref{c:r1-forest} \\
+5 Discussion  & Limits for wind-crusted and refrozen snowpacks stated explicitly & \ref{c:r2-limits} \\
+4.4 Results   & Radar onset compared with optical snow-cover loss & \ref{c:r2-optical} \\
+Figures       & Colour-blind-safe onset scale in Fig.~3; scale bar in Fig.~1 & \ref{c:r1-fig} \\
+Data          & Code and onset maps archived with a DOI & \ref{c:r2-code} \\
+\bottomrule
+\end{tabularx}}
+
+% ---- Reviewer 1 ------------------------------------------------------------
+\reviewer{Overall positive; asks for a longer record and a forest analysis.}
+
+\revcomment{The manuscript is clearly written and addresses a relevant problem. My
+main concerns are the length of the validation period and the treatment of
+forested pixels, detailed below.}
+
+\response We thank the reviewer for this positive assessment. Both concerns are
+addressed in the replies to \ref{c:r1-period} and \ref{c:r1-forest}.
+
+\revcomment[c:r1-period]{Five melt seasons seem short to claim robustness,
+especially since 2022 was an exceptionally dry year in the Alps. Could the
+authors extend the record, or at least show results without 2022?}
+
+\response We agree. Sentinel-1 data for 2019 and 2025 are now processed, which
+extends the record to seven seasons and raises the number of station-years from
+212 to 371. We also report all statistics with 2022 excluded; the median
+absolute error changes by less than half a day.
+
+\change{p.~5, ll.~118--123}{We use all Sentinel-1 interferometric wide-swath
+acquisitions from 1~October 2018 to 30~June 2025, covering seven melt seasons and
+63 automatic snow stations (371 station-years). Excluding the anomalously dry
+2022 season changes the median absolute onset error from 4.1 to 3.8~days
+(Table~S2).}
+
+\revcomment[c:r1-onset]{A single wet-snow acquisition can be triggered by a
+short warm spell in mid-winter. How do the authors avoid declaring melt onset
+too early in such cases?}
+
+\response This was a real weakness of the first version. Onset is now defined as
+the first of three consecutive acquisitions classified as wet, which at the
+six-day revisit means at least twelve days of persistent wet snow. The
+mid-winter false starts the reviewer describes drop from 14\,\% to 3\,\% of
+station-years.
+
+\change{p.~7, ll.~171--175}{Melt onset is the date of the first of three
+consecutive acquisitions in which backscatter falls more than 3\,dB below the
+dry-snow reference. Isolated wet acquisitions are treated as transient
+mid-winter melt and do not set the onset date.}
+
+\revcomment[c:r1-forest]{Roughly a third of the study area is forested, where
+C-band backscatter is dominated by the canopy. Errors should be stratified by
+forest cover.}
+
+\response We now stratify all errors by Copernicus tree-cover density in three
+classes (Table~3). Below 30\,\% cover, performance is unchanged; above 60\,\%,
+the median error rises to 7.9~days, and we recommend masking these pixels.
+
+\change{p.~10, ll.~252--256}{Errors grow with canopy density
+(Table~3): the median absolute error is 3.6~days below 30\,\% tree cover,
+5.2~days between 30 and 60\,\%, and 7.9~days above 60\,\%. We therefore mask
+pixels with more than 60\,\% cover in the published onset maps.}
+
+\revcomment[c:r1-fig]{Figure~3 uses a rainbow colour scale for onset dates,
+which is hard to read and not accessible to colour-blind readers.}
+
+\response Thank you; Figure~3 now uses the perceptually uniform \emph{batlow}
+scale, with ticks every ten days and month names on the colour bar. The same
+scale is used in the supplementary onset maps.
+
+\revcomment{Minor points: (a) the units of backscatter are missing in
+Equation~2; (b) ``SWE'' is used before it is defined; (c) the station map lacks a
+scale bar.}
+
+\response All three are corrected: (a)~Equation~2 now states dB, (b)~snow water
+equivalent (SWE) is defined at first use on p.~2, and (c)~a 20\,km scale bar has
+been added to Figure~1.
+
+% ---- Reviewer 2 ------------------------------------------------------------
+\reviewer{Asks for a sharper definition, a sensitivity analysis and stated limits.}
+
+\revcomment[c:r2-def]{The text sometimes uses ``wet-snow detection'' and ``melt
+onset'' interchangeably. These are different quantities and should be kept
+apart throughout.}
+
+\response We fully agree and have revised the terminology across the manuscript.
+Wet-snow detection now refers only to the per-acquisition classification, and
+melt onset only to the seasonal date derived from it (see also \ref{c:r1-onset}).
+A sentence in the introduction makes the distinction explicit.
+
+\change{p.~2, ll.~41--44}{We distinguish two quantities: \emph{wet-snow
+detection}, a classification of each acquisition, and \emph{melt onset}, a single
+date per pixel and season derived from the detection series.}
+
+\revcomment[c:r2-thresh]{The $-3$\,dB threshold is taken from earlier work at
+other sites. How sensitive are the results to this choice?}
+
+\response We added a sensitivity analysis over thresholds from $-1$ to $-4$\,dB in
+0.5\,dB steps (new Fig.~5). Errors are lowest between $-2.5$ and $-3.5$\,dB and
+vary by less than one day within that range, so we keep $-3$\,dB.
+
+\change{p.~8, ll.~198--201}{Varying the threshold between $-2.5$ and
+$-3.5$\,dB changes the median absolute error by at most 0.8~days (Fig.~5);
+thresholds above $-2$\,dB produce frequent false onsets from surface roughness.}
+
+\revcomment[c:r2-limits]{The discussion should state where the method is not
+expected to work, for example on wind-crusted ridges or after refreezing.}
+
+\response We added a paragraph on these limits. Refreezing resets the detection
+series but not the onset date, which is the intended behaviour; wind crusts raise
+the dry-snow reference and delay detection by a median of 2.4~days at the five
+ridge stations.
+
+\change{p.~13, ll.~318--322}{The method assumes a stable dry-snow reference.
+On wind-exposed ridges, crust formation raises this reference and delays
+detection by a median of 2.4~days; users should interpret onset dates on such
+terrain as upper bounds.}
+
+\revcomment[c:r2-code]{Will the processing code and the onset maps be made
+available?}
+
+\response Yes. The code and the seven annual onset maps are archived on Zenodo
+under an open licence, and the Data Availability statement gives the DOI.
+
+\revcomment[c:r2-optical]{The comparison with the optical snow-cover product in Section~4.4 is
+interesting but rather brief. Does the radar onset precede the loss of optical
+snow cover consistently?}
+
+\response It does, by a median of 23~days across all stations, which is the
+expected interval between the onset of melt and the disappearance of the
+snowpack. We expanded Section~4.4 with this result and a short explanation.
+
+\change{p.~11, ll.~281--285}{Radar melt onset preceded the date of optical
+snow-cover loss at 96\,\% of station-years, by a median of 23~days (interquartile
+range 15--31~days), consistent with the time a ripe snowpack needs to melt out.}
+
+\vspace{0.6\baselineskip}
+We thank both reviewers once more; their comments have made the paper more
+careful and more useful.
+
+\end{document}

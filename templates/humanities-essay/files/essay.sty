@@ -1,0 +1,124 @@
+% essay.sty -- page design for the Humanities Essay template.
+% A4 with a book-like measure, Crimson old-style figures, centred small-caps
+% headings over a fleuron, footnote citations, one muted green accent.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{essay}[2026/10/17 Humanities Essay]
+
+% ---- Page grid -------------------------------------------------------------
+% About 66 characters per line, with wide side margins and a deep foot so the
+% page reads like a printed essay rather than a report.
+\RequirePackage[a4paper, textwidth=120mm, textheight=218mm, centering,
+  vmarginratio=4:5, headheight=13pt, headsep=10mm, footskip=12mm]{geometry}
+
+% ---- Type ------------------------------------------------------------------
+% Crimson with old-style figures, so dates and page numbers sit in the line.
+% The proportional old-style cut is selected because it spaces numbers in
+% running prose more evenly than the tabular default. Crimson ships no upright
+% bold in Type 1, so the design never uses bold: emphasis is italic or caps.
+\RequirePackage[T1]{fontenc}
+\RequirePackage[osf]{crimson}
+\renewcommand*{\rmdefault}{Crimson-OsF}
+\renewcommand*{\bfdefault}{m}
+\linespread{1.12}
+\RequirePackage[protrusion=true, expansion=true, tracking=true, final]{microtype}
+\SetTracking{encoding=*, shape=sc}{60}
+\setlength{\parindent}{1.5em}
+\setlength{\emergencystretch}{1.5em}
+\widowpenalty=10000 \clubpenalty=10000
+\raggedbottom
+
+% ---- Accent ----------------------------------------------------------------
+% A muted dark green for the title, fleurons, numerals and figure labels.
+% Change it here.
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{2E4B3C}
+\colorlet{inkmuted}{black!62}
+
+% ---- Ornaments -------------------------------------------------------------
+\RequirePackage{adforn}
+\newcommand{\es@fleuron}{\textcolor{accent}{\adforn{21}}}
+% A centred fleuron between passages inside a section.
+\newcommand{\passagebreak}{%
+  \par\vspace{1.4ex plus .4ex}{\centering\es@fleuron\par}%
+  \vspace{1.4ex plus .4ex}\noindent\ignorespaces}
+
+% ---- Headings --------------------------------------------------------------
+% Sections open with a fleuron, a roman numeral and a small-caps title, all
+% centred; the first line after them is not indented, as in book typography.
+\RequirePackage{titlesec}
+\renewcommand{\thesection}{\Roman{section}}
+% The whole heading is one box so the fleuron never parts from its title.
+\newcommand{\es@head}[2]{\parbox{\linewidth}{\centering\es@fleuron\\[1.2ex]%
+  #1\scshape\MakeLowercase{#2}}}
+\titleformat{\section}[block]{\normalfont}{}{0pt}
+  {\es@head{{\color{accent}\thesection}\\[0.6ex]}}
+\titleformat{name=\section, numberless}[block]{\normalfont}{}{0pt}
+  {\es@head{}}
+\titlespacing*{\section}{0pt}{4ex plus 1ex minus .5ex}{2.4ex plus .4ex}
+
+% ---- Title block -----------------------------------------------------------
+\newcommand{\es@author}{}
+\newcommand{\es@affiliation}{}
+\newcommand{\es@subtitle}{}
+\newcommand{\es@shorttitle}{}
+\renewcommand{\author}[1]{\renewcommand{\es@author}{#1}}
+\newcommand{\affiliation}[1]{\renewcommand{\es@affiliation}{#1}}
+\newcommand{\subtitle}[1]{\renewcommand{\es@subtitle}{#1}}
+\newcommand{\shorttitle}[1]{\renewcommand{\es@shorttitle}{#1}}
+
+\renewcommand{\maketitle}{%
+  \thispagestyle{plain}%
+  \begin{center}
+    \vspace*{6mm}
+    {\fontsize{24}{29}\selectfont\color{accent}\@title\par}
+    \ifx\es@subtitle\@empty\else
+      \vspace{6pt}{\large\itshape\es@subtitle\par}%
+    \fi
+    \vspace{16pt}
+    {\color{accent}\rule{18mm}{.4pt}}\par
+    \vspace{12pt}
+    {\scshape\textls[160]{\MakeLowercase{\es@author}}\par}
+    \vspace{3pt}
+    {\small\itshape\color{inkmuted}\es@affiliation\par}
+  \end{center}
+  \vspace{14pt}}
+
+% ---- Epigraph and block quotations -----------------------------------------
+% \epigraph{text}{source}: a narrow italic block set to the right.
+\newcommand{\epigraph}[2]{%
+  \par\vspace{2pt}%
+  \hfill\begin{minipage}{68mm}\small\itshape\raggedright
+    #1\par\vspace{4pt}%
+    \raggedleft\upshape\footnotesize\textemdash\ #2\par
+  \end{minipage}\par\vspace{16pt}}
+% Block quotations are set smaller and indented on both sides.
+\renewenvironment{quote}
+  {\list{}{\leftmargin=2em \rightmargin=2em \topsep=1.2ex plus .3ex}%
+   \item\relax\small}
+  {\endlist}
+
+% ---- Figures ---------------------------------------------------------------
+\RequirePackage[font=small, labelfont={sc, color=accent}, labelsep=period,
+  justification=justified, singlelinecheck=false, skip=10pt]{caption}
+\setlength{\textfloatsep}{18pt plus 4pt minus 4pt}
+
+% ---- Footnotes -------------------------------------------------------------
+% Footnotes carry the citations, so they get a hanging number at text size
+% and a short hairline above them.
+\RequirePackage[hang, flushmargin, bottom]{footmisc}
+\setlength{\footnotesep}{10pt}
+\renewcommand{\footnoterule}{{\color{accent!50}\hrule width 22mm height .4pt}\vspace{6pt}}
+\renewcommand{\footnotelayout}{\footnotesize}
+\setlength{\skip\footins}{14pt plus 4pt minus 2pt}
+
+% ---- Running heads ---------------------------------------------------------
+% A letterspaced short title in the head and an old-style folio in the foot.
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[C]{\footnotesize\scshape\color{inkmuted}\textls[120]{\MakeLowercase{\es@shorttitle}}}
+\fancyfoot[C]{\small\thepage}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\thepage}}
+
+\endinput

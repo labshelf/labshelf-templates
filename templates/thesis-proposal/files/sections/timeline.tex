@@ -1,0 +1,47 @@
+% Chapter 7: a semester-by-semester Gantt chart drawn in TikZ.
+% Edit the task list in the \foreach below: {row/start/end/label}, with
+% start and end measured in semesters from 0 (spring 2025) to 8.
+\chapter{Timeline}\label{ch:timeline}
+
+The programme runs over eight semesters. Figure~\ref{fig:gantt} shows the
+work packages, the milestones and the point of this review. The field
+campaign is fixed to summer 2027 because it needs a full warm season;
+the other tasks have a semester of slack before submission.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[x=11.2mm, y=6.4mm, font=\sffamily\footnotesize]
+  % semester columns and year bands
+  \foreach \i/\lab in {0/Spr, 1/Aut, 2/Spr, 3/Aut, 4/Spr, 5/Aut, 6/Spr, 7/Aut}{
+    \ifodd\i\else\fill[accenttint] (\i,0.6) rectangle (\i+1,-9.6);\fi
+    \node[text=muted] at (\i+.5,1.1) {\lab};}
+  \foreach \i/\y in {0/2025, 2/2026, 4/2027, 6/2028}
+    \node[text=ink] at (\i+1,1.75) {\y};
+  \draw[muted!50, line width=.3pt] (0,.6) -- (8,.6);
+  % tasks: row/start/end/label
+  \foreach \r/\a/\b/\t in {
+      1/0/1.5/Literature review and data access,
+      2/0.5/2.5/Temperature model and validation,
+      3/1.5/4/Exposure-weighted rule (RQ1),
+      4/3.5/5.5/Transfer study (RQ2),
+      5/4/5.3/Field preparation and permits,
+      6/4.4/5.7/Field campaign (RQ3),
+      7/5.5/7/Field analysis,
+      8/6/8/Writing and submission}{
+    \node[anchor=east, text=ink] at (-.15,-\r+.5) {\t};
+    \fill[accent!80, rounded corners=1pt] (\a,-\r+.25) rectangle (\b,-\r+.75);}
+  % milestones
+  \foreach \x/\r/\m in {3.55/9/Proposal, 5/9/Paper 1, 6.5/9/Paper 2, 7.9/9/Defence}{
+    \fill[accentdark] (\x,-\r+.5) +(0,.18) -- +(.13,0) -- +(0,-.18) -- +(-.13,0) -- cycle;
+    \node[anchor=north, text=accentdark, font=\sffamily\scriptsize]
+      at (\x,-\r+.25) {\m};}
+  \node[anchor=east, text=ink] at (-.15,-8.5) {Milestones};
+  % today line
+  \draw[accentdark, densely dashed, line width=.6pt] (3.55,.6) -- (3.55,-8.1);
+  \node[fill=white, text=accentdark, font=\sffamily\scriptsize\itshape,
+        inner sep=1.5pt] at (3.55,.25) {this review};
+\end{tikzpicture}
+\caption{Work plan by semester. Shaded columns are spring semesters;
+diamonds mark milestones.}
+\label{fig:gantt}
+\end{figure}

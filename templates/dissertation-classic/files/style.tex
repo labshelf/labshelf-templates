@@ -1,0 +1,89 @@
+% Page, type and heading design for the Classic Dissertation template.
+% Change the accent colour, margins or line spacing here.
+
+% ---- Type: Palatino text and matching maths ----
+\usepackage[T1]{fontenc}
+\usepackage[osf]{newpxtext}       % old-style figures sit quietly in running text
+\usepackage{newpxmath}
+\usepackage[final]{microtype}     % protrusion and expansion keep the margins even
+\usepackage[english]{babel}
+\usepackage{csquotes}
+
+% ---- Page: generous binding margin, as graduate schools expect ----
+\usepackage[letterpaper,left=1.5in,right=1in,top=1in,bottom=1in,
+  footskip=0.5in]{geometry}
+\usepackage{setspace}
+\onehalfspacing
+\setlength{\parindent}{2em}
+\widowpenalty=10000
+\clubpenalty=10000
+
+% ---- Accent: one very dark ink blue, used only for chapter numbers ----
+\usepackage{xcolor}
+\definecolor{inkblue}{HTML}{1B2A4A}
+
+% ---- Graphics, tables, maths ----
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[font=small,labelfont=sc,labelsep=period,
+  justification=centering,skip=8pt]{caption}
+\usepackage[hang,flushmargin]{footmisc}
+\setlength{\footnotesep}{10pt}
+
+% ---- Chapter headings: "Chapter One", centred, short rule beneath ----
+\usepackage{titlesec}
+\newcommand{\chapterword}{\ifcase\value{chapter}\or One\or Two\or Three\or
+  Four\or Five\or Six\or Seven\or Eight\or Nine\or Ten\else\arabic{chapter}\fi}
+\makeatletter
+\g@addto@macro\appendix{\renewcommand{\chapterword}{\Alph{chapter}}}
+\makeatother
+\newcommand{\chapterrule}{\par\vspace{14pt}\rule{4em}{0.4pt}\par}
+\titleformat{\chapter}[display]
+  {\centering\normalfont}
+  {\color{inkblue}\large\scshape\textls[90]{\MakeLowercase{\chaptertitlename\ \chapterword}}}
+  {10pt}
+  {\LARGE\setstretch{1.15}}
+  [\chapterrule]
+\titleformat{name=\chapter,numberless}[display]
+  {\centering\normalfont}{}{0pt}{\LARGE}[\chapterrule]
+\titlespacing*{\chapter}{0pt}{0.6in}{0.45in}
+\titleformat{\section}{\normalfont\large}{\thesection\quad}{0pt}{}
+\titlespacing*{\section}{0pt}{18pt plus 4pt minus 2pt}{6pt plus 2pt}
+\titleformat{\subsection}{\normalfont\itshape}{\thesubsection\quad}{0pt}{}
+\titlespacing*{\subsection}{0pt}{12pt plus 3pt minus 2pt}{4pt plus 2pt}
+\setcounter{secnumdepth}{2}
+
+% ---- Contents: dotted leaders, plain upright entries ----
+\usepackage{tocloft}
+\renewcommand{\cfttoctitlefont}{\hfill\LARGE}
+\renewcommand{\cftaftertoctitle}{\hfill\hbox{}\par\vspace{-6pt}\hfill\rule{4em}{0.4pt}\hfill\hbox{}}
+\renewcommand{\cftloftitlefont}{\hfill\LARGE}
+\renewcommand{\cftafterloftitle}{\hfill\hbox{}\par\vspace{-6pt}\hfill\rule{4em}{0.4pt}\hfill\hbox{}}
+\renewcommand{\cftlottitlefont}{\hfill\LARGE}
+\renewcommand{\cftafterlottitle}{\hfill\hbox{}\par\vspace{-6pt}\hfill\rule{4em}{0.4pt}\hfill\hbox{}}
+\setlength{\cftbeforetoctitleskip}{0.6in}
+\setlength{\cftbeforeloftitleskip}{0.6in}
+\setlength{\cftbeforelottitleskip}{0.6in}
+\setlength{\cftaftertoctitleskip}{0.45in}
+\setlength{\cftafterloftitleskip}{0.45in}
+\setlength{\cftafterlottitleskip}{0.45in}
+\renewcommand{\cftchapfont}{\normalfont}
+\renewcommand{\cftchappagefont}{\normalfont}
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforechapskip}{8pt}
+
+% ---- Page numbers: centred at the foot of every page ----
+\usepackage{fancyhdr}
+\pagestyle{plain}
+
+% ---- Bibliography: author-year, as in most humanities graduate schools ----
+\usepackage[style=authoryear,backend=biber,maxcitenames=2,
+  uniquename=false,dashed=false]{biblatex}
+\setlength{\bibitemsep}{6pt}
+\setlength{\bibhang}{2em}
+
+% ---- Links: no coloured boxes; the document must print cleanly ----
+\usepackage[hidelinks]{hyperref}

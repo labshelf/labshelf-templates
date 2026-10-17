@@ -1,0 +1,10 @@
+schema: 1
+id: conference-paper
+name: Conference Paper
+description: Compact two-column conference paper on US Letter in XCharter, newtxmath and Lato. A full-width title block with an author grid of names, affiliations and emails, an abstract with CCS concepts and keywords, and a full-width TikZ teaser figure on page one. Numbered small-caps section heads with deep plum numerals, booktabs tables with the best value in bold plum, pgfplots figures, an algorithm2e listing and small numeric biblatex references. Fills four pages plus references.
+category: article
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

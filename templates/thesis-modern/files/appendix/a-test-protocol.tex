@@ -1,0 +1,36 @@
+% Appendix A. Appendices are ordinary chapters after \appendix in main.tex.
+\chapter{Reference test protocol}
+\label{app:protocol}
+
+Every reference performance test followed the sequence in
+\cref{tab:protocol}. The site was disconnected from the market at least
+six hours in advance so that the cells could relax, and the ambient
+temperature of the container was held at 25\,°C by its climate control.
+Capacity is the charge delivered in step~4, divided by the nameplate
+capacity at commissioning.
+
+\begin{table}[htb]
+  \caption[Reference test sequence]{Reference test sequence. C/5 is the
+    current that would discharge the nameplate capacity in five hours.}
+  \label{tab:protocol}
+  \centering
+  \begin{tabular}{@{}r l l l@{}}
+    \toprule
+    Step & Action & Current & End condition \\
+    \midrule
+    1 & Rest            & ---      & 4 h, cell spread \(<\) 1\,°C \\
+    2 & Charge (CC--CV) & C/5      & upper voltage, then \(I <\) C/50 \\
+    3 & Rest            & ---      & 1 h \\
+    4 & Discharge (CC)  & C/5      & lower voltage limit \\
+    5 & Rest            & ---      & 1 h \\
+    6 & Recharge        & C/5      & 50\,\% state of charge \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two corrections were applied. Charge was converted to capacity at a
+reference temperature of 25\,°C using the manufacturer's temperature
+coefficient, and the auxiliary consumption of the container, measured
+separately for each site, was subtracted from the pack current. The
+repeatability of the test, estimated from back-to-back repetitions on
+two sites, is \(\pm 0.4\) percentage points of state of health.

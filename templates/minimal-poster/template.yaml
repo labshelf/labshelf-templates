@@ -1,0 +1,10 @@
+schema: 1
+id: minimal-poster
+name: Minimal Poster
+description: A1 portrait "one big message" poster in the spirit of the better-poster layout. A wide central band states the main finding as one large plain-language sentence in Inter bold, with one key pgfplots figure below it and a QR code to the paper at its foot. Two narrow sidebars hold introduction, methods with a small TikZ survey sketch, a booktabs results table, limits and references in small type. Title and authors stay small at the top. Black on white, hairline rules, one emerald accent.
+category: poster
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

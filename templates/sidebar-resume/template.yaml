@@ -1,0 +1,10 @@
+schema: 1
+id: sidebar-resume
+name: Sidebar Résumé
+description: One-page A4 résumé for researchers moving between academia and industry. A soft slate-tinted sidebar on the left third holds a TikZ monogram, contact details and links with small FontAwesome icons, skills with thin proficiency bars, languages and awards. The main column sets the name large in light Raleway over a short coral dash, then a profile, experience and education on a hairline timeline with tabular dates and dots, projects and publications. Body in Lato, one slate blue-grey accent.
+category: cv
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

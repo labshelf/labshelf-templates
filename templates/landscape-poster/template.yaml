@@ -1,0 +1,10 @@
+schema: 1
+id: landscape-poster
+name: Landscape Poster
+description: A0 landscape poster on a four-column grid over warm white. A slim header holds a Roboto Slab title, authors and two TikZ logo slots; numbered cobalt squares open each section. A tinted results panel spans the middle columns with a line chart, a grouped bar chart, a booktabs table and a headline number, flanked by a TikZ study-design flow and a take-home box. Cobalt accent, muted amber for one data series, Roboto text, QR code and compact references.
+category: poster
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

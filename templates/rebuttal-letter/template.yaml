@@ -1,0 +1,10 @@
+schema: 1
+id: rebuttal-letter
+name: Response to Reviewers
+description: Point-by-point response letter for a journal revision on A4, set in IBM Plex Serif with Plex Sans labels and one deep blue-violet accent. A short letterhead, a letter to the editor and a booktabs summary-of-changes table linking to each comment. Comments sit in pale warm-grey boxes labelled R1.3, replies follow in plain text, and quoted manuscript changes carry a left accent bar, accent text and page/line references. Macros \reviewer, \revcomment, \response, \change.
+category: other
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

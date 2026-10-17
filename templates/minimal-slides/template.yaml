@@ -1,0 +1,10 @@
+schema: 1
+id: minimal-slides
+name: Minimal Slides
+description: Editorial 16:9 Beamer deck on a white page with its own small theme. Large Libertinus Serif Display titles set flush left over a hairline, Libertinus Sans text with old-style figures, one indigo accent, and only a short title and tiny page number in the footer. Includes a masthead title slide, section slides with a huge serif numeral, a quote slide, a TikZ image placeholder, a two-column comparison, a pgfplots chart, a booktabs table, biblatex references and a closing slide.
+category: slides
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

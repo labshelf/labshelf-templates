@@ -1,0 +1,58 @@
+% Chapter 4: approach, data and evaluation for each research question.
+\chapter{Methodology}\label{ch:methods}
+
+\section{Temperature model}
+
+Let $T(\mathbf{s},t)$ be air temperature at site $\mathbf{s}$ and hour
+$t$. The model writes it as a covariate trend plus a spatially
+correlated residual,
+\begin{equation}
+  T(\mathbf{s},t) = \mathbf{x}(\mathbf{s})^{\top}\boldsymbol{\beta}_t
+  + f(\mathbf{s},t) + \varepsilon,
+  \qquad f \sim \mathcal{GP}\bigl(0, k_{\theta}\bigr),
+  \label{eq:model}
+\end{equation}
+where $\mathbf{x}$ holds sky-view factor, impervious fraction, canopy
+cover and distance to water at 3\,m resolution, and $k_\theta$ is a
+product of a Matérn kernel in space and a periodic kernel in hour of
+day. The model is fitted with stochastic variational inference on 512
+inducing points.
+
+\section{Exposure-weighted acquisition (RQ1)}
+
+For a candidate site $\mathbf{c}$, the acquisition score is the
+reduction in exposure-weighted predictive variance across the grid
+$\mathcal{G}$,
+\begin{equation}
+  a(\mathbf{c}) = \sum_{\mathbf{g}\in\mathcal{G}} w(\mathbf{g})
+  \bigl[\sigma^2(\mathbf{g}) - \sigma^2(\mathbf{g}\mid\mathbf{c})\bigr],
+  \label{eq:acq}
+\end{equation}
+with weights $w$ from the census vulnerability index (residents over
+75, living alone, top-floor flats). Batches are chosen greedily, which
+keeps the near-optimality guarantee of the unweighted case.
+
+\textbf{Hypothesis H1.} At equal sensor counts, rule \eqref{eq:acq}
+lowers exposure-weighted RMSE by at least 20\,\% relative to
+variance-only placement, with no more than 5\,\% loss in unweighted RMSE.
+
+\section{Transfer between cities (RQ2)}
+
+The model trained on Aldmere is applied to two partner cities with
+dense reference networks, Lyre and Westhaven, after withholding all
+their data. Placement is simulated from zero to 150 sensors, comparing
+a cold start, a transferred prior and a prior adapted by importance
+weighting on covariate distributions \parencite{sugiyama2007covariate}.
+
+\textbf{Hypothesis H2.} A transferred prior halves the number of
+sensors needed to reach 1.0\,K weighted RMSE in the target city.
+
+\section{Field validation (RQ3)}
+
+Sixty battery-powered units with radiation shields are deployed from
+June to September 2027. Every two weeks, the twenty with the lowest
+marginal value are moved to the sites the rule proposes, subject to a
+list of permitted mounting points agreed with the city.
+
+\textbf{Hypothesis H3.} Field gains are at least two thirds of the gains
+predicted by simulation for the same period.

@@ -1,0 +1,221 @@
+% Minimal Poster: an A1 portrait "one big message" poster. The main finding sits in a
+% wide central band as one plain sentence; the conventional sections live in two
+% narrow sidebars. Edit the metadata and the accent below. Build: latexmk -pdf main.tex
+\documentclass{article}
+\usepackage[paperwidth=594mm,paperheight=841mm,margin=0mm]{geometry}
+\usepackage[T1]{fontenc}
+% Inter for everything; Lato if Inter is not installed. Proportional figures keep
+% Inter's hyphen narrow; \lstabular switches to tabular figures for the table.
+\IfFileExists{inter.sty}
+  {\usepackage[sfdefault,proportional]{inter}\newcommand{\lstabular}{\fontfamily{Inter-TLF}\selectfont}}
+  {\usepackage[default]{lato}\newcommand{\lstabular}{}}
+\usepackage[letterspace=100]{microtype}
+\usepackage{booktabs,qrcode,xcolor}
+\usepackage[absolute,overlay]{textpos}
+\usepackage[hidelinks]{hyperref}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{calc}
+\pgfplotsset{compat=1.18}
+\usepackage[style=numeric-comp,sorting=none,maxbibnames=1,minbibnames=1,
+  giveninits=true,doi=false,url=false,isbn=false,backend=biber]{biblatex}
+\addbibresource{refs.bib}
+\renewbibmacro{in:}{}
+\AtEveryBibitem{\clearfield{number}\clearfield{month}\clearfield{title}}
+
+% ---------------------------------------------------------------- colours
+% One accent only. Black text on white; grey is a tint of black, not a second hue.
+\definecolor{lsAccent}{HTML}{0E8A5F}
+\definecolor{lsInk}{HTML}{111111}
+\colorlet{lsMuted}{lsInk!58}
+\colorlet{lsRule}{lsInk!18}
+\color{lsInk}
+
+% ---------------------------------------------------------------- metadata
+\newcommand{\postertitle}{Wildflower margins and wild-bee pollination in oilseed rape}
+\newcommand{\posterauthors}{Aino Laine\textsuperscript{1}, Joseph Mbeki\textsuperscript{2}, Clara Ruiz\textsuperscript{1}}
+\newcommand{\posteraffiliations}{\textsuperscript{1}\,Department of Ecology, Northfield University\quad
+  \textsuperscript{2}\,Institute for Agroecology, Halden}
+\newcommand{\postervenue}{Ecology Across Borders 2026\\Poster 112}
+\newcommand{\posterurl}{https://example.org/wildflower-margins}
+\newcommand{\postercontact}{a.laine@example.org}
+
+% ---------------------------------------------------------------- type
+% The sidebars are read close up, so their text is small; the sentence is read
+% from across the room.
+\renewcommand{\normalsize}{\fontsize{15.5}{22}\selectfont}
+\renewcommand{\small}{\fontsize{13}{18}\selectfont}
+\renewcommand{\footnotesize}{\fontsize{11.5}{15.5}\selectfont}
+\newcommand{\lslabel}[1]{{\footnotesize\bfseries\textls[140]{\MakeUppercase{#1}}}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.6em}
+\pagestyle{empty}
+\renewcommand*{\bibfont}{\small}
+\setlength{\bibitemsep}{0.4em}
+\setlength{\biblabelsep}{3mm}
+
+% A sidebar section: hairline, accent number, spaced label.
+\newcommand{\lssection}[2]{\par\addvspace{16mm}%
+  {\color{lsInk}\rule{\linewidth}{0.8pt}}\par\vspace{3mm}%
+  {\color{lsAccent}\lslabel{#1}}\hspace{4mm}\lslabel{#2}\par\vspace{2mm}}
+
+% ---------------------------------------------------------------- grid
+% 32 mm margins, 100 mm sidebars, 22 mm gutters, a 286 mm central band.
+\setlength{\TPHorizModule}{1mm}\setlength{\TPVertModule}{1mm}
+\newcommand{\lsleft}{32mm}
+\newcommand{\lscentre}{154mm}
+\newcommand{\lsright}{462mm}
+\newlength{\lsside}\setlength{\lsside}{100mm}
+\newlength{\lsband}\setlength{\lsband}{286mm}
+\newcommand{\lstop}{118mm}
+\newcommand{\lsfoot}{800mm}% bottom line shared by the QR code and the sidebar feet
+
+\pgfplotsset{lsaxis/.style={
+  axis lines=left, axis line style={lsInk,line width=0.8pt},
+  tick style={lsInk,line width=0.8pt}, major tick length=2mm,
+  tick label style={font=\small,text=lsMuted},
+  label style={font=\small,text=lsMuted},
+  ymajorgrids, major grid style={lsRule,line width=0.5pt},
+  scale only axis, clip=false,
+  /pgf/number format/assume math mode=true}}
+
+\begin{document}
+% ================================================================ top strip
+\begin{textblock*}{\dimexpr594mm-64mm\relax}(\lsleft,32mm)
+  {\color{lsInk}\rule{\linewidth}{1.6pt}}\par\vspace{5mm}
+  \begin{minipage}[t]{\dimexpr\lsside+\lsband+22mm\relax}
+    {\fontsize{24}{30}\selectfont\bfseries\postertitle\par}\vspace{2mm}
+    {\normalsize\posterauthors\par}
+    {\small\color{lsMuted}\posteraffiliations\par}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{\lsside}\raggedleft
+    {\small\color{lsMuted}\postervenue\par}
+  \end{minipage}
+\end{textblock*}
+
+% ================================================================ central band
+\begin{textblock*}{\lsband}(\lscentre,\lstop)
+  \raggedright
+  {\color{lsInk}\rule{\linewidth}{0.8pt}}\par\vspace{3mm}
+  {\color{lsAccent}\lslabel{Main finding}}\par\vspace{12mm}
+  % The one sentence. Keep it under about 20 words; colour only the key phrase.
+  {\fontsize{80}{84}\selectfont\bfseries\hyphenpenalty=10000
+   Fields with a wildflower margin get
+   \textcolor{lsAccent}{\mbox{twice as many}} wild-bee visits,
+   100\,metres deep into the crop.\par}
+  \vspace{18mm}
+  {\color{lsInk}\rule{\linewidth}{0.8pt}}\par\vspace{5mm}
+  \lslabel{Wild-bee visits along the transect}\par\vspace{6mm}
+  \begin{tikzpicture}
+    \begin{axis}[lsaxis, width=\lsband-56mm, height=235mm,
+        xmin=0, xmax=200, ymin=0, ymax=8, xtick={0,25,50,100,150,200}, ytick={0,2,4,6,8},
+        xlabel={Distance from the field edge (m)}, ylabel={Visits per 10 min, 100 flowers},
+        every axis plot/.append style={line width=3pt}]
+      % 95% confidence bands, drawn first so the lines sit on top.
+      \addplot[fill=lsAccent,fill opacity=0.14,draw=none]
+        coordinates {(0,7.0)(25,6.2)(50,5.3)(100,4.5)(150,3.3)(200,2.6)
+                     (200,1.8)(150,2.4)(100,3.3)(50,4.1)(25,4.8)(0,5.4)} -- cycle;
+      \addplot[fill=lsInk,fill opacity=0.07,draw=none]
+        coordinates {(0,3.4)(25,3.0)(50,2.6)(100,2.2)(150,2.0)(200,1.8)
+                     (200,1.2)(150,1.4)(100,1.6)(50,1.8)(25,2.2)(0,2.4)} -- cycle;
+      \addplot[lsInk!45,mark=*,mark size=4pt]
+        coordinates {(0,2.9)(25,2.6)(50,2.2)(100,1.9)(150,1.7)(200,1.5)}
+        node[right=3mm,font=\normalsize,text=lsMuted] {No margin};
+      \addplot[lsAccent,mark=*,mark size=5pt]
+        coordinates {(0,6.2)(25,5.5)(50,4.7)(100,3.9)(150,2.85)(200,2.2)}
+        node[right=3mm,font=\normalsize\bfseries,text=lsAccent] {Margin};
+      \draw[lsInk,line width=0.8pt,densely dotted] (axis cs:100,0) -- (axis cs:100,8)
+        node[pos=1,above=1mm,font=\small,text=lsMuted] {ratio still 2.0 at 100\,m};
+    \end{axis}
+  \end{tikzpicture}\par\vspace{4mm}
+  {\small\color{lsMuted}Means and 95\% intervals from a mixed model, 18 fields with a margin
+  and 18 without, three surveys each in April and May 2025.\par}
+\end{textblock*}
+
+% QR code at the foot of the band: the paper is one scan away.
+\begin{textblock*}{\lsband}[0,1](\lscentre,\lsfoot)
+  \tikz[baseline=(q.south)]\node[inner sep=0] (q) {\color{lsInk}\qrcode[height=64mm]{\posterurl}};%
+  \hspace{10mm}%
+  \begin{minipage}[b]{\dimexpr\lsband-74mm\relax}\raggedright
+    {\fontsize{26}{32}\selectfont\bfseries Scan for the full paper,\\ data and code.\par}\vspace{3mm}
+    {\small\color{lsMuted}\posterurl\par}
+  \end{minipage}
+\end{textblock*}
+
+% ================================================================ left sidebar
+\begin{textblock*}{\lsside}(\lsleft,\lstop)
+  \raggedright
+  \vspace*{-16mm}
+  \lssection{01}{Introduction}
+  Wild bees pollinate most insect-pollinated crops, often better than honey bees~\cite{klein2007,garibaldi2013}.
+  Large uniform fields leave them little to eat outside the short crop bloom~\cite{kremen2002}.
+
+  Flower margins are subsidised across Europe, but whether their bees reach the
+  middle of the field is unclear~\cite{albrecht2020}.
+
+  \lssection{02}{Methods}
+  36 oilseed rape fields in southern Finland, matched in pairs by size and soil.
+  One field of each pair had a 6\,m sown wildflower margin along one edge.
+
+  \vspace{4mm}
+  % Survey layout: the margin along the edge and the six transect stations.
+  \begin{tikzpicture}[x=1mm,y=1mm]
+    \fill[lsAccent] (2,0) rectangle (8,56);
+    \draw[lsInk,line width=0.8pt] (2,0) rectangle (96,56);
+    \foreach \d/\l in {5/0,16.5/25,28/50,51/100,73/150,95/200}{
+      \fill[lsInk] (\d,28) circle (1.6);
+      \node[font=\footnotesize,text=lsMuted,below=2mm] at (\d,0) {\l};}
+    \draw[lsInk,line width=0.8pt,densely dotted] (5,28) -- (95,28);
+    \node[font=\footnotesize,text=lsAccent,anchor=south west,inner sep=0] at (2,59) {margin};
+    \node[font=\footnotesize,text=lsMuted,anchor=south east,inner sep=0] at (96,59) {crop};
+  \end{tikzpicture}\par\vspace{1mm}
+  {\footnotesize\color{lsMuted}Stations along a transect, metres from the edge.\par}
+
+  At each station we counted wild-bee visits to 100 flowers for 10 minutes, three
+  times during bloom. Bees were identified to genus on the wing.
+\end{textblock*}
+
+% ================================================================ right sidebar
+\begin{textblock*}{\lsside}(\lsright,\lstop)
+  \raggedright
+  \vspace*{-16mm}
+  \lssection{03}{Results in detail}
+  {\small\lstabular\setlength{\tabcolsep}{0pt}\renewcommand{\arraystretch}{1.25}%
+  \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l r r r@{}}
+    \toprule
+    Distance & Margin & None & Ratio \\
+    \midrule
+    0\,m   & 6.2 & 2.9 & \textcolor{lsAccent}{2.1} \\
+    25\,m  & 5.5 & 2.6 & \textcolor{lsAccent}{2.1} \\
+    50\,m  & 4.7 & 2.2 & \textcolor{lsAccent}{2.1} \\
+    100\,m & 3.9 & 1.9 & \textcolor{lsAccent}{2.0} \\
+    150\,m & 2.9 & 1.7 & 1.7 \\
+    200\,m & 2.2 & 1.5 & 1.5 \\
+    \bottomrule
+  \end{tabular*}\par}
+  {\footnotesize\color{lsMuted}Visits per 10 min per 100 flowers.\par}
+
+  Bumblebees made up 61\% of visits, mining bees 27\%. Seed set was 9\%
+  higher within 50\,m of a margin (\textit{p}\,=\,0.02).
+
+  \lssection{04}{Limits}
+  One crop, one region and one season. Margins were three years old;
+  younger margins may hold fewer bees.
+
+\end{textblock*}
+
+\begin{textblock*}{\lsside}[0,1](\lsright,\lsfoot)
+  \raggedright
+  \lssection{05}{References}
+  \printbibliography[heading=none]
+\end{textblock*}
+
+% Sidebar feet sit on the same line as the foot of the QR code.
+\begin{textblock*}{\lsside}[0,1](\lsleft,\lsfoot)
+  \raggedright
+  \lssection{06}{Contact}
+  \postercontact\par
+  {\small\color{lsMuted}Funded by the Nordic Pollinator Programme, grant NP-2024-17.\par}
+\end{textblock*}
+
+\null
+\end{document}

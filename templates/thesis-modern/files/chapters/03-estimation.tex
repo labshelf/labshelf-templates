@@ -1,0 +1,131 @@
+% Chapter 3.
+\chapter{A hybrid estimator}
+\label{ch:estimation}
+
+\section{Learning the residual}
+\label{sec:residual}
+
+The ageing law of \cref{eq:ageing} captures the broad trend of every site
+but leaves a residual of up to two per cent in state of health. Rather
+than adding terms to the physical model until it fits, the hybrid
+estimator treats the law as a prior mean and learns what it misses from
+data \parencite{rasmussen2006gp}. Let \(m(\mathbf{x}_t)\) denote the prediction of the ageing law for
+the operating history \(\mathbf{x}_t\) up to time \(t\). The estimator
+models the true state of health as
+\begin{equation}
+  \mathrm{SoH}(t) = m(\mathbf{x}_t) + f(\mathbf{z}_t) + \varepsilon,
+  \qquad f \sim \mathcal{GP}\bigl(0, k(\mathbf{z}, \mathbf{z}')\bigr),
+  \label{eq:hybrid}
+\end{equation}
+where \(\mathbf{z}_t\) is a vector of features extracted from recent
+partial charge segments and \(\varepsilon\) is the measurement noise of
+the reference test.
+
+\begin{definition}{Partial charge feature}{feature}
+  A \emph{partial charge feature} is a statistic of the voltage curve
+  recorded while the battery charges continuously across a fixed
+  window of state of charge, here 40 to 60\,\%. The features used are the
+  area under the incremental capacity curve \(\mathrm{d}Q/\mathrm{d}V\)
+  within the window, the voltage at which its peak occurs, and the
+  equivalent series resistance at the start of the segment.
+\end{definition}
+
+Frequency-response duty rarely charges a battery through a full window,
+but over three years each site accumulates several hundred qualifying
+segments, enough to estimate the features weekly. The kernel \(k\) is a
+sum of a squared-exponential term over the features and a linear term
+over time, which lets the correction drift slowly while responding to
+changes in electrode behaviour.
+
+\section{Evaluation on held-out sites}
+\label{sec:evaluation}
+
+The estimator was evaluated by leaving one site out at a time: the
+ageing law and the Gaussian process were fitted on ten sites and used to
+track the eleventh from commissioning onward, with access to its
+telemetry but none of its reference tests. \Cref{tab:errors} compares
+the hybrid estimator with its two components and with the estimate
+reported by each site's battery management system.
+
+\begin{table}[tb]
+  \caption[Estimation error on held-out sites]{Estimation error on
+    held-out sites, in percentage points of state of health. Coverage is
+    the share of reference tests inside the 95\,\% predictive interval.}
+  \label{tab:errors}
+  \centering
+  \begin{tabular}{@{}l r r r@{}}
+    \toprule
+    Estimator & RMSE & Max.\ error & Coverage \\
+    \midrule
+    Battery management system  & 3.41 & 7.20 & --- \\
+    Ageing law alone           & 1.92 & 4.05 & --- \\
+    Gaussian process alone     & 2.37 & 6.81 & 71\,\% \\
+    \textbf{Hybrid estimator}  & \textbf{0.88} & \textbf{2.14} & \textbf{94\,\%} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The hybrid estimator halves the error of the ageing law and divides that
+of the management system by almost four. More importantly, its
+uncertainty is honest: 94\,\% of the held-out reference tests fall inside
+the nominal 95\,\% interval. The Gaussian process alone, lacking a
+physical mean, extrapolates poorly beyond the ages seen in training and
+is overconfident there.
+
+\begin{figure}[tb]
+  \marginfigure{%
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.98\linewidth, height=0.6\linewidth,
+        xmin=0, xmax=36, ymin=0.90, ymax=1.005,
+        xtick={0,6,...,36}, ytick={0.90,0.925,0.95,0.975,1.0},
+        yticklabel style={/pgf/number format/.cd, fixed, precision=3},
+        xlabel={Months in service}, ylabel={State of health},
+        legend pos=south west,
+      ]
+      \addplot[name path=upper, draw=none, domain=0:36, samples=60]
+        {1 - 0.0150*sqrt(x) - 0.00090*x + 0.002 + 0.00035*x};
+      \addplot[name path=lower, draw=none, domain=0:36, samples=60]
+        {1 - 0.0150*sqrt(x) - 0.00090*x - 0.002 - 0.00035*x};
+      \addplot[accent!15] fill between[of=upper and lower];
+      \addlegendentry{95\,\% interval}
+      \addplot[accent, line width=1pt, domain=0:36, samples=60]
+        {1 - 0.0150*sqrt(x) - 0.00090*x};
+      \addlegendentry{Hybrid estimate}
+      \addplot[black!55, line width=0.8pt, densely dashed, domain=0:36, samples=60]
+        {1 - 0.0085*sqrt(x) - 0.00062*x};
+      \addlegendentry{Management system}
+      \addplot[only marks, mark=*, mark size=1.5pt, black]
+        coordinates {(6,0.9578) (12,0.9367) (19,0.9177) (25,0.9017) (33,0.8826)};
+      \addlegendentry{Reference test}
+    \end{axis}
+  \end{tikzpicture}}{%
+  \caption[Tracking a held-out site]{Tracking site NL-04 without any of
+    its reference tests. The management system drifts high; the hybrid
+    estimate stays within its interval.}
+  \label{fig:tracking}}
+\end{figure}
+
+\begin{keyresult}{Accuracy without site-specific tests}{accuracy}
+  Trained on other sites only, the hybrid estimator tracks the state of
+  health of a new site to within 0.88 percentage points RMSE over three
+  years, with a calibrated 95\,\% interval. No reference test of the
+  target site is needed after commissioning.
+\end{keyresult}
+
+\section{Field trial}
+\label{sec:trial}
+
+Operators keep a battery between conservative state-of-charge limits,
+typically 10 and 90\,\%, partly because they do not trust their estimate
+of how much capacity remains. If the estimate is known to within a
+percentage point, the lower limit can follow the true capacity rather
+than a worst case. From February to October 2026, site NL-01 ran with
+its lower limit set by the hybrid estimate minus twice its standard
+deviation, while a twin container on the same site kept the fixed limit.
+
+Over nine months the trial container delivered 6.4\,\% more energy into
+the frequency reserve market. Its reference test at the end of the trial
+showed a state of health of 0.947, against 0.949 for the control, a
+difference well within the test's repeatability of \(\pm 0.004\). The
+estimate itself, made before the test, was 0.944.

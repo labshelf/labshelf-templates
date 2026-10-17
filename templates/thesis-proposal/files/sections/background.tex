@@ -1,0 +1,46 @@
+% Chapter 2: the literature the proposal builds on.
+\chapter{Background and related work}\label{ch:background}
+
+\section{Mapping urban temperature}
+
+Urban climatology has long described the city as a mosaic of local
+climate zones whose thermal behaviour follows from built form and land
+cover \parencite{stewart2012local}. Statistical maps of air temperature
+interpolate between stations using these covariates, most often through
+land-use regression or kriging with external drift
+\parencite{hjort2016spatial}. Recent work replaces linear trends with
+gradient-boosted trees or neural networks, gaining accuracy but losing
+the calibrated uncertainty that a placement rule needs
+\parencite{venter2021hyperlocal}.
+
+Gaussian processes keep that uncertainty explicit. With a kernel that
+combines spatial distance and covariate similarity, they predict both a
+mean temperature and a variance at every unobserved location
+\parencite{rasmussen2006gaussian}. Sparse approximations make them
+tractable for city-wide grids of a few hundred thousand cells
+\parencite{hensman2013gaussian}.
+
+\section{Optimal and adaptive sensor placement}
+
+Choosing sites to maximise information is a classical problem in
+spatial statistics. Mutual information between observed and unobserved
+locations is submodular, so a greedy rule achieves at least
+$(1-1/e)$ of the optimum \parencite{krause2008near}. Adaptive variants
+place sensors one batch at a time and refit the model between batches,
+which matters when the kernel itself is uncertain
+\parencite{garnett2023bayesian}.
+
+These methods treat all locations as equally important. Cost-sensitive
+and task-driven variants exist in robotics and hydrology, where the
+objective is a downstream decision rather than a map
+\parencite{marchant2014bayesian}, but none has been applied to the
+distribution of heat exposure across a population.
+
+\section{The gap}
+
+Three things are missing from current practice. No placement rule
+weights uncertainty by exposure; no study tests whether a placement
+policy learned in one city transfers to another; and no adaptive scheme
+has been validated in a live urban deployment, where sensors fail and
+access is negotiated site by site. The research questions in the next
+chapter address each gap in turn.

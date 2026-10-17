@@ -1,0 +1,10 @@
+schema: 1
+id: math-paper
+name: Mathematics Paper
+description: An amsart-inspired research paper on A4 set in Libertinus Serif with libertinust1math. Centred small-caps title and authors, an abstract in a narrow indented block closed by MSC codes and keywords, centred small-caps section heads and run-in subsections. Theorem, lemma, definition and remark environments have small-caps heads in deep navy, italic statements and a navy end-of-proof square. Includes tikz-cd diagrams, a TikZ figure, numeric references and closing author addresses.
+category: article
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

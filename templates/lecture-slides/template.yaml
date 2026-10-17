@@ -1,0 +1,10 @@
+schema: 1
+id: lecture-slides
+name: Lecture Slides
+description: 16:9 Beamer deck for teaching a university course, with its own small theme in Lato on white with a slate base and one teal-cyan accent. A dark slate title slide carries the course code, lecture number and date; content slides have a slim accent strip naming the section up the left edge; dividers show the agenda with ticked progress. Includes tinted definition, theorem, example and warning boxes, a listings code panel, handout-safe reveals, a worked example, a quiz and a next-lecture slide.
+category: slides
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

@@ -1,0 +1,34 @@
+% Research questions: each is a numbered, styled item that can be
+% cited with \ref (it prints RQ1, RQ2, ...).
+\chapter{Research questions}\label{ch:questions}
+
+The gap described above leads to one overarching aim: \emph{to make the
+placement of urban heat sensors an explicit, learnable decision that
+weights error by human exposure.} Three questions break this aim into
+parts that can each be answered within a thesis chapter.
+
+\begin{researchquestion}{Exposure-weighted acquisition}\label{rq:acq}
+How should a sequential placement rule trade off reduction in predictive
+variance against the number of vulnerable residents near each candidate
+site, and how much does such a rule improve mapping error where it
+matters most compared with variance-only and random placement?
+\end{researchquestion}
+
+\begin{researchquestion}{Transfer between cities}\label{rq:transfer}
+Can a temperature model and its placement policy, learned from a dense
+network in one city, guide the first deployment in a city with almost
+no street-level data, and which covariates make that transfer succeed
+or fail?
+\end{researchquestion}
+
+\begin{researchquestion}{Field validation}\label{rq:field}
+In a live season-long deployment of mobile sensors that are moved every
+two weeks, does adaptive placement deliver the gains predicted in
+simulation once sensor drift, vandalism and access constraints are
+included?
+\end{researchquestion}
+
+The questions build on each other: \ref{rq:acq} supplies the rule,
+\ref{rq:transfer} asks how far it generalises, and \ref{rq:field} tests
+it against the untidiness of a real street. Each question has a
+falsifiable outcome, stated as a hypothesis in Chapter~\ref{ch:methods}.

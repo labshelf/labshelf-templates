@@ -1,0 +1,55 @@
+% Title page: an accent block across the top half carries the title; the
+% author and degree sit below on white. Every line comes from main.tex.
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[accent] (current page.north west) rectangle
+    ([yshift=-0.52\paperheight]current page.north east);
+  % Placeholder mark: replace with your university logo if you have one.
+  \begin{scope}[shift={([xshift=24mm, yshift=-26mm]current page.north west)},
+      line width=1.1pt, draw=white]
+    \draw (0,0) circle (4mm);
+    \draw (-4mm,0) -- (4mm,0) (0,-4mm) -- (0,4mm);
+    \fill[white] (0,0) circle (1.1mm);
+  \end{scope}
+  \node[anchor=west, text=white, font=\sansbold\small]
+    at ([xshift=31mm, yshift=-24.4mm]current page.north west)
+    {\spacedcaps{\thesisuniversity}};
+  \node[anchor=west, text=white!80!accent, font=\sffamily\footnotesize]
+    at ([xshift=31mm, yshift=-28.6mm]current page.north west)
+    {\thesisfaculty};
+  % Title and subtitle, set on the lower edge of the block.
+  \node[anchor=south west, text=white, text width=150mm, align=left,
+      inner sep=0pt]
+    at ([xshift=24mm, yshift=-0.52\paperheight+16mm]current page.north west)
+    {% Light display cuts have a tight word space; widen it for the title.
+     {\sanslight\fontsize{50}{56}\selectfont\spaceskip=0.26em\relax\thesistitle\par}
+     \vspace{6mm}
+     {\sanslight\fontsize{17}{23}\selectfont\color{white!85!accent}\hyphenpenalty=10000 \exhyphenpenalty=10000 \thesissubtitle\par}};
+  % Author and degree, below the block.
+  \node[anchor=north west, text width=150mm, align=left, inner sep=0pt]
+    at ([xshift=24mm, yshift=-0.52\paperheight-18mm]current page.north west)
+    {{\sansbold\fontsize{17}{21}\selectfont\thesisauthor\par}
+     \vspace{5mm}
+     {\sffamily\small\color{inkmuted}A thesis submitted for the degree of\\
+       \thesisdegree\ in \thesisfield\par}};
+  \node[anchor=south west, text width=150mm, align=left, inner sep=0pt,
+      font=\sffamily\small]
+    at ([xshift=24mm, yshift=30mm]current page.south west)
+    {\begin{tabular}{@{}l@{\hspace{6mm}}l@{}}
+       {\sansbold\color{accent}\spacedcaps{Supervisor}}    & \thesissupervisor \\[1mm]
+       {\sansbold\color{accent}\spacedcaps{Co-supervisor}} & \thesiscosupervisor \\[1mm]
+       {\sansbold\color{accent}\spacedcaps{Submitted}}     & \thesisdate
+     \end{tabular}};
+\end{tikzpicture}
+\end{titlepage}
+
+% Reverse of the title page: imprint and licence.
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{flushleft}\sffamily\footnotesize\color{inkmuted}
+  \thesistitle: \thesissubtitle\\[0.8ex]
+  \copyright\ 2026 \thesisauthor. This work is licensed under a Creative
+  Commons Attribution 4.0 International Licence.\\[0.8ex]
+  Set in IBM Plex Serif and IBM Plex Sans with \LaTeX.
+\end{flushleft}
+\cleardoublepage

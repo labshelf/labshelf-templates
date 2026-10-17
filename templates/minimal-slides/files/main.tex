@@ -1,0 +1,198 @@
+% Minimal Slides: a 16:9 Beamer deck with an editorial, magazine-like look.
+% The theme (fonts, colours, title, section, quote and placeholder slides)
+% lives in beamerthememinimal.sty; this file holds only the talk.
+% To recolour the deck, change mnAccent in the theme file.
+% `t' hangs content from the title hairline instead of centring it vertically.
+\documentclass[aspectratio=169,11pt,t]{beamer}
+
+\usetheme{minimal}
+\usepackage[style=authoryear,maxcitenames=2,maxbibnames=4,uniquelist=false,backend=biber]{biblatex}
+\addbibresource{refs.bib}
+\renewcommand*{\bibfont}{\scriptsize}
+% Accent-coloured links, never boxed.
+\hypersetup{colorlinks=true,linkcolor=mnInk,citecolor=mnInk,urlcolor=mnAccent}
+
+% Title metadata. The short title appears in the footer of every slide;
+% \institute fills the masthead line on the title slide.
+\title[Paper or Pixels]{Paper or pixels?}
+\subtitle{What a semester of long-form reading tells us about comprehension on screens}
+\author{Clara Lindqvist\texorpdfstring{\enspace\textperiodcentered\enspace}{, }Daniel Osei\texorpdfstring{\enspace\textperiodcentered\enspace}{, }Ines Moreau}
+\institute{Reading Research Colloquium}
+\date{12 March 2026}
+
+\begin{document}
+
+% ------------------------------------------------------------------ title
+\begin{frame}[plain,noframenumbering]
+  \titlepage
+\end{frame}
+
+% ------------------------------------------------------------------ contents
+\begin{frame}{In this talk}
+  \vspace{2mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.31\textwidth}
+      {\mndisplay{34}\color{mnAccent}\LibertinusSerifLF 1\par}
+      \vspace{1mm}{\rmfamily\large The question\par}
+      \vspace{1mm}{\small\color{mnMuted}Why ask about paper again, after two decades of studies.\par}
+    \column{0.31\textwidth}
+      {\mndisplay{34}\color{mnAccent}\LibertinusSerifLF 2\par}
+      \vspace{1mm}{\rmfamily\large The study\par}
+      \vspace{1mm}{\small\color{mnMuted}A semester, 212 students and the same eight essays in two media.\par}
+    \column{0.31\textwidth}
+      {\mndisplay{34}\color{mnAccent}\LibertinusSerifLF 3\par}
+      \vspace{1mm}{\rmfamily\large The findings\par}
+      \vspace{1mm}{\small\color{mnMuted}A gap that grows with length, and what readers did about it.\par}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ part 1
+\section{The question}
+
+\begin{frame}{Twenty years of studies, one stubborn gap}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.56\textwidth}
+      \begin{itemize}
+        \item Meta-analyses agree: readers understand informational text a little
+              better on paper \parencite{delgado2018,clinton2019}.
+        \item The gap is small, but it has not closed as screens improved.
+        \item Almost every study uses short passages read once, in a lab.
+      \end{itemize}
+    \column{0.36\textwidth}
+      \vspace{1mm}
+      {\mndisplay{44}\color{mnAccent}$-$0.21\par}
+      \vspace{2mm}{\color{mnRule}\rule{\linewidth}{0.4pt}}\par\vspace{2mm}
+      {\small\color{mnMuted}pooled effect size for screen versus paper, informational
+      texts under time pressure \parencite{delgado2018}\par}
+  \end{columns}
+\end{frame}
+
+\mnquote{On paper I know where I am in the argument. On a screen I only know where I am on the page.}
+  {Participant 27, second-year history student}
+  {Exit interview, December 2025}
+
+% ------------------------------------------------------------------ part 2
+\section{The study}
+
+\begin{frame}{Reading where students actually read}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.52\textwidth}
+      \mnplaceholder{0.98\linewidth}{31mm}{Figure 1}
+      \par\vspace{2mm}
+      {\footnotesize\rmfamily\itshape\color{mnMuted}The reading room of the university
+      library, where half of the sessions took place.\par}
+    \column{0.42\textwidth}
+      \begin{itemize}
+        \item 212 undergraduates, 14 weeks
+        \item Eight essays of 2\,000 to 9\,000 words
+        \item Each essay read on paper by one half of the class and on a tablet by the other
+        \item Comprehension tested a week later, not the same day
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Two conditions, one text}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.45\textwidth}
+      {\color{mnAccent}\mnlabel{Paper}}\par\vspace{1.5mm}
+      {\rmfamily\Large Printed reader\par}
+      \vspace{2.5mm}
+      \begin{itemize}
+        \item Stapled A4 booklet, 11\,pt serif
+        \item Pencil margins allowed
+        \item Readers keep the booklet for the week
+      \end{itemize}
+    \column{0.02\textwidth}
+      \tikz\draw[mnRule,line width=0.4pt] (0,0) -- (0,40mm);
+    \column{0.45\textwidth}
+      {\color{mnAccent}\mnlabel{Screen}}\par\vspace{1.5mm}
+      {\rmfamily\Large Tablet reader\par}
+      \vspace{2.5mm}
+      \begin{itemize}
+        \item The same layout as a PDF on a 10-inch tablet
+        \item Highlighting and notes allowed
+        \item Readers keep the file for the week
+      \end{itemize}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ part 3
+\section{The findings}
+
+\begin{frame}{The longer the essay, the wider the gap}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.64\textwidth}
+      \begin{tikzpicture}
+        \begin{axis}[mnaxis, width=66mm, height=33mm,
+            xmin=1.5, xmax=9.5, ymin=50, ymax=85,
+            xtick={2,4,6,8}, ytick={50,60,70,80},
+            xlabel={Essay length (thousand words)}, ylabel={Score (\%)}]
+          \addplot[mnAccent, mark=*, mark size=1.3pt]
+            coordinates {(2,78.4) (3,77.9) (4.5,76.1) (5.5,75.4) (6,74.8) (7,74.0) (8,73.1) (9,72.6)};
+          \addplot[mnMuted, mark=o, mark size=1.3pt]
+            coordinates {(2,77.6) (3,76.0) (4.5,72.3) (5.5,69.8) (6,68.1) (7,65.9) (8,63.4) (9,61.2)};
+          \node[anchor=west,font=\footnotesize,text=mnAccent] at (axis cs:9.15,72.6) {Paper};
+          \node[anchor=west,font=\footnotesize,text=mnMuted] at (axis cs:9.15,61.2) {Screen};
+        \end{axis}
+      \end{tikzpicture}
+    \column{0.29\textwidth}
+      \vspace{2mm}
+      {\small Below 3\,000 words the two media are indistinguishable. Past 6\,000 words,
+      screen readers lose about two points per thousand words.\par}
+      \vspace{2mm}
+      {\footnotesize\color{mnMuted}Mean delayed-test score, $n = 212$.\par}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{What readers did with the text}
+  \vspace{1mm}
+  \centering
+  {\LibertinusSansTLF
+  \begin{tabular}{@{}l r r r@{}}
+    \toprule
+    & \multicolumn{1}{c}{Paper} & \multicolumn{1}{c}{Screen} & \multicolumn{1}{c}{Difference} \\
+    \midrule
+    Reading time per essay (min)   & 41.2 & 36.8 & $-$4.4 \\
+    Annotations per 1\,000 words   & 6.3  & 2.1  & $-$4.2 \\
+    Returns to an earlier page     & 9.7  & 3.4  & $-$6.3 \\
+    Delayed-test score (\%)        & 75.1 & 69.6 & $-$5.5 \\
+    Confidence in own score (\%)   & 71.0 & 78.3 & \textcolor{mnAccent}{$+$7.3} \\
+    \bottomrule
+  \end{tabular}\par}
+  \vspace{4mm}
+  {\footnotesize\color{mnMuted}Screen readers read faster, marked less, and were more confident
+  in a lower score: the calibration gap described by \textcite{singer2017}.\par}
+\end{frame}
+
+\begin{frame}{What we take from it}
+  \begin{enumerate}
+    \item The medium matters most for long, argued texts, the kind a degree is built on.
+    \item The cost comes from navigation: readers who go back keep their scores.
+    \item Overconfidence, not attention, is the risk worth teaching against.
+  \end{enumerate}
+  \vspace{3mm}
+  {\small\color{mnMuted}Consistent with the slower, recursive reading that
+  \textcite{wolf2018} argues screens discourage, and with \textcite{mangen2013}.\par}
+\end{frame}
+
+% ------------------------------------------------------------------ references
+\section*{References}
+\begin{frame}{References}
+  \printbibliography[heading=none]
+\end{frame}
+
+% ------------------------------------------------------------------ closing
+\begin{frame}[plain,noframenumbering]
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[anchor=south west,inner sep=0,text=mnInk]
+      at ($(current page.south west)+(13mm,40mm)$) {\mndisplay{54}Thank you.};
+    \fill[mnAccent] ($(current page.south west)+(13mm,33mm)$) rectangle ++(10mm,1.2pt);
+    \node[anchor=north west,inner sep=0,text width=120mm]
+      at ($(current page.south west)+(13mm,29mm)$) {%
+      {\rmfamily\itshape\large\color{mnMuted}Questions, data and materials\par}
+      \vspace{2mm}
+      {\small c.lindqvist@northfield.example\quad\textperiodcentered\quad osf.example/paper-or-pixels\par}};
+  \end{tikzpicture}
+\end{frame}
+
+\end{document}

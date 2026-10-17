@@ -1,0 +1,372 @@
+% Mathematics Paper -- an amsart-inspired research paper on A4.
+% The page design (grid, Libertinus type, theorem styles, running heads,
+% accent colour) lives in mathpaper.sty; this file holds the content.
+% Edit the title, authors, MSC codes and addresses in the metadata block.
+% Build with: latexmk -pdf main.tex
+\documentclass[11pt, twoside]{article}
+\usepackage{mathpaper}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathreplacing}
+\usepackage{tikz-cd}
+\tikzcdset{arrow style=tikz, diagrams={>={Straight Barb[scale=0.8]}}}
+
+% Numeric references in brackets, small, with initials as in AMS journals.
+\usepackage[backend=biber, style=numeric-comp, sorting=nyt, giveninits=true,
+  maxbibnames=5, doi=false, url=false, isbn=false, eprint=false]{biblatex}
+\addbibresource{refs.bib}
+\renewcommand*{\bibfont}{\small}
+\DeclareFieldFormat[article]{title}{\mkbibemph{#1}}
+\DeclareFieldFormat[book]{title}{\mkbibemph{#1}}
+\DeclareFieldFormat{journaltitle}{#1}
+\renewbibmacro{in:}{}
+
+% Links in the accent colour, without boxes.
+\usepackage[colorlinks, allcolors=accent]{hyperref}
+\usepackage[capitalise, nameinlink]{cleveref}
+% Theorem A is unnumbered, so it is referenced by name.
+\newcommand{\thmA}{\hyperref[thm:A]{Theorem~A}}
+
+% Notation used throughout; change it in one place.
+\newcommand{\R}{\mathbb{R}}
+\def\Bbbk{\mathbf{k}}
+\newcommand{\vect}{\mathbf{vect}_{\Bbbk}}
+\newcommand{\Pers}{\mathbf{Pers}}
+\newcommand{\sh}[2]{#1[#2]}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\coker}{coker}
+\DeclareMathOperator{\Barc}{Bar}
+\newcommand{\dI}{d_{\mathrm{I}}}
+\newcommand{\dB}{d_{\mathrm{B}}}
+
+% ---- Metadata --------------------------------------------------------------
+\title{Mayer--Vietoris Sequences\\and Interleavings of Persistence Modules}
+\shorttitle{Mayer--Vietoris sequences and interleavings}
+\author{Agnieszka Wróbel \and Tomás Echeverría}
+\renewcommand{\and}{\enspace and\enspace}
+\shortauthors{A. Wróbel and T. Echeverría}
+\date{Received 3 March 2026; revised 14 August 2026}
+\subjclass{Primary 55N31; Secondary 18G80, 62R40.}
+\keywords{persistence modules, interleaving distance, Mayer--Vietoris
+  sequence, barcodes, covers of filtered spaces.}
+\address{Agnieszka Wróbel}{Institute of Mathematics, Jagiellonian
+  University, ul.\ Łojasiewicza 6, 30-348 Kraków, Poland}{a.wrobel@example.org}
+\address{Tomás Echeverría}{Departamento de Matemáticas, Universidad de
+  Chile, Las Palmeras 3425, Ñuñoa, Santiago, Chile}{t.echeverria@example.org}
+
+\begin{abstract}
+Given a filtered space covered by two filtered subspaces, the persistent
+homology of the whole is computed from the pieces by a long exact
+Mayer--Vietoris sequence, but in general the pieces do not determine it up to
+isomorphism. We show that they determine it up to an $\varepsilon$-interleaving
+whenever the image of the connecting morphism is $\varepsilon$-trivial, and
+that this hypothesis holds as soon as every bar of the intersection in the
+adjacent degree is shorter than $\varepsilon$. By the isometry theorem the
+same bound holds for the bottleneck distance between barcodes. We give a
+quantitative version for covers that are only approximately excisive and
+illustrate the bound on a sampled annulus.
+\end{abstract}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+Persistent homology assigns to a filtered space $X = (X_t)_{t\in\R}$ the
+family of vector spaces $H_n(X_t)$ together with the maps induced by the
+inclusions $X_s \subseteq X_t$. Such a family is a \emph{persistence module},
+and when each space is finite-dimensional it decomposes into interval modules,
+recorded as a barcode~\cite{crawley-boevey2015,zomorodian2005}. Barcodes are
+stable: nearby filtrations have nearby barcodes, and the interleaving distance
+between modules equals the bottleneck distance between their
+barcodes~\cite{chazal2009,lesnick2015,bauer2015}.
+
+Computations rarely see a whole space at once. In distributed and multiscale
+settings one computes the persistent homology of pieces $A$ and $B$ with
+$X = A \cup B$ and must recover that of $X$. Levelwise, the Mayer--Vietoris
+sequence
+\begin{equation}
+\label{eq:mv-level}
+\cdots \to H_n(A_t\cap B_t) \to H_n(A_t)\oplus H_n(B_t) \to H_n(X_t)
+  \xrightarrow{\ \delta\ } H_{n-1}(A_t\cap B_t) \to \cdots
+\end{equation}
+is natural in $t$, hence a long exact sequence of persistence
+modules~\cite{dicuroya2023}. Exactness does not give $H_n(X)$, however: an
+extension problem remains, and in persistence it is unsolvable in general.
+Our observation is that an extension by a module whose structure maps die
+quickly is close to split, and that ``die quickly'' can be read off the
+barcode of the intersection.
+
+\begin{maintheorem}
+\label{thm:A}
+Let $X = A\cup B$ be a filtered space covered by the interiors of the
+filtered subspaces $A$ and $B$, and let $Q_n$ be the cokernel of
+$H_n(A\cap B) \to H_n(A)\oplus H_n(B)$. If every bar of $H_{n-1}(A\cap B)$ has
+length at most $\varepsilon$, then $\dI\bigl(H_n(X), Q_n\bigr) \le \varepsilon$
+and $\dB\bigl(\Barc H_n(X), \Barc Q_n\bigr) \le \varepsilon$.
+\end{maintheorem}
+
+The theorem is sharp: for every $\varepsilon > 0$ there are covers of a
+filtered circle for which both distances equal $\varepsilon$
+(\cref{ex:annulus}). \Cref{sec:prelim} recalls interleavings,
+\cref{sec:extensions} proves the algebraic lemma behind the theorem, and
+\cref{sec:covers} applies it to covers and to covers that are only
+approximately excisive.
+
+\section{Preliminaries}
+\label{sec:prelim}
+
+Fix a field $\Bbbk$ and write $\vect$ for the category of finite-dimensional
+vector spaces over $\Bbbk$. We regard $\R$ as a poset category.
+
+\begin{definition}
+A \emph{persistence module} is a functor $M\colon \R \to \vect$. We write $M_t$
+for its value at $t$ and $\varphi_M^{s,t}\colon M_s \to M_t$ for its
+\emph{structure map} when $s \le t$. Morphisms are natural transformations,
+and $\Pers$ denotes the resulting abelian category.
+\end{definition}
+
+For $\varepsilon \ge 0$ the \emph{shift} $\sh{M}{\varepsilon}$ is the module
+with $\sh{M}{\varepsilon}_t = M_{t+\varepsilon}$, and the structure maps of
+length $\varepsilon$ assemble into a morphism
+$\sigma_M^\varepsilon\colon M \to \sh{M}{\varepsilon}$. A morphism
+$f\colon M\to N$ shifts to $\sh{f}{\varepsilon}$ in the evident way.
+
+\begin{definition}
+\label{def:interleaving}
+Modules $M$ and $N$ are \emph{$\varepsilon$-interleaved} if there are
+morphisms $f\colon M \to \sh{N}{\varepsilon}$ and
+$g\colon N \to \sh{M}{\varepsilon}$ such that the triangles
+\begin{equation}
+\label{eq:interleaving}
+\begin{tikzcd}[column sep=small, row sep=large]
+M \arrow[rr, "\sigma_M^{2\varepsilon}"] \arrow[dr, "f"']
+  & & \sh{M}{2\varepsilon} \\
+& \sh{N}{\varepsilon} \arrow[ur, "\sh{g}{\varepsilon}"'] &
+\end{tikzcd}
+\qquad\qquad
+\begin{tikzcd}[column sep=small, row sep=large]
+& \sh{M}{\varepsilon} \arrow[dr, "\sh{f}{\varepsilon}"] & \\
+N \arrow[rr, "\sigma_N^{2\varepsilon}"'] \arrow[ur, "g"]
+  & & \sh{N}{2\varepsilon}
+\end{tikzcd}
+\end{equation}
+commute. The \emph{interleaving distance} is
+\[
+\dI(M,N) = \inf\{\varepsilon \ge 0 : M \text{ and } N \text{ are
+$\varepsilon$-interleaved}\},
+\]
+with the convention $\inf\emptyset = \infty$.
+\end{definition}
+
+The interleaving distance is an extended pseudometric on $\Pers$; the
+triangle inequality follows by composing interleavings~\cite{bubenik2014}.
+Every pointwise finite-dimensional module is a direct sum of interval modules
+$\Bbbk_I$, and the multiset of intervals is its \emph{barcode}
+$\Barc M$~\cite{crawley-boevey2015}.
+
+\begin{theorem}[Isometry theorem~\cite{lesnick2015,bauer2015}]
+\label{thm:isometry}
+For pointwise finite-dimensional modules $M$ and $N$,
+\begin{equation}
+\label{eq:isometry}
+\dI(M,N) = \dB(\Barc M, \Barc N).
+\end{equation}
+\end{theorem}
+
+\begin{definition}
+A module $K$ is \emph{$\varepsilon$-trivial} if $\sigma_K^\varepsilon = 0$,
+that is, if every structure map of length $\varepsilon$ vanishes.
+\end{definition}
+
+\begin{remark}
+\label{rem:trivial}
+A pointwise finite-dimensional module is $\varepsilon$-trivial if and only if
+each of its bars has length at most $\varepsilon$. Submodules and quotients of
+$\varepsilon$-trivial modules are $\varepsilon$-trivial, because the
+structure maps of a submodule are restrictions and those of a quotient are
+induced maps.
+\end{remark}
+
+\section{Extensions by trivial modules}
+\label{sec:extensions}
+
+The following lemma carries the whole argument. It says that an extension by
+an $\varepsilon$-trivial module is $\varepsilon$-interleaved with its
+submodule, whatever the extension class.
+
+\begin{lemma}
+\label{lem:extension}
+Let $0 \to Q \xrightarrow{\iota} M \xrightarrow{\pi} K \to 0$ be a short exact
+sequence in $\Pers$ with $K$ $\varepsilon$-trivial. Then there is a unique
+morphism $\psi\colon M \to \sh{Q}{\varepsilon}$ with
+$\sh{\iota}{\varepsilon}\circ\psi = \sigma_M^\varepsilon$, and $\iota$ and
+$\psi$ form an $\varepsilon$-interleaving. In particular
+$\dI(Q, M) \le \varepsilon$.
+\end{lemma}
+
+\begin{proof}
+Naturality of $\pi$ gives $\sh{\pi}{\varepsilon}\circ\sigma_M^\varepsilon =
+\sigma_K^\varepsilon\circ\pi = 0$, so $\sigma_M^\varepsilon$ lands in the
+kernel of $\sh{\pi}{\varepsilon}$, which is the image of the monomorphism
+$\sh{\iota}{\varepsilon}$. This yields $\psi$ and its uniqueness, and the
+diagram
+\begin{equation}
+\label{eq:extension}
+\begin{tikzcd}
+0 \arrow[r] & Q \arrow[r, "\iota"] \arrow[d, "\sigma_Q^\varepsilon"']
+  & M \arrow[r, "\pi"] \arrow[d, "\sigma_M^\varepsilon"]
+    \arrow[dl, dashed, "\psi" description]
+  & K \arrow[r] \arrow[d, "0"] & 0 \\
+0 \arrow[r] & \sh{Q}{\varepsilon} \arrow[r, "\sh{\iota}{\varepsilon}"']
+  & \sh{M}{\varepsilon} \arrow[r, "\sh{\pi}{\varepsilon}"']
+  & \sh{K}{\varepsilon} \arrow[r] & 0
+\end{tikzcd}
+\end{equation}
+commutes. Put $f = \sh{\iota}{\varepsilon}\circ\sigma_Q^\varepsilon\colon
+Q \to \sh{M}{\varepsilon}$ and $g = \psi$. The two triangles of
+\eqref{eq:interleaving} read
+\[
+\sh{\psi}{\varepsilon}\circ f = \sigma_Q^{2\varepsilon}
+\quad\text{and}\quad
+\sh{f}{\varepsilon}\circ\psi = \sigma_M^{2\varepsilon}.
+\]
+The second follows from $\sh{\iota}{\varepsilon}\circ\psi =
+\sigma_M^\varepsilon$ and naturality of $\sigma$. Composing the first with
+$\sh{\iota}{2\varepsilon}$ reduces it to the same identity, and
+$\sh{\iota}{2\varepsilon}$ is injective, so it may be cancelled.
+\end{proof}
+
+\begin{remark}
+The constant in \cref{lem:extension} is sharp. For $M = \Bbbk_{[0,\infty)}$
+and its submodule $Q = \Bbbk_{[\varepsilon,\infty)}$ the quotient is
+$K = \Bbbk_{[0,\varepsilon)}$, which is $\varepsilon$-trivial, and
+$\dI(Q,M) = \varepsilon$ because the infinite bars must be matched to each
+other.
+\end{remark}
+
+\section{Covers of filtered spaces}
+\label{sec:covers}
+
+A \emph{filtered space} is a functor $X\colon \R \to \mathbf{Top}$ whose
+structure maps are inclusions, and a \emph{cover} of $X$ is a pair of filtered
+subspaces with $A_t \cup B_t = X_t$ for all $t$. The cover is
+\emph{excisive} if $\{\mathrm{int}\,A_t, \mathrm{int}\,B_t\}$ covers $X_t$ for
+every $t$; then \eqref{eq:mv-level} is exact at each $t$ and, being natural,
+is a long exact sequence in $\Pers$.
+
+\begin{proof}[Proof of \thmA]
+Cutting the long exact sequence at $H_n(X)$ gives a short exact sequence
+\begin{equation}
+\label{eq:cut}
+0 \to Q_n \to H_n(X) \xrightarrow{\ \delta\ } \im\delta \to 0,
+\end{equation}
+where $\im\delta \subseteq H_{n-1}(A\cap B)$. By hypothesis and
+\cref{rem:trivial}, $H_{n-1}(A\cap B)$ and hence $\im\delta$ are
+$\varepsilon$-trivial. \Cref{lem:extension} gives
+$\dI(H_n(X), Q_n) \le \varepsilon$, and \cref{thm:isometry} turns this into
+the bound on barcodes.
+\end{proof}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[scale=0.92, line cap=round]
+  % Left: an annulus covered by two overlapping arcs A (left) and B (right).
+  \begin{scope}
+    \fill[black!6, even odd rule] (0,0) circle (1.55) (0,0) circle (0.85);
+    \draw[black!55, line width=.5pt] (0,0) circle (1.55) (0,0) circle (0.85);
+    \draw[accent, line width=2.4pt, opacity=.85]
+      (100:1.2) arc[start angle=100, end angle=260, radius=1.2];
+    \draw[black!70, line width=2.4pt, opacity=.55]
+      (-80:1.2) arc[start angle=-80, end angle=80, radius=1.2];
+    \node[accent] at (180:1.95) {$A$};
+    \node[black!75] at (0:1.95) {$B$};
+    \node[font=\footnotesize, black!60] at (0,-2.05) {cover of $X_t$};
+  \end{scope}
+  % Right: barcodes with the bars of the intersection kept short.
+  \begin{scope}[xshift=4.3cm, yshift=-1.25cm]
+    \draw[black!45, -{Straight Barb[scale=.7]}] (0,0) -- (5.2,0)
+      node[right, font=\footnotesize, black!60] {$t$};
+    \foreach \x/\l in {0/0, 1/1, 2/2, 3/3, 4/4}
+      \draw[black!45] (\x,0) -- (\x,-.08) node[below, font=\scriptsize] {\l};
+    \node[left, font=\footnotesize] at (-.15,2.45) {$H_0(A\cap B)$};
+    \draw[black!60, line width=1.6pt] (.2,2.45) -- (4.9,2.45);
+    \draw[black!60, line width=1.6pt] (.4,2.15) -- (1.05,2.15);
+    \node[left, font=\footnotesize] at (-.15,1.35) {$H_1(X)$};
+    \draw[accent, line width=1.6pt] (1.05,1.35) -- (4.4,1.35);
+    \node[left, font=\footnotesize] at (-.15,.6) {$Q_1$};
+    \draw[black!35, line width=1.6pt] (1.7,.6) -- (4.4,.6);
+    \draw[decorate, decoration={brace, amplitude=3pt, mirror}, black!60]
+      (.4,1.98) -- (1.05,1.98) node[midway, below=2pt, font=\scriptsize]
+      {$\le\varepsilon$};
+  \end{scope}
+\end{tikzpicture}
+\caption{A sampled annulus covered by two arcs (left) and the barcodes in
+\cref{ex:annulus} (right). The short bar of $H_0(A\cap B)$ controls the
+difference between the bar of $H_1(X)$ and its approximation from the pieces.}
+\label{fig:annulus}
+\end{figure}
+
+\begin{example}
+\label{ex:annulus}
+Let $X$ be the Vietoris--Rips filtration of a dense sample of an annulus,
+covered by the filtrations $A$ and $B$ of two overlapping arcs as in
+\cref{fig:annulus}. The intersection $A_t\cap B_t$ has two components for
+small $t$, one of which merges after time $\varepsilon$; the class in
+$H_1(X)$ that goes around the annulus is born when the second overlap
+appears and maps under $\delta$ onto the short bar. The cokernel $Q_1$ sees
+the loop only once the short bar has died, so the left endpoints of the
+two bars differ by exactly $\varepsilon$, and the bound of \thmA{}
+is attained.
+\end{example}
+
+Covers built from data, as in the distributed algorithms
+of~\cite{yoon2023,casas2021}, are seldom excisive at every scale: two patches of a
+point cloud overlap only after their Rips complexes have grown. The next
+result measures this defect and pays for it in the bound.
+
+\begin{definition}
+A cover is \emph{$\eta$-excisive} if for all $t$ the inclusion of the
+singular chains of $X_t$ subordinate to $\{A_t, B_t\}$ into all singular
+chains of $X_t$ becomes a homology isomorphism after composing with the
+inclusion into $X_{t+\eta}$, in every degree.
+\end{definition}
+
+\begin{proposition}
+\label{prop:approx}
+Suppose that the cover $X = A\cup B$ is $\eta$-excisive and that every bar of
+$H_{n-1}(A\cap B)$ has length at most $\varepsilon$. Then
+\begin{equation}
+\label{eq:approx}
+\dI\bigl(H_n(X), Q_n\bigr) \le \varepsilon + \eta .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Let $C$ be the filtered complex of chains subordinate to the cover. Its
+homology fits into an exact Mayer--Vietoris sequence for every $t$, so the
+proof of \thmA{} gives $\dI(H_n(C), Q_n) \le \varepsilon$. The
+hypothesis says that the inclusion $H_n(C) \to H_n(X)$ and the map
+$H_n(X) \to \sh{H_n(C)}{\eta}$ defined through $X_{t+\eta}$ form an
+$\eta$-interleaving, so $\dI(H_n(C), H_n(X)) \le \eta$. The triangle
+inequality for $\dI$ completes the proof.
+\end{proof}
+
+\begin{corollary}
+\label{cor:local}
+Under the hypotheses of \cref{prop:approx},
+$\dB\bigl(\Barc H_n(X), \Barc Q_n\bigr) \le \varepsilon + \eta$. In particular
+the barcode of $X$ in degree $n$ is determined up to $\varepsilon + \eta$ by
+$A$, $B$ and $A\cap B$ alone.
+\end{corollary}
+
+\subsection*{Acknowledgements}
+We thank the referee for a careful reading and for suggesting the sharper
+form of \cref{lem:extension}. The first author was supported by a fictional
+grant of the National Science Centre.
+
+\printbibliography
+\printaddresses
+
+\end{document}

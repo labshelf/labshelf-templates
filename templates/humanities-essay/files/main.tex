@@ -1,0 +1,192 @@
+% Humanities Essay -- a long-form essay for history or philosophy on A4.
+% The page design (measure, Crimson type, headings, fleurons, footnotes,
+% accent colour) lives in essay.sty; this file holds the text.
+% Edit the title, author and epigraph in the metadata block below.
+% Build with: latexmk -pdf main.tex
+\documentclass[11pt]{article}
+\usepackage{essay}
+
+\usepackage[english]{babel}
+\usepackage[autostyle]{csquotes}
+\usepackage{tikz}
+
+% Chicago notes: the first citation is a full note, later ones are short,
+% and the bibliography at the end lists every work cited.
+\usepackage[notes, backend=biber, noibid]{biblatex-chicago}
+\addbibresource{refs.bib}
+
+% Links in the text colour: an essay should not look like a web page.
+\usepackage[hidelinks]{hyperref}
+
+% ---- Metadata --------------------------------------------------------------
+\title{Hours of Account}
+\subtitle{Watchmakers, Ledgers and the Moral Time of Geneva, 1760--1790}
+\shorttitle{Hours of Account}
+\author{Héloïse Marchetti}
+\affiliation{Department of History, University of Edinburgh}
+
+\begin{document}
+\maketitle
+
+\epigraph{Wound the great clock at six, and my own at a quarter past, so that
+the house should not run ahead of the city.}{Abraham Courvoisier,
+\textit{Livre de raison}, 14~March 1771}
+
+\noindent Historians of time have long told a story about discipline. In
+E.\,P. Thompson's classic account, the spread of clocks and watches in the
+eighteenth century accompanied a new regime of work in which the employer's
+hour displaced the rhythms of task and season, and the moral language of
+punctuality was the language of the factory.\autocite{thompson1967} The story
+has been qualified many times, most usefully by work showing that clock time
+was familiar to ordinary people long before the mills, and that it served
+them as often as it bound them.\autocite[1--24]{glennie2009} Yet the
+qualification tends to keep the original question: who imposed the hour on
+whom?
+
+This essay asks a different question of a different place. Geneva in the
+second half of the eighteenth century was the watchmaking capital of Europe,
+a republic whose workshops, the \textit{Fabrique}, exported tens of thousands
+of movements a year.\autocite[237--245]{landes1983} Its master watchmakers
+did not need to be taught the hour; they made it. What they kept, besides
+their clocks, were account books, and the account books show something that
+neither the factory nor the parish bell explains: an attempt to make time
+itself into a moral account, kept in the same columns as debts and
+obligations.
+
+\section{The ledger as a clock}
+
+The richest of these books is the \textit{livre de raison} of Abraham
+Courvoisier, a master in the quarter of Saint-Gervais who kept it from 1764
+until his death in 1789.\autocite{courvoisier1771} It is a domestic ledger of
+a familiar kind, recording rents, wages, the dowry of a daughter and the
+price of firewood. What makes it unusual is that roughly one entry in five
+records not money but time: hours worked by journeymen, hours lost to
+illness, hours \enquote{given} to the consistory or the militia, and the
+daily setting of the household clock against the bell of the cathedral of
+Saint-Pierre.
+
+Courvoisier entered these hours in the same hand, and in the same double
+columns, as his debts. Time owed to the workshop sits beside money owed to
+the supplier of brass, and both are struck through when the debt is
+settled. The ledger thus treats an hour as something that can be lent,
+borrowed and repaid. A characteristic entry for the winter of 1771 reads:
+
+\begin{quote}
+Pierre Dufour, journeyman, three hours this Tuesday for his mother's
+burial, which he will make good on Saturday after the bell. Given to the
+widow Perrin two hours of the boy for her chimney, which she will not repay
+and need not.\autocite[fol.~38v]{courvoisier1771}
+\end{quote}
+
+\noindent The distinction between hours that \enquote{will be made good} and
+hours that \enquote{need not} be repaid is the hinge of the whole book. It
+separates the economy of the workshop, in which time is a debt like any
+other, from an economy of charity, in which time is a gift and the gift is
+recorded precisely so that it can be seen not to be owed.
+
+\passagebreak
+Readers of Marthe Vuilleumier's study of the \textit{Fabrique} will recognise
+the structure. Vuilleumier showed that the credit relations between masters,
+journeymen and the cabinotiers who finished cases were as much a matter of
+reputation as of money, and that a master's standing depended on being seen
+to honour obligations he could have evaded.\autocite[88--112]{vuilleumier1998}
+What the Courvoisier ledger adds is that time entered the same economy of
+reputation. To keep exact account of hours given away was to be known as a
+man who gave them.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[line cap=round]
+  % A watch dial in the manner of a Genevan enamel face of the 1770s.
+  \def\R{2.05}
+  \fill[black!3] (0,0) circle (\R+0.18);
+  \draw[accent, line width=.9pt] (0,0) circle (\R+0.18);
+  \draw[black!55, line width=.35pt] (0,0) circle (\R-0.02);
+  \draw[black!55, line width=.35pt] (0,0) circle (\R-0.2);
+  \foreach \m in {0,...,59} {
+    \draw[black!60, line width=.3pt] ({90-6*\m}:\R-0.02) -- ({90-6*\m}:\R-0.2);
+  }
+  \foreach \h/\n in {1/I,2/II,3/III,4/IIII,5/V,6/VI,7/VII,8/VIII,9/IX,10/X,11/XI,12/XII} {
+    \node[font=\footnotesize, rotate={-30*\h}] at ({90-30*\h}:\R-0.52) {\n};
+  }
+  \draw[black!70, line width=.35pt] (0,0) circle (0.55);
+  \node[font=\scriptsize\itshape, black!70] at (0,-0.98) {Courvoisier};
+  \node[font=\tiny\scshape, black!60] at (0,-1.2) {genève};
+  % Hands set to a quarter past six, the hour of the household clock.
+  \draw[accent, line width=1.2pt] (0,0) -- (-97.5:1.05);
+  \draw[accent, line width=.8pt] (0,0) -- (0:1.62);
+  \fill[accent] (0,0) circle (0.07);
+\end{tikzpicture}
+\caption{Enamel dial of a verge watch signed \enquote{Courvoisier, Genève},
+c.\,1775, redrawn from the original. The hands are set to a quarter past
+six, the time at which the ledger records the winding of the household
+clock each morning. The four-stroke numeral for four, rather than IV, follows
+the convention of Genevan dial painters, who balanced the heavier VIII on
+the opposite side; the signature is placed below the centre so that it
+remained legible under the hour hand for most of the day.}
+\label{fig:dial}
+\end{figure}
+
+\section{The republic of the hour}
+
+If Courvoisier's ledger turned time into a moral account, it did so within a
+civic order that already used the hour as a sign of virtue. Geneva's
+Calvinist institutions had long regulated the day by bell: the hours of
+sermons, the closing of the city gates, the times at which taverns had to
+shut.\autocite[201--219]{dohrn1996} Daniel Okonkwo has argued that by the
+mid-eighteenth century this regulation had been absorbed into a republican
+self-image, in which the punctual citizen was the virtuous one, and in which
+the city's watches, sold across Europe, carried that image
+abroad.\autocite[150--156]{okonkwo2019}
+
+The ledger complicates this picture in an instructive way. Courvoisier does
+not set his clock by his own watches, which he made and could have trusted;
+he sets it by the cathedral bell, and records the difference. Over
+twenty-five years the entries show the household clock running a few
+minutes fast in summer and slow in winter, and each correction is noted
+with the same care as a payment. The household, as the epigraph puts it,
+\enquote{should not run ahead of the city}.
+
+Figure~\ref{fig:dial} shows the dial of one of the watches that left
+Courvoisier's workshop in these years. Its hands are set at the hour of the
+morning winding. It is tempting to read the dial as an emblem of private
+time, carried in a pocket and answering to no one. The ledger suggests the
+opposite reading: the watch was an instrument for keeping one's private
+hours in step with a public order, and the account book was the record that
+one had done so.
+
+\passagebreak
+This is not the discipline Thompson described. Nobody imposed the
+cathedral's hour on Courvoisier; he imposed it on himself, and he wrote down
+the result. Imogen Hartwell has called this kind of record \enquote{a
+ledger of conscience}, noting that artisanal account books in several
+Protestant cities recorded hours alongside sums in the decades before
+industrial work rules existed.\autocite[309--314]{hartwell2014} The
+Genevan case shows how close this practice stood to the city's religious
+and political institutions, and how much it depended on the moral standing
+of the master who kept the book.
+
+\section{Conclusion}
+
+The history of time-discipline has been written mostly from the point of
+view of those on whom the clock was imposed. Account books like
+Courvoisier's allow it to be written from the point of view of those who
+kept it. What they show is not an early form of factory discipline but a
+moral economy in which hours, like debts, were owed, repaid and forgiven,
+and in which the public hour of the city was the standard against which a
+household measured its own uprightness.
+
+Two consequences follow. First, the precision of Genevan watches, so often
+treated as a purely technical achievement, belonged to a culture that
+valued exact accounting of every kind; the watch and the ledger were tools
+of the same habit of mind.\autocite[245]{landes1983} Second, the
+transition Thompson described, from task-oriented to timed labour, looks
+less like a rupture when seen from Saint-Gervais. The language of owed and
+repaid hours was already there; what the factory changed was who kept the
+account.\autocite[63--70]{thompson1967}
+
+% The bibliography starts on its own page, as in a printed essay.
+\clearpage
+\printbibliography[title=Bibliography]
+
+\end{document}

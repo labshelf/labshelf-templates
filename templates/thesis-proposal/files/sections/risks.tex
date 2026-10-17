@@ -1,0 +1,41 @@
+% Chapter 8: risks with likelihood, impact and mitigation.
+\chapter{Risks and mitigation}\label{ch:risks}
+
+Table~\ref{tab:risks} lists the risks judged most likely to delay the
+thesis. Likelihood and impact are rated low, medium or high; the
+mitigation column states what is already in place.
+
+\newcommand*{\rate}[1]{\textcolor{accent}{#1}}
+\begin{table}[ht]
+\centering\small
+\caption{Main risks to the programme.}
+\label{tab:risks}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{36mm}
+  >{\sffamily\footnotesize}c >{\sffamily\footnotesize}c
+  >{\raggedright\arraybackslash}X@{}}
+\toprule
+\thead{Risk} & \thead{Likel.} & \thead{Impact} & \thead{Mitigation}\\
+\midrule
+Mounting permits are delayed beyond May 2027
+  & \rate{med} & high
+  & List of 140 pre-approved lampposts agreed with the city in 2026;
+    campaign can start with these alone. \\
+A cool summer in 2027 gives few heat days
+  & \rate{med} & med
+  & Nights above 20\,°C are frequent even in cool summers; the
+    analysis also uses the 2028 municipal data. \\
+Partner city withdraws data access
+  & low & high
+  & Data-sharing agreements signed with both cities; Westhaven data are
+    already archived. \\
+Sensor loss or vandalism above 20\,\%
+  & \rate{med} & low
+  & Ten spare units; tamper-resistant mounts; loss is itself recorded
+    as a result for \ref{rq:field}. \\
+Weighted rule shows no gain over variance-only
+  & low & med
+  & A null result is publishable and still answers \ref{rq:acq};
+    Chapter~5 does not depend on it. \\
+\bottomrule
+\end{tabularx}
+\end{table}

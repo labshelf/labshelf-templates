@@ -1,0 +1,132 @@
+% style.tex -- the whole visual design of the proposal lives here.
+% Edit the accent colour below; everything else follows from it.
+
+% ---- Fonts --------------------------------------------------------------
+% Alegreya for text (old-style figures sit well in running prose),
+% Alegreya Sans for headings, labels and tables.
+\usepackage[T1]{fontenc}
+\usepackage[osf]{Alegreya}
+\usepackage[osf]{AlegreyaSans}
+\usepackage[final]{microtype}
+\usepackage[english]{babel}
+\usepackage{csquotes}
+
+% ---- Page geometry ------------------------------------------------------
+% A ~70-character measure with generous margins reads comfortably on A4.
+\usepackage[a4paper, textwidth=142mm, textheight=232mm,
+            hmarginratio=1:1, vmarginratio=4:5, headsep=9mm,
+            footskip=12mm]{geometry}
+\linespread{1.08}
+\setlength{\parindent}{1.2em}
+
+% ---- Colour -------------------------------------------------------------
+% One warm terracotta accent, a darker shade for links and a pale tint
+% for panels. Change these three lines to recolour the document.
+\usepackage{xcolor}
+\definecolor{accent}{HTML}{B4532A}
+\definecolor{accentdark}{HTML}{8A3A1C}
+\definecolor{accenttint}{HTML}{F8EEE7}
+\definecolor{ink}{HTML}{2B2522}
+\definecolor{muted}{HTML}{7A6E68}
+
+% ---- Packages used by the content --------------------------------------
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[inline]{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{calc, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+\usepackage{caption}
+\usepackage{needspace}
+
+% ---- Headings -----------------------------------------------------------
+% Chapters are section-style (no page break) so a short proposal flows;
+% the number hangs in the margin in terracotta, over a hairline.
+\RedeclareSectionCommand[style=section, beforeskip=-3.2\baselineskip,
+  afterskip=1.2\baselineskip, font=\sffamily\Large\color{ink}]{chapter}
+\RedeclareSectionCommand[beforeskip=-1.6\baselineskip,
+  afterskip=.5\baselineskip, font=\sffamily\large\color{ink}]{section}
+\RedeclareSectionCommand[beforeskip=-1.2\baselineskip,
+  afterskip=.3\baselineskip,
+  font=\sffamily\normalsize\itshape\color{accentdark}]{subsection}
+\setkomafont{disposition}{\sffamily}
+\renewcommand*{\chapterformat}{%
+  \makebox[0pt][r]{\color{accent}\thechapter\hspace{.7em}}}
+\renewcommand*{\sectionformat}{%
+  \makebox[0pt][r]{\color{accent}\thesection\hspace{.6em}}}
+\renewcommand*{\subsectionformat}{}
+\makeatletter
+\renewcommand*{\sectionlinesformat}[4]{%
+  \Ifstr{#1}{chapter}
+    {\parbox{\linewidth}{\raggedright#3#4\par
+       \vspace{.45\baselineskip}%
+       {\color{accent}\rule{\linewidth}{.4pt}}}}
+    {\@hangfrom{\hskip #2#3}{#4}}}
+\makeatother
+
+% ---- Running heads ------------------------------------------------------
+\usepackage[headsepline=.3pt]{scrlayer-scrpage}
+\setkomafont{pagehead}{\sffamily\footnotesize\color{muted}}
+\setkomafont{pagefoot}{\sffamily\footnotesize\color{muted}}
+\setkomafont{pagenumber}{\sffamily\footnotesize\color{accent}}
+\setkomafont{headsepline}{\color{accent!45}}
+\clearpairofpagestyles
+\ihead{\textsc{\MakeLowercase{\ProposalShortTitle}}}
+\ohead{\ProposalCandidate}
+\cfoot*{\pagemark}
+\renewcommand*{\chapterpagestyle}{scrheadings}
+
+% ---- Lists and captions -------------------------------------------------
+\setlist{itemsep=.2em, topsep=.4em}
+\setlist[itemize]{label={\color{accent}\textbullet}, leftmargin=1.3em}
+\captionsetup{font={small,sf}, labelfont={color=accent},
+  labelsep=period, justification=raggedright, singlelinecheck=false}
+\setlength{\abovecaptionskip}{.6em}
+
+% ---- Tables -------------------------------------------------------------
+\renewcommand{\arraystretch}{1.18}
+\setlength{\aboverulesep}{.5ex}
+\setlength{\belowrulesep}{.6ex}
+\newcommand*{\thead}[1]{\leavevmode{\sffamily\small\color{accentdark}#1}}
+
+% ---- Summary panel ------------------------------------------------------
+\newtcolorbox{summarypanel}{enhanced, colback=accenttint, colframe=accenttint,
+  boxrule=0pt, arc=0pt, left=8mm, right=8mm, top=7mm, bottom=7mm,
+  borderline west={2pt}{0pt}{accent}}
+
+% ---- Research questions -------------------------------------------------
+% \begin{researchquestion}{Short label} ... \end{researchquestion}
+% numbers itself RQ1, RQ2, ... and can be referenced with \label/\ref.
+\newcounter{rq}
+\renewcommand*{\therq}{RQ\arabic{rq}}
+\newtcolorbox{rqbox}{enhanced, breakable, colback=white, colframe=white,
+  boxrule=0pt, arc=0pt, left=4.5mm, right=0mm, top=1mm, bottom=1mm,
+  before skip=1em, after skip=1em, borderline west={.8pt}{0pt}{accent}}
+\newenvironment{researchquestion}[1]{%
+  \refstepcounter{rq}%
+  \begin{rqbox}%
+  {\sffamily\small\color{accent}\textsc{\MakeLowercase{\therq}}\enspace
+   \color{ink}\bfseries #1}\par\vspace{.25em}\itshape\ignorespaces}
+  {\end{rqbox}}
+
+% ---- Small helpers ------------------------------------------------------
+\newcommand*{\fieldlabel}[1]{\leavevmode{\sffamily\footnotesize\color{accent}%
+  \textsc{\MakeLowercase{#1}}}}
+
+% ---- Bibliography -------------------------------------------------------
+\usepackage[backend=biber, style=authoryear-comp, maxcitenames=2,
+  maxbibnames=6, giveninits=true, uniquename=false, dashed=false,
+  doi=true, url=false, isbn=false]{biblatex}
+\setlength{\bibitemsep}{.35\baselineskip}
+\renewcommand*{\bibfont}{\small}
+\DeclareFieldFormat[article,inproceedings,incollection]{title}{#1}
+
+% ---- Links --------------------------------------------------------------
+% Links are coloured text, never boxed.
+\usepackage[colorlinks, linkcolor=accentdark, citecolor=accentdark,
+  urlcolor=accentdark, pdfusetitle]{hyperref}
+\color{ink}

@@ -1,0 +1,10 @@
+schema: 1
+id: thesis-proposal
+name: Thesis Proposal
+description: Master's or PhD qualifying proposal on A4 (KOMA scrreprt) in Alegreya and Alegreya Sans with old-style figures and a warm terracotta accent. Compact cover with a TikZ crest and a candidate, advisor and committee table; a one-page tinted summary panel; numbered research questions with a hairline left rule; chapter plan and risk tables in booktabs; a semester-by-semester TikZ Gantt with milestones; a pgfplots figure; expected contributions; biblatex author-year references.
+category: thesis
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

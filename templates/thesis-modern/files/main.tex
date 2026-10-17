@@ -1,0 +1,67 @@
+% Modern thesis on A4, two-sided, set in IBM Plex Serif with IBM Plex Sans
+% headings and one deep-green accent. Edit the metadata below, write the
+% chapters in chapters/, and keep the page design in style.tex.
+% Build with latexmk (pdflatex + biber).
+\documentclass[
+  fontsize=10pt,
+  paper=a4,
+  twoside,
+  openright,
+  cleardoublepage=empty,
+  numbers=noenddot,
+  bibliography=totoc,
+  listof=totoc,
+  captions=tableheading,
+  parskip=false,
+]{scrbook}
+
+% Accent colour: chapter numbers, the title block, box rules and plot lines
+% all derive from this one value. Change it here.
+\usepackage{xcolor}
+\definecolor{accent}{HTML}{1F5F4A}
+
+\input{style}
+
+\addbibresource{refs.bib}
+
+% Metadata: used on the title page and in the PDF properties.
+\newcommand{\thesistitle}{Learning to Age}
+\newcommand{\thesissubtitle}{Data-driven state-of-health estimation for grid-scale lithium-ion storage}
+\newcommand{\thesisauthor}{Ines Achterberg}
+\newcommand{\thesisdegree}{Doctor of Philosophy}
+\newcommand{\thesisfield}{Electrical Engineering}
+\newcommand{\thesisuniversity}{University of Northmere}
+\newcommand{\thesisfaculty}{Faculty of Electrical Engineering and Computer Science}
+\newcommand{\thesissupervisor}{Prof.\ dr.\ Joost Verhagen}
+\newcommand{\thesiscosupervisor}{Dr.\ Amara Okonjo}
+\newcommand{\thesisdate}{November 2026}
+
+\hypersetup{pdftitle={\thesistitle: \thesissubtitle}, pdfauthor={\thesisauthor}}
+
+\begin{document}
+
+\frontmatter
+\input{frontmatter/titlepage}
+\input{frontmatter/abstract}
+\input{frontmatter/acknowledgements}
+\tableofcontents
+\listoffigures
+\listoftables
+\input{frontmatter/abbreviations}
+
+\mainmatter
+\part{Foundations}
+\input{chapters/01-introduction}
+\input{chapters/02-ageing-data}
+
+\part{Findings}
+\input{chapters/03-estimation}
+\input{chapters/04-conclusions}
+
+\appendix
+\input{appendix/a-test-protocol}
+
+\backmatter
+\printbibliography[title={References}]
+
+\end{document}
