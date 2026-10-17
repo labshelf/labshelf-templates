@@ -68,7 +68,7 @@
 \renewcommand*{\chapterlinesformat}[3]{%
   \Ifstr{#1}{chapter}{%
     \raggedright
-    \Ifstr{#2}{}{\vspace*{6.5\baselineskip}}{#2\par\nobreak\vspace{2.5ex}}%
+    \Ifstr{#2}{}{\vspace*{3.27\baselineskip}}{#2\par\nobreak\vspace{2.5ex}}%
     {\color{accent}\rule{3em}{1.4pt}}\par\nobreak\vspace{2.2ex}%
     #3\par
   }{\@hangfrom{#2}{#3}}}
@@ -124,7 +124,7 @@
 
 % ---- Contents --------------------------------------------------------------
 \DeclareTOCStyleEntry[
-  beforeskip=1.2em, entryformat=\sansbold, pagenumberformat=\sansbold\color{accent},
+  beforeskip=0.9em, entryformat=\sansbold, pagenumberformat=\sansbold\color{accent},
 ]{tocline}{chapter}
 \DeclareTOCStyleEntry[
   beforeskip=2em, entryformat=\sanslight\large, pagenumberformat=\sanslight\large,
@@ -202,6 +202,9 @@
     axis line style={rulegrey, line width=0.4pt},
     tick style={rulegrey, line width=0.4pt},
     tick label style={font=\sffamily\scriptsize},
+    % Ticks are typeset as text, not maths, so digits come from Plex Sans.
+    xticklabel={\pgfmathprintnumber[assume math mode=true]{\tick}},
+    yticklabel={\pgfmathprintnumber[assume math mode=true]{\tick}},
     label style={font=\sffamily\footnotesize},
     legend style={draw=none, fill=none, font=\sffamily\scriptsize},
     legend cell align=left,
@@ -219,6 +222,8 @@
 \setlength{\bibitemsep}{0.4\baselineskip}
 
 \usepackage[hidelinks]{hyperref}
+% DOIs and URLs in the text face; the default typewriter font is Computer Modern.
+\urlstyle{same}
 \usepackage[nameinlink, capitalise, noabbrev]{cleveref}
 \crefname{tcb@cnt@definition}{Definition}{Definitions}
 \crefname{tcb@cnt@keyresult}{Key result}{Key results}

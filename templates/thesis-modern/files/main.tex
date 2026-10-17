@@ -10,7 +10,7 @@
   cleardoublepage=empty,
   numbers=noenddot,
   bibliography=totoc,
-  listof=totoc,
+  listof=notoc,
   captions=tableheading,
   parskip=false,
 ]{scrbook}
@@ -38,6 +38,7 @@
 
 \hypersetup{pdftitle={\thesistitle: \thesissubtitle}, pdfauthor={\thesisauthor}}
 
+\setcounter{tocdepth}{\sectiontocdepth}
 \begin{document}
 
 \frontmatter

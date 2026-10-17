@@ -58,8 +58,8 @@ accessed, the small set of keys likely to follow it within the next
 millisecond and promotes them ahead of demand. A gradient-boosted model
 over co-access features fits in 6\,MB per shard, is retrained online every
 few minutes, and gates every prefetch by a cost-aware threshold so that
-wrong guesses never evict useful data. On four production-derived traces
-\sys{} lowers P99 read latency by 31--47\% over ARC and by 18\%
+wrong guesses never evict useful data. On three production-derived traces
+\sys{} lowers P99 read latency by 31--47\% over ARC and by up to 23\%
 over the best sequence-model prefetcher, at under 3\% CPU overhead.
 \end{abstract}
 
@@ -88,7 +88,7 @@ over the best sequence-model prefetcher, at under 3\% CPU overhead.
     \draw[->, accent] (feat) -- (model);
     \draw[->, accent] (model) -- (gate);
     \draw[->, black!60] (index) -- (dram);
-    \draw[->, accent, thick] (gate.south) |- node[pos=.75, above, accent] {promote ahead of demand} (nvme.east);
+    \draw[->, accent, thick] (gate.south) |- node[pos=.25, right, accent] {promote ahead of demand} (nvme.east);
     \draw[->, black!60] (nvme.west) -- node[above] {miss} (dram.east);
   \end{tikzpicture}\par\vspace{4pt}
   \captionof{figure}{\sys{} sits beside the shard index. Every access
@@ -282,23 +282,25 @@ record $(k, C)$ as pending labels for retraining\;
         width=0.34\textwidth, height=44mm]
       \nextgroupplot[title={Graph: read latency CDF}, xmode=log,
           xlabel={latency (\si{\micro\second})}, ylabel={fraction of reads},
-          xmin=5, xmax=1000, ymin=0, ymax=1]
+          xmin=5, xmax=1000, ymin=0, ymax=1,
+          legend pos=south east, legend cell align=left]
         \addplot[black!35, dashed] coordinates {(5,0) (8,.55) (12,.74) (40,.80) (100,.84) (200,.90) (377,.99) (800,1)};
         \addplot[black!60] coordinates {(5,0) (8,.58) (12,.80) (40,.85) (100,.89) (200,.95) (262,.99) (700,1)};
         \addplot[accent] coordinates {(5,0) (8,.61) (12,.86) (40,.90) (100,.94) (160,.98) (201,.99) (600,1)};
+        \legend{ARC, ARC + LSTM, \sys{}}
       \nextgroupplot[title={Precision and coverage vs.\ $\tau$},
           xlabel={gate threshold $\tau$}, ylabel={percent},
           xmin=0, xmax=0.5, ymin=0, ymax=100,
           legend style={at={(0.97,0.5)}, anchor=east}]
-        \addplot[accent] coordinates {(0,38) (.05,52) (.1,63) (.15,73) (.2,79) (.3,86) (.4,90) (.5,92)};
+        \addplot[accent] coordinates {(0,47) (.05,52) (.1,63) (.15,73) (.2,79) (.3,86) (.4,90) (.5,92)};
         \addplot[black!60] coordinates {(0,81) (.05,74) (.1,66) (.15,58) (.2,49) (.3,34) (.4,22) (.5,14)};
         \legend{precision, coverage}
       \nextgroupplot[title={Recovery after a layout change},
           xlabel={minutes after change}, ylabel={precision (\%)},
           xmin=0, xmax=60, ymin=0, ymax=100,
-          legend style={at={(0.97,0.03)}, anchor=south east}]
+          legend style={at={(0.97,0.5)}, anchor=east}, legend cell align=left]
         \addplot[black!45, dashed] coordinates {(0,72) (5,40) (10,31) (20,30) (40,29) (60,29)};
-        \addplot[accent] coordinates {(0,72) (5,41) (10,58) (15,69) (20,71) (40,72) (60,73)};
+        \addplot[accent] coordinates {(0,72) (5,41) (10,69) (15,72) (20,72) (40,72) (60,73)};
         \legend{frozen model, online}
     \end{groupplot}
   \end{tikzpicture}
@@ -381,13 +383,13 @@ catalogue (\emph{Shop}) and YCSB workload B with Zipfian keys~\cite{cooper2010yc
 \paragraph{Tail latency}
 \Cref{tab:results} reports P99 read latency. \sys{} lowers it by
 47\% over ARC on \emph{Graph}, where co-access groups are strongest, and by
-31\% on \emph{Shop}. On YCSB-B the gain is within noise: keys are drawn
+32\% on \emph{Shop}. On YCSB-B the gain is within noise: keys are drawn
 independently, so there are no successors to learn, and the cost gate
-correctly declines almost every prefetch. The latency CDF in
+correctly declines almost every prefetch, which is the behaviour we want
+from a prefetcher on a workload it cannot help. The latency CDF in
 \cref{fig:behaviour} shows where the gain comes from: the median is
 unchanged, while the fraction of reads served from flash falls from 26\% to
-14\%. This is the behaviour we want
-from a prefetcher on a workload it cannot help.
+14\%.
 
 \begin{figure}[t]
   \centering
@@ -396,10 +398,10 @@ from a prefetcher on a workload it cannot help.
         xlabel={DRAM tier as \% of data}, ylabel={hit ratio (\%)},
         xmin=1, xmax=16, ymin=60, ymax=96, xtick={1,2,4,8,16}, xmode=log,
         log basis x=2, xticklabels={1,2,4,8,16},
-        legend pos=south east, legend cell align=left]
+        legend pos=south east, legend columns=3, legend cell align=left]
       \addplot[black!35, dashed] coordinates {(1,62.1) (2,70.4) (4,77.9) (8,83.9) (16,88.6)};
       \addplot[black!60] coordinates {(1,68.3) (2,76.0) (4,82.6) (8,88.0) (16,91.4)};
-      \addplot[accent, mark=*, mark size=1.2pt] coordinates {(1,74.8) (2,82.1) (4,87.5) (8,91.3) (16,93.9)};
+      \addplot[accent, mark=*, mark size=1.2pt] coordinates {(1,78.4) (2,82.1) (4,87.5) (8,91.3) (16,93.9)};
       \legend{ARC, ARC + LSTM, \sys{}}
     \end{axis}
   \end{tikzpicture}
@@ -452,8 +454,9 @@ key, or 3.1\% of the DRAM tier.
 
 \paragraph{Ablation}
 \Cref{tab:ablation} removes one component at a time. The cost gate matters
-most: without it precision drops to 44\% and the wasted bandwidth
-quadruples, which in turn slows demand reads that share the device. Online
+most: prefetching every predicted successor, with no gate at all, drops
+precision to 44\% (below even $\tau = 0$ in \cref{fig:behaviour}, which
+still weighs eviction cost) and the wasted bandwidth quadruples, which in turn slows demand reads that share the device. Online
 retraining is the second largest contributor. Replacing the trees by the
 LSTM keeps precision almost unchanged but raises latency, because inference
 no longer fits on the request path and predictions arrive late.

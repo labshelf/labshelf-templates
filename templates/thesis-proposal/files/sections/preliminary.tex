@@ -29,14 +29,14 @@ measured on all withheld sensors, weighted by exposure.
 \addplot[accentdark!55] coordinates {(20,1.92) (40,1.52) (60,1.32)
   (80,1.19) (100,1.09) (120,1.02) (140,0.97) (160,0.93) (180,0.90) (200,0.88)};
 \addlegendentry{Variance only}
-\addplot[accent, line width=1.6pt] coordinates {(20,1.92) (40,1.36) (60,1.12)
-  (80,0.99) (100,0.91) (120,0.85) (140,0.81) (160,0.78) (180,0.76) (200,0.74)};
+\addplot[accent, line width=1.6pt] coordinates {(20,1.92) (40,1.45) (60,1.22)
+  (80,1.05) (100,0.91) (120,0.83) (140,0.79) (160,0.77) (180,0.75) (200,0.74)};
 \addlegendentry{Exposure weighted}
 \draw[accent, densely dotted, line width=.5pt] (axis cs:20,1.13) -- (axis cs:200,1.13);
 \fill[accent] (axis cs:70,1.13) circle (1.3pt);
 \fill[muted] (axis cs:120,1.13) circle (1.3pt);
-\node[font=\sffamily\scriptsize, text=accent, anchor=south] at (axis cs:70,1.14) {70};
-\node[font=\sffamily\scriptsize, text=muted, anchor=north] at (axis cs:120,1.12) {120};
+\node[font=\sffamily\scriptsize, text=accent, anchor=north east] at (axis cs:69,1.12) {70};
+\node[font=\sffamily\scriptsize, text=muted, anchor=south west] at (axis cs:121,1.135) {120};
 \end{axis}
 \end{tikzpicture}
 \caption{Retrospective placement in Aldmere, mean of 50 random starts.

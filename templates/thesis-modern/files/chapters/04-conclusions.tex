@@ -21,6 +21,13 @@ at high state of charge and temperature. The second is that an estimate
 with honest uncertainty has direct economic value: the field trial
 recovered usable energy without detectable cost in ageing.
 
+Neither result needs new hardware. Every quantity the estimator uses is
+already logged by the battery management system and the site controller,
+and the reference tests it relies on are the ones operators run at
+commissioning for warranty purposes. What changes is how those records
+are kept and combined: harmonised across sites, stored at full resolution
+and read against a physical model rather than a fixed threshold.
+
 \section{Limitations and further work}
 \label{sec:limits}
 
@@ -37,6 +44,14 @@ years, a short span against a design life of fifteen. In particular:
   \item the field trial ran on a single site, in a mild year, and its
     economic result depends on market prices that have since fallen.
 \end{itemize}
+
+Two directions look most promising. The first is to extend the
+estimator to module level, using the hottest-module signal of
+\cref{sec:temperature} as an input rather than a correction, so that an
+operator can see which racks to rebalance or replace first. The second is
+to close the loop: if the estimate sets the state-of-charge limits, the
+limits in turn shape the ageing, and a controller that accounts for both
+could trade energy delivered today against capacity kept for later years.
 
 Each of these points is a question that time and more sites will answer.
 The data set and the estimator are released with this thesis so that

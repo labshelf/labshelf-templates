@@ -31,6 +31,11 @@
 
 % ---- Packages used by the content --------------------------------------
 \usepackage{amsmath}
+% Math letters and lining digits in Alegreya, so formulas match the text.
+\let\TPrmdefault\rmdefault
+\renewcommand*{\rmdefault}{Alegreya-LF}
+\usepackage[italic]{mathastext}
+\let\rmdefault\TPrmdefault
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}

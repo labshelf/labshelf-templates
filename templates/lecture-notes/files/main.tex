@@ -120,8 +120,11 @@ function with a jump, and Figure~\ref{fig:square} shows what it costs.
 \begin{tikzpicture}
 \begin{axis}[width=\textwidth,height=52mm,
   axis lines=middle,xmin=-3.4,xmax=3.4,ymin=-1.45,ymax=1.45,
-  xtick={-3.1416,-1.5708,1.5708,3.1416},
-  xticklabels={$-\pi$,$-\frac{\pi}{2}$,$\frac{\pi}{2}$,$\pi$},
+  xtick={-1.5708,1.5708,3.1416},
+  xticklabels={$-\frac{\pi}{2}$,$\frac{\pi}{2}$,$\pi$},
+  % The curves start at -pi and fall below the axis, so its label sits to the left.
+  extra x ticks={-3.1416},extra x tick labels={$-\pi$},
+  extra x tick style={xticklabel style={anchor=north east,xshift=-1pt}},
   ytick={1},tick label style={font=\footnotesize},
   xticklabel style={fill=white,inner sep=1pt,yshift=-2pt},
   every axis plot/.append style={samples=400,smooth,domain=-3.1416:3.1416},
@@ -139,7 +142,7 @@ function with a jump, and Figure~\ref{fig:square} shows what it costs.
 \end{axis}
 \end{tikzpicture}}{%
 \caption{Partial sums of the square-wave series. Away from the jump they
-settle down; next to it each $S_N$ overshoots by about 9\% of the jump.}
+settle down; next to it $S_5$ and $S_{19}$ overshoot by about 9\% of the jump.}
 \label{fig:square}}
 \end{figure}
 
@@ -285,6 +288,8 @@ is a weighted average of $f$ near $x$.
 \draw[black!30,very thin] (axis cs:-3.1416,0) -- (axis cs:3.4,0);
 \addplot[thmcol,thin] {sin(deg(5.5*x))/sin(deg(x/2))};
 \addplot[accent,semithick] {sin(deg(10.5*x))/sin(deg(x/2))};
+\node[font=\scriptsize\sffamily,thmcol,anchor=west] at (axis cs:0.3,11) {$D_5$};
+\node[font=\scriptsize\sffamily,accent,anchor=west] at (axis cs:0.15,20.5) {$D_{10}$};
 \end{axis}
 \end{tikzpicture}}{%
 \caption{The Dirichlet kernels $D_5$ and $D_{10}$. The peak grows but the
@@ -376,7 +381,7 @@ By Example~\ref{ex:square} only odd sine modes are present, so
   u(x,t) = \frac{4}{\pi}\sum_{n\ \mathrm{odd}}\frac{e^{-n^2t}}{n}\sin nx .
 \]
 For $t\ge 1$ the first term dominates, since the next one is smaller by a
-factor $\tfrac13 e^{-8t}<10^{-4}$. The ring therefore relaxes to the mean
+factor $\tfrac13 e^{-8t}\le\tfrac13 e^{-8}\approx 1.1\times10^{-4}$. The ring therefore relaxes to the mean
 temperature $0$ like $\frac{4}{\pi}e^{-t}\sin x$: one smooth bump that
 fades at unit rate.
 \end{solution}

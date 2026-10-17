@@ -62,8 +62,8 @@
       \vspace{1mm}
       {\mndisplay{44}\color{mnAccent}$-$0.21\par}
       \vspace{2mm}{\color{mnRule}\rule{\linewidth}{0.4pt}}\par\vspace{2mm}
-      {\small\color{mnMuted}pooled effect size for screen versus paper, informational
-      texts under time pressure \parencite{delgado2018}\par}
+      {\small\color{mnMuted}pooled effect size (Hedges' $g$) for screen versus paper
+      reading of informational texts \parencite{delgado2018}\par}
   \end{columns}
 \end{frame}
 
@@ -128,11 +128,11 @@
             xtick={2,4,6,8}, ytick={50,60,70,80},
             xlabel={Essay length (thousand words)}, ylabel={Score (\%)}]
           \addplot[mnAccent, mark=*, mark size=1.3pt]
-            coordinates {(2,78.4) (3,77.9) (4.5,76.1) (5.5,75.4) (6,74.8) (7,74.0) (8,73.1) (9,72.6)};
-          \addplot[mnMuted, mark=o, mark size=1.3pt]
-            coordinates {(2,77.6) (3,76.0) (4.5,72.3) (5.5,69.8) (6,68.1) (7,65.9) (8,63.4) (9,61.2)};
-          \node[anchor=west,font=\footnotesize,text=mnAccent] at (axis cs:9.15,72.6) {Paper};
-          \node[anchor=west,font=\footnotesize,text=mnMuted] at (axis cs:9.15,61.2) {Screen};
+            coordinates {(2,78.4) (3,77.9) (4.5,75.9) (5.5,75.0) (6,74.6) (7,73.8) (8,72.8) (9,72.4)};
+          \addplot[mnMuted, mark=*, mark size=1.3pt, mark options={fill=white, line width=0.6pt}]
+            coordinates {(2,77.8) (3,77.2) (4.5,72.1) (5.5,70.1) (6,68.2) (7,66.0) (8,63.8) (9,61.6)};
+          \node[anchor=west,font=\footnotesize,text=mnAccent] at (axis cs:9.15,72.4) {Paper};
+          \node[anchor=west,font=\footnotesize,text=mnMuted] at (axis cs:9.15,61.6) {Screen};
         \end{axis}
       \end{tikzpicture}
     \column{0.29\textwidth}

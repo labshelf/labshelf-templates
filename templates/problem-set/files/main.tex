@@ -72,6 +72,21 @@
     {\scriptsize\color{rust}\textsc{\MakeLowercase{#1}}}
   \end{minipage}}
 
+% ---- Points table -----------------------------------------------------------
+% Each problem writes its points to the aux file; the table at the top reads
+% them back on the next run, so its rows and total follow the problems.
+% latexmk reruns until they settle.
+\makeatletter
+\newcount\ps@total
+\def\ps@rows{}
+\newcommand{\pointsentry}[2]{%
+  \g@addto@macro\ps@rows{#1 & #2 & \\}\global\advance\ps@total#2\relax}
+\newcommand{\recordpoints}[1]{%
+  \protected@write\@auxout{}{\string\pointsentry{\theproblem}{#1}}}
+\newcommand{\pointsrows}{\ps@rows}
+\newcommand{\pointstotal}{\the\ps@total}
+\makeatother
+
 % ---- Problems -------------------------------------------------------------
 % \begin{problem}{points}{title}: the number and title open the problem, the
 % point badge hangs in the left margin, aligned to the heading's baseline.
@@ -82,6 +97,7 @@
     font=\sffamily\scriptsize] (b) {#1\,pts};\hspace{6mm}}}
 \newenvironment{problem}[2]{%
   \refstepcounter{problem}%
+  \recordpoints{#1}%
   \par\addvspace{1.2\baselineskip}\penalty-200
   % The statement and its parts never split across pages.
   \noindent\begin{minipage}{\linewidth}\setlength{\parskip}{0.45\baselineskip}%
@@ -133,19 +149,15 @@
 \hfill
 \begin{minipage}[t]{0.34\textwidth}
   \vspace{0pt}\small
-  % Points table: fill in the points per problem; the score column is left
-  % blank for the grader.
+  % Points table: rows and total come from the problems; the score column
+  % is left blank for the grader.
   \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l c c@{}}
     \toprule
     \textsc{problem} & \textsc{points} & \textsc{score} \\
     \midrule
-    1 & 10 & \\
-    2 & 12 & \\
-    3 & 10 & \\
-    4 & 8  & \\
-    5 & 10 & \\
+    \pointsrows
     \midrule
-    \textsc{total} & 50 & \\
+    \textsc{total} & \pointstotal & \\
     \bottomrule
   \end{tabular*}
 \end{minipage}
@@ -265,11 +277,14 @@ By independence its probability is $(1-p)^n$.
 
 (b) Because $\{N>m+n\}\subseteq\{N>m\}$, the intersection of the two events is
 the smaller one, and
+% The shallow last row leaves amsmath's strut below the ink; a shorter skip
+% gives the same visible gap as the displays that end on a fraction.
+{\setlength{\belowdisplayskip}{8.6pt plus 3pt minus 6pt}%
 \begin{align*}
   \Prob(N > m+n \mid N > m) &= \frac{\Prob(N>m+n)}{\Prob(N>m)}
      = \frac{(1-p)^{m+n}}{(1-p)^m} \\
   &= (1-p)^n = \Prob(N>n),
-\end{align*}
+\end{align*}}%
 so past misses say nothing about the wait still to come.
 
 (c) Summing the geometric series,

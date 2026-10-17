@@ -83,11 +83,11 @@ is overconfident there.
         xlabel={Months in service}, ylabel={State of health},
         legend pos=south west,
       ]
-      \addplot[name path=upper, draw=none, domain=0:36, samples=60]
+      \addplot[name path=upper, draw=none, forget plot, domain=0:36, samples=60]
         {1 - 0.0150*sqrt(x) - 0.00090*x + 0.002 + 0.00035*x};
-      \addplot[name path=lower, draw=none, domain=0:36, samples=60]
+      \addplot[name path=lower, draw=none, forget plot, domain=0:36, samples=60]
         {1 - 0.0150*sqrt(x) - 0.00090*x - 0.002 - 0.00035*x};
-      \addplot[accent!15] fill between[of=upper and lower];
+      \addplot[accent!15, area legend] fill between[of=upper and lower];
       \addlegendentry{95\,\% interval}
       \addplot[accent, line width=1pt, domain=0:36, samples=60]
         {1 - 0.0150*sqrt(x) - 0.00090*x};
@@ -129,3 +129,10 @@ the frequency reserve market. Its reference test at the end of the trial
 showed a state of health of 0.947, against 0.949 for the control, a
 difference well within the test's repeatability of \(\pm 0.004\). The
 estimate itself, made before the test, was 0.944.
+
+The gain came almost entirely from the winter months, when the hybrid
+estimate allowed the lower limit to drop to 6\,\% and the container could
+absorb longer runs of under-frequency events. In summer the two containers
+behaved alike, because the reserve market rarely called for deep
+discharges. The operator has since adopted the estimate-based limit on
+both containers at NL-01.

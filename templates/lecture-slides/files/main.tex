@@ -52,8 +52,8 @@
 
 \begin{frame}{From keys to slots}
   \begin{definitionbox}[Hash function]
-    A hash function $h$ maps every key in a universe $U$ to one of $m$ slots,
-    \mbox{$h\colon U \to \{0, 1, \dots, m-1\}$}. A hash table stores key $k$ in slot $h(k)$.
+    A hash function $h\colon U \to \{0, 1, \dots, m-1\}$ maps every key in a
+    universe $U$ to one of $m$ slots. A hash table stores key $k$ in slot $h(k)$.
   \end{definitionbox}
   \begin{examplebox}[Division method]
     With $m = 11$ and $h(k) = k \bmod 11$, the key $47$ goes to slot $3$,
@@ -104,7 +104,7 @@ class ChainedTable:
         \item<1-> $h(25) = 3$: slot 3 is free, store 25.
         \item<2-> $h(47) = 3$: taken, probe 4, store 47.
         \item<3-> $h(14) = 3$: probe 4, then 5, store 14.
-        \item<4-> $h(36) = 3$: three probes, store in 6.
+        \item<4-> $h(36) = 3$: probe 4, 5, 6, store 36.
       \end{enumerate}
     \column{0.47\textwidth}
       \vspace{1mm}
@@ -175,7 +175,7 @@ class ChainedTable:
       \end{align*}}
     \column{0.44\textwidth}
       \begin{examplebox}[Rule of thumb]
-        Doubling $m$ when $\alpha$ passes $0.75$ keeps lookups under four probes.
+        Doubling $m$ when $\alpha$ passes $0.75$ keeps failed lookups to at most four probes.
         Each key is rehashed into the new table, so one resize costs $O(n)$.
       \end{examplebox}
       \begin{theorembox}[Amortised cost]
@@ -198,12 +198,12 @@ class ChainedTable:
       \lcoption{A}{About 1, the table is nearly empty}
       \lcoption{B}{About 2}
     \column{0.48\textwidth}
-      \lcoption*{C}{No bound: $\alpha = 1$, the table is full}
-      \lcoption{D}{About 10}
+      \lcoption*{C}{All ten slots: $\alpha = 1$, the table is full}
+      \lcoption{D}{About 5, half the table}
   \end{columns}
-  \vspace{1mm}
-  \uncover<2->{{\small\color{lcMuted}With ten keys in ten slots there is no empty slot to stop
-  a probe sequence: the bound $1/(1-\alpha)$ is undefined. Resize before this happens.\par}}
+  \vspace{3mm}
+  \uncover<2->{{\small\color{lcMuted}With ten keys in ten slots no empty slot stops the probe
+  sequence, so the lookup checks every slot and the bound $1/(1-\alpha)$ is undefined. Resize before this happens.\par}}
 \end{frame}
 
 \begin{frame}{Summary}
