@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "commit": "9aee1be03c50de24d47f89d1d18a792b604fac92",
+  "commit": "28cc071b7c80c0f4354ef59758457d31301c7873",
   "templates": [
     {
       "id": "academic-cv",
@@ -111,8 +111,8 @@
         },
         {
           "path": "main.tex",
-          "size": 26028,
-          "sha256": "3d6aa0f5dc2978b6f2817ed8c034dd6f5f0e46e71ff3e7deedb10cee755ffc5c"
+          "size": 26300,
+          "sha256": "c2d3661486b13bf7e0ea3814b9065303be98f5fa9559dc6f91b371b1952a8599"
         },
         {
           "path": "refs.bib",
@@ -121,12 +121,12 @@
         }
       ],
       "thumbnail": {
-        "size": 199150,
-        "sha256": "9529623ec86473813f20ad936a6cba56b74765db802c085ae9bad13ef427fdf0"
+        "size": 194539,
+        "sha256": "5f04ee79a6eeb09d73e225f994c618d5e8fee75858b68af4eb456b75b90bfb4e"
       },
       "sample": {
-        "size": 325598,
-        "sha256": "3ebcb00cc95958fa4ef90d0ae89219a2b285763e64dd20ba3ad1a7ed26bfbe82"
+        "size": 325851,
+        "sha256": "bf1259f5b9135173bc3d03f14c48d667bac4494c364d9fce7deb8184cac6d182"
       }
     },
     {
@@ -238,8 +238,8 @@
         },
         {
           "path": "chapters/01-introduction.tex",
-          "size": 3411,
-          "sha256": "316bd531e687f0739fdcc62889ddbf75b5a75dc1b9ea29c5561d297870ce63ff"
+          "size": 3399,
+          "sha256": "c7ec94d4389f61962caff1f97846d2a8dc5237ae2703c6b1a3ba68e7d3110021"
         },
         {
           "path": "chapters/02-sources-and-method.tex",
@@ -248,13 +248,13 @@
         },
         {
           "path": "chapters/03-salt-roads.tex",
-          "size": 7397,
-          "sha256": "c2278718f1c871ea250e320be9b75c21e2367b3914278142d01c2cc27a2d5d75"
+          "size": 7657,
+          "sha256": "9700fdfad56cafd3adb7aee4922e18c77a4b424ad5e163bba8f418e02ec50b34"
         },
         {
           "path": "frontmatter/abstract.tex",
-          "size": 1495,
-          "sha256": "8a8abb19159471a4c280ccc2896cee603eb2e5f829f754a7b3277652184d035d"
+          "size": 1497,
+          "sha256": "5684d56852710adfca5aba28081dff4e341f2efad3e3f77ab422dc6b9e17884e"
         },
         {
           "path": "frontmatter/acknowledgements.tex",
@@ -289,22 +289,22 @@
         {
           "path": "style.tex",
           "size": 3645,
-          "sha256": "f3db9f1f5f4bb132e67e91629b6ad885422f9e3b952132c802f50af5997dc7ae"
+          "sha256": "fcb055aedbf6116ed87b36281d28e9ddb7c9e8a63e9c448e517da571832eddc1"
         }
       ],
       "thumbnail": {
-        "size": 44399,
-        "sha256": "0a8f002e302ca2ce62f1db3ba9b77baa1479be486646202c630727135ae38645"
+        "size": 62518,
+        "sha256": "d7b226cecc82417f0d43bb326a38d4830c81de53705c1c057eb96ed1ae181dc4"
       },
       "sample": {
-        "size": 148313,
-        "sha256": "d6bfe658aac09e06765528e5fa250bca445b9335be7f8cdeeaa0ecd4288ad2b4"
+        "size": 147904,
+        "sha256": "0750a61a6b4c23ed2b69e69800a8f979a6f9fb3c2c5e3a31ffdde09c43edd79e"
       }
     },
     {
       "id": "humanities-essay",
       "name": "Humanities Essay",
-      "description": "Long-form history or philosophy essay on A4 in Crimson with proportional old-style figures on a book-like measure with generous margins. A centred title and italic subtitle over a short rule, a letterspaced small-caps author, an epigraph and indented block quotations. Sections open with a muted dark-green fleuron, roman numeral and small-caps title, with fleuron breaks between passages. Chicago-style footnote citations, a TikZ figure with a long caption and a bibliography on its own page.",
+      "description": "Long-form history or philosophy essay on A4 in Crimson with proportional old-style figures on a book-like measure with generous margins. A centred title and italic subtitle over a short rule, a letterspaced small-caps author, an epigraph and indented block quotations. Sections open with a muted dark-green fleuron, roman numeral and small-caps title, with fleuron breaks between passages. Chicago-style footnote citations, a TikZ figure with a long caption and a bibliography that follows the text.",
       "category": "article",
       "format": "latex",
       "engine": "pdflatex",
@@ -321,8 +321,8 @@
         },
         {
           "path": "main.tex",
-          "size": 9776,
-          "sha256": "845cbd58bbf604c12a1e52f3f041773f4a2ba31765482e3111c85adf7bd93d4b"
+          "size": 9822,
+          "sha256": "581a4530ba8cc708e7c868e92f6779011748fe3207913815d7f2b7c2d0fde62c"
         },
         {
           "path": "refs.bib",
@@ -331,12 +331,12 @@
         }
       ],
       "thumbnail": {
-        "size": 98636,
-        "sha256": "2455e45cfe771bfd0a0f55bd2d9eaddd5a02670b5d32561a76882f0d3d2c9ea0"
+        "size": 395221,
+        "sha256": "e64168fe51f3812a6986b8edc0b2c55b3142ae8aae1c8db0f1d53595f24fb35d"
       },
       "sample": {
-        "size": 112143,
-        "sha256": "f906d2161de8886b598135e4819349edc4ab0f045778409e7ed65064e8564b4e"
+        "size": 112112,
+        "sha256": "76f8ec9a27bb60984ad4aad67c9f9c4fc39d315ef0478bf5a4a0d2794f7fe554"
       }
     },
     {
@@ -354,8 +354,8 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 15364,
-          "sha256": "90e9725c2af4984657095f4cd08be74aadff3cc78645ffe0e0e126661f761a37"
+          "size": 15396,
+          "sha256": "2cb0fc395b343a7520cf1a66d7a4f816dd7b1f6478b076bc96765e689a566a7d"
         },
         {
           "path": "refs.bib",
@@ -364,12 +364,12 @@
         }
       ],
       "thumbnail": {
-        "size": 477543,
-        "sha256": "51c90bab5902591984214897d9bb8493531ddfdb4a4d9061dc7877577d408960"
+        "size": 479819,
+        "sha256": "f2561aa8458747e72d2a20d425c346b8be3f53ce2f01bad594d76996b92ad604"
       },
       "sample": {
-        "size": 144275,
-        "sha256": "d464ea1f7c75a28b5e514ea917b3f842b8902e9a3344d2ab0af4a7d2750276d5"
+        "size": 144312,
+        "sha256": "c6677e45bdc3444a8405ecc2a4d80e8407067e912eeb1c4bb22a091a4d51ce11"
       }
     },
     {
@@ -387,22 +387,22 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 15507,
-          "sha256": "6f8a892e4786865c3632f9aeea002073b52d56a10ac25c971f2cd3856fa0d18d"
+          "size": 16454,
+          "sha256": "7dfa2d93a6abea875974fb3b398cabd386f510ffa044fbea6f7585f114d75a63"
         },
         {
           "path": "notes-style.tex",
-          "size": 8659,
-          "sha256": "64ec8fcf75ed2d5e7c4cb99ca080e54230f02323883ee7b556e3e8abed5edaa1"
+          "size": 8799,
+          "sha256": "eaa6ea6e7d42e85527cc6045ccb03386af807e8444791d4a2f50031ab9f6862b"
         }
       ],
       "thumbnail": {
-        "size": 131006,
-        "sha256": "068e9e431c170c9024216a819a54929686bcd600b71608df1564f4cc4c8f925c"
+        "size": 444589,
+        "sha256": "199056a6f077e10b93a2f3757c29623fff510b5f11f5b7ec15f7ec1b7dd8fe6f"
       },
       "sample": {
-        "size": 393022,
-        "sha256": "7f9d5fdb690a7b892ff2f25eec11726c088ed10694fed404c7921b6c8f50489f"
+        "size": 394310,
+        "sha256": "05e38f3e1fc9bcd929949bf5af8ae2d85247b331ff8cc0ff8e22e48ee30188d2"
       }
     },
     {
@@ -425,8 +425,8 @@
         },
         {
           "path": "main.tex",
-          "size": 9612,
-          "sha256": "9dc9433c7e89ffcdf54dbfb89e71e900dca75f596a4f52629734f4cac745b54a"
+          "size": 9658,
+          "sha256": "1002b297071b3232451bdf71a71be4b34bdc97271f8a2966eb98e9d131721d64"
         }
       ],
       "thumbnail": {
@@ -434,8 +434,8 @@
         "sha256": "f6e3970eccc6f0bb6c061b83fe21b9a45d4d4be7df265549829e8dab877f29c2"
       },
       "sample": {
-        "size": 196306,
-        "sha256": "3a849f8000e408ba0e6506f6a67b7e20a42b40f1c4e92add728c1414c10213b1"
+        "size": 196396,
+        "sha256": "7b42d07973daf4d7538b4ee34dfd65b8167fec7f07abe58ec15fadfe5c0790fa"
       }
     },
     {
@@ -491,8 +491,8 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 16147,
-          "sha256": "58efd6b0485677b989f181beee149b804e25d69ea06c357d1dc09633a3469aa3"
+          "size": 16151,
+          "sha256": "2dea6ff44fd863ed4270e44422dddee2168917623fe0ecb127fb66643396a69e"
         },
         {
           "path": "mathpaper.sty",
@@ -506,12 +506,12 @@
         }
       ],
       "thumbnail": {
-        "size": 120469,
-        "sha256": "bf27012c6008f45713a82f432bf4186ad8cfa8cb1d79b77817ec1b7e9fc5b7c0"
+        "size": 483633,
+        "sha256": "f4ad9581503689a256e3b6c02aa828d87e5edd9bbbdfd17377f9aebb707b3b35"
       },
       "sample": {
-        "size": 529357,
-        "sha256": "9470e041aa991f1aa49a9d77b98332acb7392a72dab99c0c66774ca8690caeb6"
+        "size": 529430,
+        "sha256": "6c9579f0a099a6c215710050350a7a716e027e7057cf4a2aa1e9be5afbe84c7e"
       }
     },
     {
@@ -529,8 +529,8 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 10365,
-          "sha256": "1debb4ee102c61a102108b653804af2e673a36360566776ccad620ff10e40061"
+          "size": 10474,
+          "sha256": "91e672192ebe6ba830ea1c38f43961801c2112cbea88013ac1cf6759325bfe3d"
         },
         {
           "path": "refs.bib",
@@ -539,12 +539,12 @@
         }
       ],
       "thumbnail": {
-        "size": 381625,
-        "sha256": "98325bc4c7d7df478b45c8b75e3362915fbb21d65832be533754ea51738bd4b6"
+        "size": 382959,
+        "sha256": "d6ba859d72000af0eb22af4ff1433556b9a6da929c0b8fd77a90c12cc50888cc"
       },
       "sample": {
-        "size": 155902,
-        "sha256": "ab00d0e27f06536bcf17965f8d9f5a512aa1130ef03b0a4eaa6da72cfd9e6af1"
+        "size": 156162,
+        "sha256": "cd762309392ca4e9e9d547646534ce799924ecfd1f2c0b4bf427b81113c216db"
       }
     },
     {
@@ -562,13 +562,13 @@
       "files": [
         {
           "path": "beamerthememinimal.sty",
-          "size": 8607,
-          "sha256": "75fea189149c24da52300153fa9d4def72944ddf93ff3f174f05fc40d951fb5b"
+          "size": 8717,
+          "sha256": "5b39c3c9d26e1ca1f694673ff44cf675a7b9fa12053de3b452f679bf4100e3eb"
         },
         {
           "path": "main.tex",
-          "size": 8620,
-          "sha256": "e874c04e8145dd0e68c6d7b9440fc998ba3db2a1612b90b2fcab56aae469c384"
+          "size": 8669,
+          "sha256": "59c6680fbf4dba15a89b38d6b600da9ead407f3be100787ce69815c60f88fa6d"
         },
         {
           "path": "refs.bib",
@@ -581,8 +581,8 @@
         "sha256": "4be63969a154e9519fe3df850167cb7c47270a5b37f15859eac65b5b86caf9ec"
       },
       "sample": {
-        "size": 549090,
-        "sha256": "aa28c9eff69d7510380edd9a61ec94a13623df902e64ef330fd6d3c690144cbc"
+        "size": 666859,
+        "sha256": "8012b62fbbf6cb7e738899053400941ed315aaef909e2de91d96a6161829e8d5"
       }
     },
     {
@@ -638,17 +638,17 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 13753,
-          "sha256": "eb4b6edad9c04ff877bdb4052410c3fa5895a282c236ee1027fa511b5b8625fc"
+          "size": 14538,
+          "sha256": "fda5fd0588f690c0bb04a78763239e7f5ba972899b1eb8db94bd5a172e9acfb3"
         }
       ],
       "thumbnail": {
-        "size": 195908,
-        "sha256": "2b8e374d14c86692de71e403e3c54f96755f828f6755d8321cdb117368fad562"
+        "size": 395231,
+        "sha256": "8549925ac771731f20dde102398906499e6d50a544ac04852f6dc987147088d1"
       },
       "sample": {
-        "size": 591230,
-        "sha256": "86f3074b3877a270f4e13d4ef29a728234c2cfe1dcd882010322376108605e61"
+        "size": 591278,
+        "sha256": "bf20746db1a6cb7fcc7aa55eb817a2919226e390c72b9d92e617318f69bb2a4f"
       }
     },
     {
@@ -666,17 +666,17 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 14464,
-          "sha256": "a39f1866836daaf7dc4ee3123ff7393e87365d4bfa29c5c95ccb06e5c694ece4"
+          "size": 14498,
+          "sha256": "3d07516f2ee4f089a13d8b5f262099b5a97945ba535f29a39173451c6f65b70b"
         }
       ],
       "thumbnail": {
-        "size": 123029,
-        "sha256": "c01d7accde7c7469b021803c7e51b0153f97e2f84ffc4a80024f2ca4426b4525"
+        "size": 133322,
+        "sha256": "5af25b03ad3bbf6e46a466c6646644832dc13975d0039b6dfb07b2add124fb0e"
       },
       "sample": {
-        "size": 163181,
-        "sha256": "87eba567303c680c406f33df6bbeb2021376f7a01fc217bceec4aaa2bd7459df"
+        "size": 129054,
+        "sha256": "a7ee393ac42494dbc1eb28fb1a8c9d5e060790cc2a6cbc61e9bb15f55bc5cf77"
       }
     },
     {
@@ -770,17 +770,17 @@
       "files": [
         {
           "path": "main.tex",
-          "size": 11446,
-          "sha256": "b5d795523ad0c8712832b6a26861c5540e001af7fc7d50ad6a0f26da0ba6a948"
+          "size": 11456,
+          "sha256": "2e6bd7ad9245798f3a9d426a2dbe0885204f3af28cfedd1e7dade3857a2a07d5"
         }
       ],
       "thumbnail": {
-        "size": 206207,
-        "sha256": "ee5f989b756f678a4f0b396c6ee412d7b0668ff5c3e006cfa79873f71aa8ba27"
+        "size": 206905,
+        "sha256": "ce27889c32dc121f62e4c9ee119ac5bb7af7810c37fb2f9f33059d2feec34304"
       },
       "sample": {
         "size": 129438,
-        "sha256": "15e93cc6b0bb3a24373f5e689e66df948a0fd98598f9e287318bab51fd31f42d"
+        "sha256": "1838de91b54b85794d816c5dcd868921e6e1f4908713707cb3e1fce0d09a171c"
       }
     },
     {
@@ -848,17 +848,17 @@
         },
         {
           "path": "style.tex",
-          "size": 5310,
-          "sha256": "65a820c02b6739499001d3c144ce34570eb89049cadbc82f9b2c3a80e9c14744"
+          "size": 5408,
+          "sha256": "efeb63a331d974036e378e9609319110ad810f5b2a4026b4e0629e38cdac4c40"
         }
       ],
       "thumbnail": {
-        "size": 95099,
-        "sha256": "70f7350892a69532f99a4f950554fea3362099f3e096ae6d79939178f42ae9c1"
+        "size": 157839,
+        "sha256": "35d5fba4c7ce8c33e4a17976df5dba0ef28fc80908db0508a06232de5dc56798"
       },
       "sample": {
-        "size": 174657,
-        "sha256": "b10ee464dc60a45cca365d1fa9b3569c9d908e8a48ffd0c13b8f44d5c48b788a"
+        "size": 151719,
+        "sha256": "cd8e80cd01e1db0aadcc3fc5adb6de665e1fd256f58c413ddca5872e22043f41"
       }
     },
     {
@@ -881,23 +881,23 @@
         },
         {
           "path": "chapters/01-introduction.tex",
-          "size": 6007,
-          "sha256": "b147b17f5379bd3004f2744c940258452de04a552db9a1a7033df39301a9c98d"
+          "size": 6783,
+          "sha256": "9095c63022aff8a67f7215eabcc6975a455b2efa517f55e1e01965a4441db92a"
         },
         {
           "path": "chapters/02-ageing-data.tex",
-          "size": 6132,
-          "sha256": "8e70dda790470f2b06b48ec169a3143fac58c31cb958b3f101e806880d8e6900"
+          "size": 6639,
+          "sha256": "72424c6a36a7d7a35afb97ecc01eeae658d9c5caa2e01c791b1ce556e567f2d3"
         },
         {
           "path": "chapters/03-estimation.tex",
-          "size": 6056,
-          "sha256": "6e49183986cf463cf287e5e7f264c93687054e4424aa4ac0035d2ef83af3745a"
+          "size": 6477,
+          "sha256": "e27e4b714956f4f1ae76a37292e527e2bf2619bf637812da8f725dffc3ae6179"
         },
         {
           "path": "chapters/04-conclusions.tex",
-          "size": 2060,
-          "sha256": "675713be086dd18973bf2dcfe9b571fe781d0cf8bfa4da6fe2676eee95e301ee"
+          "size": 2974,
+          "sha256": "02350bd51509234d0f3d3c53805160527f8c14b93f1660dbe27682c667309c13"
         },
         {
           "path": "frontmatter/abbreviations.tex",
@@ -921,8 +921,8 @@
         },
         {
           "path": "main.tex",
-          "size": 1905,
-          "sha256": "28a25e9aea0ab81e9f82aba4f9b6030b9a3a33ce5f8de83453fb0c5a08f69ad7"
+          "size": 1945,
+          "sha256": "b76261c6cb1588ff495212a5a50ad3d5075c5fed2bc1abea1ece9474d0b3ca5c"
         },
         {
           "path": "refs.bib",
@@ -931,17 +931,17 @@
         },
         {
           "path": "style.tex",
-          "size": 9283,
-          "sha256": "9882310b6438170fa84cdbf986222e2b6e826f875f78b245a85078a112bbf6ad"
+          "size": 9593,
+          "sha256": "fa714f55a42a131e792e02d42e46d89a5263da8ec2492aff55ad98af66667c5b"
         }
       ],
       "thumbnail": {
-        "size": 44850,
-        "sha256": "5aa0bbe6a14129c35fc3e08883fdeffdbc30ddfd5cb2ddb2ea1dcad3f719b10f"
+        "size": 148000,
+        "sha256": "6fb4ae5d72acf42712fb16b6b61fed7f272270d44f731d6e5294f1793651f597"
       },
       "sample": {
-        "size": 270840,
-        "sha256": "14bc804f5457beaaaa05bd69c21f8c634fdfa695f908ce905f881e412d90285d"
+        "size": 243626,
+        "sha256": "a294478718019e1da28784f952d889cb57fa71827903ec8def7772a76d900f32"
       }
     },
     {
@@ -999,8 +999,8 @@
         },
         {
           "path": "sections/preliminary.tex",
-          "size": 3169,
-          "sha256": "f4e64d0e5b83ca0185e58266c641c890f335631a36a3843b513a3f236799db35"
+          "size": 3180,
+          "sha256": "4ff36b08fbba63503385f1afe8ea9a9b921087327111deda458bf3ac7f655067"
         },
         {
           "path": "sections/questions.tex",
@@ -1014,27 +1014,27 @@
         },
         {
           "path": "sections/summary.tex",
-          "size": 2255,
-          "sha256": "053538f52375b80c424c2a6bef53912b7e2407e4035b6b80ad6e2d2f3c83595f"
+          "size": 2946,
+          "sha256": "f87f471b75339abc1b95cc8da38ac4c3bc97beb11bbec4bf3660b4ef444e3d19"
         },
         {
           "path": "sections/timeline.tex",
           "size": 2230,
-          "sha256": "fc681290a0889fec354799fe4521719e0742b63535571c47aa8f61925a7ffe08"
+          "sha256": "3c334b95c0e55c38ee3c6fe4cdccb9f162470e0ccd40d9a4142f7b134dc48049"
         },
         {
           "path": "style.tex",
-          "size": 5684,
-          "sha256": "6a77a76576c5533afded15888aa11955b8881467a31d67af31733f6c85395f92"
+          "size": 5884,
+          "sha256": "4f5d387b921763e98891c4da8a62d283ea413095796b89525c271f737ad4c5c5"
         }
       ],
       "thumbnail": {
-        "size": 57829,
-        "sha256": "5f28c9a03b2dafa70c16b2d6d66413e326a1c022329e633d401f394a3ecbf26f"
+        "size": 215254,
+        "sha256": "91ba14530c00b9f08dae4351c6a55d6849b21cb6c7f0ad812fd9410f16313bf6"
       },
       "sample": {
-        "size": 543418,
-        "sha256": "8642430219924dc6ff568574163e4ad3f898386b64c20bf280bfc2ea34f42b77"
+        "size": 493975,
+        "sha256": "9163decd6c6e006426e6670a0fffe21ebe9bad8dbb0aa015a57a8c80a800e10e"
       }
     }
   ]
