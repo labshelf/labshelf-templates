@@ -1,0 +1,125 @@
+% Layout and typography for the proposal. main.tex holds the content;
+% the accent colour is the one setting most people change here.
+
+% --- Type: Source Serif body, Source Sans display, matching math ------------
+\usepackage[T1]{fontenc}
+\usepackage[osf]{sourceserif}
+\usepackage[lining,tabular,semibold,scale=0.94]{sourcesans}
+\usepackage{amsmath}
+\usepackage{newtxmath}
+\usepackage[italic,defaultmathsizes,noendash]{mathastext}
+\usepackage[protrusion=true,expansion=true,tracking=true,kerning=true]{microtype}
+\SetTracking{encoding=*,shape=*,family=*}{0}
+
+% --- Page: A4 with a measure of roughly 70 characters ------------------------
+\usepackage[a4paper,textwidth=146mm,top=32mm,bottom=30mm,headsep=10mm,
+  footskip=14mm,hcentering]{geometry}
+\linespread{1.08}
+\setlength{\parindent}{1.4em}
+\setlength{\parskip}{0pt}
+\frenchspacing
+\clubpenalty=10000
+\widowpenalty=10000
+
+% --- Colour: change the accent here -----------------------------------------
+\usepackage{xcolor}
+\definecolor{accent}{HTML}{1D5A63}   % deep teal
+\colorlet{accentsoft}{accent!7}
+\colorlet{accentmid}{accent!45}
+\colorlet{muted}{black!58}
+\colorlet{hairline}{black!22}
+
+% --- Small labels: tracked capitals in the sans -----------------------------
+\newcommand{\caps}[1]{{\sffamily\textls[110]{\MakeUppercase{#1}}}}
+
+% --- Headings ---------------------------------------------------------------
+\usepackage[explicit]{titlesec}
+\titleformat{\section}
+  {\sffamily\large}
+  {\llap{\color{accent}\thesection\hspace{0.9em}}}
+  {0pt}{#1}
+\titlespacing*{\section}{0pt}{2.4\baselineskip plus 4pt minus 2pt}{0.7\baselineskip}
+\titleformat{\subsection}
+  {\sffamily\normalsize\color{accent}}
+  {\thesubsection\hspace{0.7em}}
+  {0pt}{#1}
+\titlespacing*{\subsection}{0pt}{1.4\baselineskip plus 2pt minus 2pt}{0.35\baselineskip}
+
+% --- Running header and footer ----------------------------------------------
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\footnotesize\color{muted}\caps{\ShortTitle}}
+\fancyhead[R]{\footnotesize\color{muted}\sffamily\ProposalCall}
+\fancyfoot[C]{\footnotesize\color{muted}\sffamily
+  Page \thepage\ of \pageref*{LastPage}}
+\fancypagestyle{cover}{\fancyhf{}\fancyfoot[C]{\footnotesize\color{muted}%
+  \sffamily Page \thepage\ of \pageref*{LastPage}}}
+
+% --- Lists, tables, captions ------------------------------------------------
+\usepackage{enumitem}
+\setlist{itemsep=0.2\baselineskip,topsep=0.4\baselineskip,leftmargin=1.6em}
+\usepackage{booktabs,tabularx,array,float}
+\usepackage[group-separator={,},group-minimum-digits=4,
+  text-family-to-math=true]{siunitx}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\setlength{\heavyrulewidth}{0.7pt}
+\setlength{\lightrulewidth}{0.35pt}
+\setlength{\cmidrulewidth}{0.35pt}
+\renewcommand{\arraystretch}{1.25}
+\newcommand{\tablefont}{\sffamily\small}
+\newcommand{\thead}[1]{\leavevmode{\color{accent}\footnotesize\caps{#1}}}
+\usepackage[font={small,sf},labelfont={color=accent},labelsep=quad,
+  justification=raggedright,singlelinecheck=false,skip=8pt]{caption}
+
+% --- Panels: summary and aims -----------------------------------------------
+\usepackage[most]{tcolorbox}
+\newtcolorbox{summarybox}{enhanced,breakable,colback=accentsoft,
+  colframe=accentsoft,boxrule=0pt,arc=0pt,left=6mm,right=6mm,top=4.5mm,
+  bottom=4.5mm,before skip=6mm,after skip=4mm,
+  overlay={\node[anchor=north west,inner sep=0pt]
+    at ([xshift=6mm,yshift=-4.5mm]frame.north west)
+    {\footnotesize\color{accent}\caps{Summary}};},
+  fontupper=\small\linespread{1.12}\selectfont,
+  before upper={\vspace*{1.6em}\noindent}}
+
+\newcounter{aim}
+\newcommand{\aimobjective}{\item}
+\NewDocumentEnvironment{aim}{m}
+  {\refstepcounter{aim}%
+   \begin{tcolorbox}[enhanced,breakable,colback=white,colframe=white,
+     boxrule=0pt,arc=0pt,left=5mm,right=0mm,top=1mm,bottom=1mm,
+     before skip=4mm,after skip=4mm,
+     borderline west={1.2pt}{0pt}{accent}]
+   {\footnotesize\color{accent}\caps{Aim \theaim}}\par\nobreak
+   \vspace{0.2\baselineskip}%
+   {\sffamily\large #1\par}\nobreak\vspace{0.35\baselineskip}}
+  {\end{tcolorbox}}
+\newlist{objectives}{enumerate}{1}
+\setlist[objectives]{label={\sffamily\small\color{accent}O\theaim.\arabic*},
+  ref={O\theaim.\arabic*},leftmargin=3em,labelsep=0.8em,
+  itemsep=0.15\baselineskip,topsep=0.3\baselineskip}
+
+% --- Gantt chart ------------------------------------------------------------
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric}
+
+% --- Bibliography and cross references --------------------------------------
+\usepackage[backend=biber,style=authoryear-comp,maxcitenames=2,
+  maxbibnames=6,uniquelist=false,dashed=false]{biblatex}
+\renewcommand{\bibfont}{\small}
+\setlength{\bibitemsep}{0.35\baselineskip}
+\setlength{\bibhang}{1.4em}
+\DeclareFieldFormat[article,inproceedings,incollection]{title}{#1}
+\renewbibmacro{in:}{\ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}}
+\addbibresource{refs.bib}
+
+\usepackage[colorlinks,linkcolor=accent,citecolor=accent,urlcolor=accent,
+  pdfusetitle]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\crefname{aim}{Aim}{Aims}
+\crefname{objectivesi}{Objective}{Objectives}
+\crefname{wp}{work package}{work packages}
+\urlstyle{same}

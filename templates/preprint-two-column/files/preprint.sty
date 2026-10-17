@@ -1,0 +1,138 @@
+% preprint.sty -- page design for the Two-Column Preprint template.
+% A4 two-column grid, Source Serif text with Source Sans headings, one
+% deep ink-blue accent, a full-width title block and a running header.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{preprint}[2026/10/17 Two-Column Preprint]
+
+% ---- Page grid -------------------------------------------------------------
+\RequirePackage[a4paper, top=24mm, bottom=26mm, inner=17mm, outer=17mm,
+  columnsep=7mm, headheight=12pt, headsep=8mm, footskip=10mm]{geometry}
+
+% ---- Type ------------------------------------------------------------------
+% Source Serif for text, Source Sans for display; mathastext takes the Latin
+% letters and digits of maths from Source Serif, newtxmath supplies the rest.
+\RequirePackage[T1]{fontenc}
+\RequirePackage[semibold, scale=0.94]{sourceserif}
+\RequirePackage[semibold, scale=0.94]{sourcesans}
+\RequirePackage[scaled=0.82]{beramono}
+\RequirePackage{newtxmath}
+\RequirePackage[italic, defaultmathsizes, noendash]{mathastext}
+\linespread{1.06}
+\RequirePackage[protrusion=true, expansion=true, tracking=true, final]{microtype}
+\SetTracking{encoding=*, shape=sc}{50}
+\frenchspacing
+\setlength{\parindent}{1em}
+\setlength{\emergencystretch}{1.5em}
+
+% ---- Accent ----------------------------------------------------------------
+% The only colour in the document. Change it here; panels and rules derive
+% their tints from it.
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{1F3A68}
+\colorlet{accentpanel}{accent!6}
+\colorlet{inkmuted}{black!62}
+
+\newcommand{\pp@label}[1]{%
+  {\sffamily\bfseries\footnotesize\color{accent}\textls[120]{\MakeUppercase{#1}}}}
+
+% ---- Headings --------------------------------------------------------------
+\RequirePackage[explicit]{titlesec}
+\titleformat{\section}{\sffamily\bfseries\large\raggedright}
+  {\textcolor{accent}{\thesection}}{0.6em}{#1}
+\titleformat{\subsection}{\sffamily\bfseries\normalsize\raggedright}
+  {\textcolor{accent}{\thesubsection}}{0.6em}{#1}
+\titleformat{\paragraph}[runin]{\sffamily\bfseries\small}{}{0pt}{#1.}
+\titlespacing*{\section}{0pt}{2.6ex plus .6ex minus .3ex}{1.1ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{2ex plus .5ex minus .2ex}{0.7ex plus .2ex}
+\titlespacing*{\paragraph}{0pt}{1.2ex plus .3ex}{0.6em}
+
+% ---- Captions --------------------------------------------------------------
+\RequirePackage[font={small,sf}, labelfont={bf,color=accent},
+  justification=justified, singlelinecheck=false, skip=6pt]{caption}
+\DeclareCaptionLabelSeparator{quad}{\quad}
+\captionsetup{labelsep=quad}
+\setlength{\textfloatsep}{14pt plus 3pt minus 3pt}
+\setlength{\dbltextfloatsep}{16pt plus 3pt minus 3pt}
+
+% ---- Running header --------------------------------------------------------
+% Short title on the left, page number on the right; the first page carries
+% only the preprint line set by \maketitle.
+\RequirePackage{fancyhdr}
+\newcommand{\pp@short}{}
+\newcommand{\shorttitle}[1]{\renewcommand{\pp@short}{#1}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\footnotesize\color{inkmuted}\pp@short}
+\fancyhead[R]{\sffamily\footnotesize\bfseries\color{accent}\thepage}
+\renewcommand{\headrule}{{\color{accent!35}\hrule height .4pt}}
+\renewcommand{\headrulewidth}{.4pt}
+\fancypagestyle{firstpage}{\fancyhf{}%
+  \fancyhead[L]{\pp@label{\pp@kind}}%
+  \fancyhead[R]{\sffamily\footnotesize\color{inkmuted}\pp@date}%
+  \renewcommand{\headrule}{}}
+
+% ---- Title block -----------------------------------------------------------
+\newcommand{\pp@kind}{Preprint}
+\newcommand{\pp@date}{\today}
+\newcommand{\pp@authors}{}
+\newcommand{\pp@affils}{}
+\newcommand{\pp@corresp}{}
+\newcommand{\pp@keywords}{}
+\newcommand{\pp@abstract}{}
+\newcommand{\preprintkind}[1]{\renewcommand{\pp@kind}{#1}}
+\newcommand{\preprintdate}[1]{\renewcommand{\pp@date}{#1}}
+\newcommand{\authors}[1]{\renewcommand{\pp@authors}{#1}}
+\newcommand{\affiliations}[1]{\renewcommand{\pp@affils}{#1}}
+\newcommand{\correspondence}[1]{\renewcommand{\pp@corresp}{#1}}
+\newcommand{\keywords}[1]{\renewcommand{\pp@keywords}{#1}}
+\newcommand{\affil}[1]{\textsuperscript{\sffamily#1}}
+\RenewDocumentEnvironment{abstract}{+b}{\gdef\pp@abstract{#1}}{}
+
+\renewcommand{\maketitle}{%
+  \twocolumn[{%
+    \raggedright
+    {\sffamily\bfseries\fontsize{21}{25}\selectfont\@title\par}
+    \vspace{12pt}
+    {\large\pp@authors\par}
+    \vspace{6pt}
+    {\sffamily\footnotesize\color{inkmuted}\pp@affils\par}
+    \vspace{14pt}
+    \pp@abstractpanel
+    \vspace{18pt}}]%
+  \thispagestyle{firstpage}%
+  \ifx\pp@corresp\@empty\else
+    {\renewcommand{\thefootnote}{}\footnotetext{\pp@corresp}}%
+  \fi}
+
+% A tinted panel with a hairline in the accent on top.
+\newcommand{\pp@abstractpanel}{%
+  {\color{accent}\hrule height .8pt}%
+  \colorbox{accentpanel}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{%
+    \vspace{6pt}%
+    \hspace*{6pt}\parbox{\dimexpr\textwidth-2\fboxsep-12pt\relax}{%
+      \pp@label{Abstract}\par\vspace{4pt}%
+      \justifying\noindent\pp@abstract\par
+      \ifx\pp@keywords\@empty\else
+        \vspace{6pt}{\small\pp@label{Keywords}\quad
+          {\sffamily\small\pp@keywords}\par}%
+      \fi}%
+    \vspace{7pt}}}%
+  \par}
+\RequirePackage{ragged2e}
+
+% ---- Footnotes -------------------------------------------------------------
+\renewcommand{\footnoterule}{{\color{accent!35}\hrule width 3em height .4pt}\vspace{4pt}}
+\RequirePackage[hang, flushmargin]{footmisc}
+\renewcommand{\footnotelayout}{\small}
+
+% ---- Lists and tables ------------------------------------------------------
+\RequirePackage{enumitem}
+\setlist{nosep, leftmargin=1.4em}
+\RequirePackage{booktabs}
+\setlength{\heavyrulewidth}{.8pt}
+\setlength{\lightrulewidth}{.4pt}
+
+% ---- Balanced last page ----------------------------------------------------
+\RequirePackage{pbalance}
+
+\endinput

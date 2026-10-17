@@ -1,0 +1,10 @@
+schema: 1
+id: thesis
+name: Thesis
+description: Book-style thesis on B5 paper set in EB Garamond with old-style figures and a single oxblood accent. Chapters open with a large number flush right over a hairline and a letterspaced small-caps title; small-caps running heads, a centred title page with a rule-and-lozenge ornament. Includes dedication, abstract, acknowledgements, contents, list of figures, three chapters with equations, TikZ plots, booktabs tables and an appendix, plus a biblatex author-year bibliography.
+category: thesis
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

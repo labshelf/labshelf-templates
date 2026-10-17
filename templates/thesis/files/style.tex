@@ -1,0 +1,154 @@
+% Page layout, headings, running heads, captions and bibliography style.
+\makeatletter
+
+\usepackage[english]{babel}
+\usepackage[babel]{csquotes}
+\usepackage[final,protrusion=true,expansion=true,tracking=true]{microtype}
+\SetTracking{encoding=*,shape=sc}{60}
+
+% Classical proportions: a narrow inner margin and a generous outer and
+% lower margin, giving a measure of about 68 characters.
+\usepackage[
+  inner=21mm, outer=39mm, top=27mm, bottom=46mm,
+  headsep=9mm, footskip=13mm,
+]{geometry}
+\setlength{\parindent}{1.4em}
+\linespread{1.06}
+% A book page never starts or ends a paragraph with a lone line.
+\clubpenalty=10000
+\widowpenalty=10000
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,decorations.pathmorphing}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{graphicx}
+\usepackage{array}
+
+% Letterspaced lowercase small caps, the voice of every heading.
+\DeclareRobustCommand{\spacedsc}[1]{\textls[110]{\scshape\MakeLowercase{#1}}}
+
+% Chapter openings: a large old-style number in the accent colour,
+% a hairline, then the title in spaced small caps, all flush right.
+\RedeclareSectionCommand[
+  beforeskip=6\baselineskip,
+  afterskip=4\baselineskip,
+  font=\normalfont,
+]{chapter}
+\renewcommand*{\chapterformat}{%
+  {\fontsize{60}{60}\selectfont\fontfigurestyle{lining}\selectfont\color{accent}\thechapter}}
+\renewcommand*{\chapterlinesformat}[3]{%
+  \Ifstr{#1}{chapter}{%
+    \raggedleft
+    \Ifstr{#2}{}{}{#2\par\nobreak\vspace{1.2ex}}%
+    {\color{hairline}\rule{\linewidth}{0.3pt}}\par\nobreak\vspace{2.2ex}%
+    {\Large\spacedsc{#3}\par}%
+  }{\@hangfrom{#2}{#3}}}
+
+\RedeclareSectionCommand[
+  beforeskip=-2.2\baselineskip plus -0.5\baselineskip,
+  afterskip=1\baselineskip,
+  font=\normalfont\normalsize,
+]{section}
+\RedeclareSectionCommand[
+  beforeskip=-1.6\baselineskip plus -0.3\baselineskip,
+  afterskip=0.6\baselineskip,
+  font=\normalfont\normalsize\itshape,
+]{subsection}
+\renewcommand*{\sectionformat}{{\color{accent}\thesection}\enskip}
+\renewcommand*{\subsectionformat}{\thesubsection\enskip}
+\renewcommand*{\sectionlinesformat}[4]{%
+  \Ifstr{#1}{section}%
+    {\@hangfrom{\hskip #2#3}{\spacedsc{#4}}}%
+    {\@hangfrom{\hskip #2#3}{#4}}}
+
+% Running heads: chapter on the left page, section on the right, in
+% spaced small caps; page numbers sit in the outer corner.
+\usepackage[headsepline=false]{scrlayer-scrpage}
+\pagestyle{scrheadings}
+\automark[section]{chapter}
+\renewcommand*{\chaptermarkformat}{}
+\renewcommand*{\sectionmarkformat}{}
+\clearpairofpagestyles
+\chead{\spacedsc{\headmark}}
+\ohead{\pagemark}
+\cfoot[\pagemark]{}
+\setkomafont{pagehead}{\normalfont\small}
+\setkomafont{pagenumber}{\normalfont\small}
+
+% Table of contents: chapters in spaced small caps, no dot leaders.
+\DeclareTOCStyleEntry[
+  beforeskip=1.1em,
+  pagenumberformat=\normalfont,
+]{tocline}{chapter}
+\DeclareTOCStyleEntries[dynindent]{tocline}{section,subsection}
+\setkomafont{disposition}{\normalfont}
+\renewcommand*{\TOCLineLeaderFill}[1][.]{\hfill}
+\renewcommand*{\addchaptertocentry}[2]{%
+  \addtocentrydefault{chapter}{#1}{\texorpdfstring{\spacedsc{#2}}{#2}}}
+
+% Captions: small type, label in spaced small caps, ragged right.
+\setcapindent{0pt}
+\setkomafont{caption}{\small}
+\setkomafont{captionlabel}{\small}
+\renewcommand*{\figureformat}{\spacedsc{\figurename}~\thefigure}
+\renewcommand*{\tableformat}{\spacedsc{\tablename}~\thetable}
+\renewcommand*{\captionformat}{\quad}
+\addtokomafont{caption}{\raggedright}
+
+% Float pages fill from the top, as on a set page, instead of centring
+% a lone table in the middle of the sheet.
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+
+% Footnotes: hanging full-size marks, set slightly smaller than text.
+\deffootnote{1.2em}{1.2em}{\makebox[1.2em][l]{\thefootnotemark}}
+\setfootnoterule[0.3pt]{4em}
+
+% Tables use lining tabular figures so columns align.
+\newcommand{\tablefigures}{\fontfigurestyle{lining}\fontfigurealignment{tabular}\selectfont}
+\AddToHook{env/tabular/begin}{\tablefigures}
+\AddToHook{env/tabular*/begin}{\tablefigures}
+
+% Plots share the text face and the accent colour.
+\pgfplotsset{
+  every axis/.append style={
+    axis line style={hairline, line width=0.4pt},
+    tick style={hairline, line width=0.4pt},
+    tick label style={font=\footnotesize},
+    label style={font=\footnotesize},
+    legend style={draw=none, font=\footnotesize, fill=none},
+    legend cell align=left,
+  },
+}
+
+\usepackage[
+  backend=biber,
+  style=authoryear-comp,
+  maxcitenames=2,
+  uniquelist=false,
+  giveninits=true,
+  uniquename=init,
+  dashed=false,
+  doi=true,
+  url=false,
+  isbn=false,
+]{biblatex}
+\AtBeginBibliography{\small\renewcommand*{\mkbibnamefamily}[1]{\textsc{#1}}}
+\setlength{\bibitemsep}{0.35\baselineskip}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+% PLATFORM: cleveref cannot patch the KOMA \appendix, so chapters after it
+% would be cited as "Chapter A".
+\AddToHook{cmd/appendix/after}{\crefalias{chapter}{appendix}}
+
+% Epigraph for a chapter opening: \chapterepigraph{text}{source}.
+\newcommand{\chapterepigraph}[2]{%
+  \begin{flushright}\small\itshape
+    \begin{minipage}{0.62\linewidth}\raggedleft #1\par
+      \vspace{0.6ex}\upshape\spacedsc{#2}\end{minipage}
+  \end{flushright}\vspace{2\baselineskip}}
+\makeatother

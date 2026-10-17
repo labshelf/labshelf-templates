@@ -1,0 +1,254 @@
+% Research Talk: a 16:9 Beamer deck with the hand-built LabShelf theme.
+% The theme (colours, fonts, footline, divider and statement slides) lives in
+% beamerthemelabshelftalk.sty; this file holds only the talk itself.
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usetheme{labshelftalk}
+\usepackage{booktabs}
+\usepackage[style=authoryear,maxcitenames=2,maxbibnames=3,uniquelist=false,backend=biber]{biblatex}
+\addbibresource{refs.bib}
+\renewcommand*{\bibfont}{\scriptsize}
+
+% Title metadata: the short forms appear in the footline of every slide.
+\title{Cool streets}
+\subtitle{Three decades of urban heat islands in twelve European cities, seen from orbit}
+\author[M. Okafor]{Maya Okafor\texorpdfstring{\quad}{, }Tom\'as Rivera\texorpdfstring{\quad}{, }Lena Hartmann}
+\institute{Institute for Urban Climate, Northfield University}
+\date{Urban Climate Seminar \enspace\textperiodcentered\enspace 14 May 2026}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\section{Motivation}
+
+\begin{frame}{Heat is Europe's deadliest weather hazard}
+  \vspace{5mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.3\textwidth}
+      {\lsdisplay{28}\color{lsAccent}61\,672\par}
+      \vspace{3mm}\rule{\linewidth}{0.4pt}\par\vspace{2mm}
+      {\small heat-related deaths in Europe in the summer of 2022 \parencite{ballester2023}\par}
+    \column{0.3\textwidth}
+      {\lsdisplay{28}\color{lsAccent}+4.6\,K\par}
+      \vspace{3mm}\rule{\linewidth}{0.4pt}\par\vspace{2mm}
+      {\small mean summer surface heat island of the twelve cities we study, 2024\par}
+    \column{0.3\textwidth}
+      {\lsdisplay{28}\color{lsAccent}1 in 3\par}
+      \vspace{3mm}\rule{\linewidth}{0.4pt}\par\vspace{2mm}
+      {\small Europeans live in a city of more than 100\,000 people\par}
+  \end{columns}
+  \vspace{0pt plus 1filll}
+  {\footnotesize\color{lsMuted}Built surfaces store heat by day and release it slowly
+  \parencite{oke1982}; the street, not the weather station, is where people feel it.\par}
+  \vspace{4mm}
+\end{frame}
+
+\section{Data and method}
+
+\begin{frame}{Thirty-four summers of thermal imagery}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.54\textwidth}
+      \begin{itemize}
+        \item 1\,264 cloud-free summer scenes from Landsat 5, 7, 8 and 9
+        \item Twelve cities, from Lisbon to Warsaw, each with a rural reference ring
+        \item Thermal bands aggregated from 30\,m to a 100\,m street grid
+        \item 4\,812 neighbourhoods linked to canopy, imperviousness and building height
+      \end{itemize}
+      \vspace{3mm}
+      {\footnotesize\color{lsMuted}Scenes acquired between June and August, about 10:30 local time.\par}
+    \column{0.38\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \lsheatraster{12}{12}{2.8mm}{lsPaper}
+        \foreach \c [count=\k from 0] in {0,20,40,60,80,100}{
+          \fill[lsAccent!\c!lsPaper] (\k*5.6mm,-3.6mm) rectangle ++(4.8mm,1.4mm);}
+        \node[anchor=north west,inner sep=0,font=\tiny\ttfamily,text=lsMuted] at (0,-5mm) {COOLER};
+        \node[anchor=north east,inner sep=0,font=\tiny\ttfamily,text=lsMuted] at (32.8mm,-5mm) {HOTTER};
+      \end{tikzpicture}\par
+      \vspace{2mm}
+      {\scriptsize\color{lsMuted}Land surface temperature, Madrid centre, 3 August 2024\par}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{From radiance to surface temperature}
+  \vspace{9mm}
+  {\Large\begin{equation*}
+    T_s \;=\; \frac{\tikzmarknode{tb}{T_B}}
+      {1 + \bigl(\tikzmarknode{lam}{\lambda}\, T_B / \tikzmarknode{rho}{\rho}\bigr)\,
+       \ln \tikzmarknode{eps}{\varepsilon}}
+  \end{equation*}}
+  \begin{tikzpicture}[remember picture,overlay,
+      note/.style={font=\scriptsize,text=lsInk,align=left,inner sep=0},
+      lead/.style={lsAccent,line width=0.5pt}]
+    \draw[lead] (tb.north) -- ++(0,4mm) -- ++(-20mm,0) coordinate (a);
+    \node[note,anchor=east,align=right] at ($(a)+(-1.5mm,0)$) {{\lssemibold at-sensor brightness}\\ temperature, Band 10};
+    \draw[lead] (lam.south) -- ++(0,-7mm) -- ++(-16mm,0) coordinate (b);
+    \node[note,anchor=east,align=right] at ($(b)+(-1.5mm,0)$) {{\lssemibold wavelength}\\ 10.9\,\textmu m};
+    \draw[lead] (rho.south) -- ++(0,-7mm) -- ++(16mm,0) coordinate (c);
+    \node[note,anchor=west] at ($(c)+(1.5mm,0)$) {{\lssemibold radiation constant}\\ $hc/k_B = 1.438$\,cm\,K};
+    \draw[lead] (eps.north) -- ++(0,11mm) -- ++(14mm,0) coordinate (d);
+    \node[note,anchor=west] at ($(d)+(1.5mm,0)$) {{\lssemibold surface emissivity}\\ from NDVI};
+  \end{tikzpicture}\par
+  \vspace{0pt plus 1filll}
+  {\footnotesize\color{lsMuted}Single-channel retrieval after \textcite{jimenez2003}. Heat-island
+  intensity is the urban mean minus the rural-ring mean, scene by scene.\par}
+  \vspace{4mm}
+\end{frame}
+
+\section{Results}
+
+\begin{frame}{Heat islands have grown in every city we studied}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.68\textwidth}
+      \begin{tikzpicture}
+        \begin{axis}[lsaxis, width=\linewidth-24mm, height=36mm,
+            xmin=1990, xmax=2024, ymin=2, ymax=6,
+            xtick={1990,2000,2010,2020}, ytick={2,3,4,5,6},
+            x tick label style={/pgf/number format/1000 sep={}},
+            ylabel={Surface heat island (K)}]
+          \addplot[lsRule!40!lsMuted] coordinates {(1990,2.4)(1992,2.5)(1994,2.4)(1996,2.6)(1998,2.6)(2000,2.7)(2002,2.8)(2004,2.8)(2006,2.9)(2008,3.0)(2010,3.0)(2012,3.1)(2014,3.2)(2016,3.2)(2018,3.3)(2020,3.4)(2022,3.5)(2024,3.6)}
+            node[right,font=\scriptsize,text=lsMuted] {Lisbon};
+          \addplot[lsRule!40!lsMuted] coordinates {(1990,2.8)(1992,2.9)(1994,3.0)(1996,2.9)(1998,3.2)(2000,3.3)(2002,3.3)(2004,3.5)(2006,3.6)(2008,3.7)(2010,3.8)(2012,3.8)(2014,4.0)(2016,4.1)(2018,4.3)(2020,4.3)(2022,4.5)(2024,4.6)}
+            node[right,font=\scriptsize,text=lsMuted] {Athens};
+          \addplot[lsAccent,line width=1.6pt] coordinates {(1990,3.1)(1992,3.3)(1994,3.2)(1996,3.5)(1998,3.6)(2000,3.6)(2002,3.9)(2004,4.0)(2006,4.1)(2008,4.3)(2010,4.2)(2012,4.5)(2014,4.7)(2016,4.6)(2018,4.9)(2020,5.1)(2022,5.2)(2024,5.4)}
+            node[right,font=\scriptsize\lssemibold,text=lsAccent] {Madrid};
+        \end{axis}
+      \end{tikzpicture}
+    \column{0.26\textwidth}
+      \vspace{2mm}
+      {\lsdisplay{22}\color{lsAccent}+0.7\,K\par}
+      \vspace{1.5mm}
+      {\footnotesize per decade in Madrid, the fastest of the twelve.\par}
+      \vspace{5mm}
+      {\footnotesize\color{lsMuted}Mean of all summer scenes per two-year window. All twelve
+      trends are positive at $p<0.01$, in line with the global survey of \textcite{peng2012}.\par}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Tree canopy is the strongest cooling lever}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.68\textwidth}
+      \begin{tikzpicture}
+        \begin{axis}[lsaxis, width=\linewidth-24mm, height=36mm,
+            xmin=0, xmax=48, ymin=-5, ymax=4,
+            xtick={0,10,20,30,40}, ytick={-4,-2,0,2,4},
+            xlabel={Tree canopy cover (\%)},
+            ylabel={Temperature anomaly (K)}]
+          \addplot[only marks,mark=*,mark size=1.3pt,lsAccent,fill opacity=0.55,draw opacity=0]
+            coordinates {(16.2,0.78)(5.2,3.06)(25.6,-1.59)(24.3,-1.08)(3.6,2.52)(6.0,2.35)
+            (20.7,-0.40)(11.8,0.90)(29.6,-1.54)(19.5,-0.53)(45.0,-4.10)(14.7,0.91)
+            (8.3,2.16)(37.9,-3.48)(10.0,0.83)(18.4,-0.48)(26.1,-1.38)(11.1,1.37)
+            (31.9,-3.10)(27.8,-1.67)(21.9,-1.07)(32.8,-1.89)(12.7,0.38)(40.5,-4.60)
+            (34.1,-3.44)(7.2,3.53)(20.4,-0.46)(23.5,-1.38)(3.7,2.23)(27.2,-2.59)
+            (40.5,-4.63)(28.2,-1.17)(27.5,-2.84)(43.6,-4.59)(22.9,-1.04)(32.9,-3.01)
+            (30.5,-1.37)(14.5,0.60)(19.0,-0.26)(22.3,-0.94)(9.4,1.76)(35.8,-3.27)
+            (7.7,1.95)(40.3,-3.72)(5.5,1.69)(40.9,-4.15)};
+          \addplot[lsInk,line width=0.8pt,domain=2:46,samples=2] {3.4-0.19*x};
+        \end{axis}
+      \end{tikzpicture}
+    \column{0.26\textwidth}
+      \vspace{2mm}
+      {\lsdisplay{22}\color{lsAccent}$-$1.9\,K\par}
+      \vspace{1.5mm}
+      {\footnotesize for every ten points of canopy cover.\par}
+      \vspace{5mm}
+      {\footnotesize\color{lsMuted}Each dot is a 100-neighbourhood bin from all twelve cities;
+      the line is the pooled fit. Consistent with \textcite{schwaab2021}.\par}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{What drives the street-level anomaly}
+  \vspace{3mm}
+  \centering\small\renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{@{}l r r r@{}}
+    \toprule
+    {\lssemibold Driver} & {\lssemibold Effect (K)} & {\lssemibold 95\% interval} & {\lssemibold Variance} \\
+    \midrule
+    Impervious surface, +10 pp   & $+1.42$ & $[\,1.31,\ 1.53\,]$ & 38\% \\
+    Tree canopy, +10 pp          & \textcolor{lsAccent}{$-1.87$} & $[-2.01,\ -1.73\,]$ & 29\% \\
+    Roof albedo, +0.1            & $-0.94$ & $[-1.10,\ -0.78\,]$ & 12\% \\
+    Mean building height, +5\,m  & $+0.36$ & $[\,0.22,\ 0.50\,]$ & 9\% \\
+    Distance to water, +1\,km    & $+0.21$ & $[\,0.12,\ 0.30\,]$ & 5\% \\
+    \bottomrule
+  \end{tabular}\par
+  \vspace{4mm}
+  {\footnotesize\color{lsMuted}Mixed-effects model with a random intercept per city;
+  $n = 4\,812$ neighbourhoods, $R^2 = 0.71$.\par}
+\end{frame}
+
+\lsstatement{Key takeaway}
+  {Ten more points of tree canopy cool a street by \textcolor{lsAccent}{almost two degrees}, more than any other lever a city controls.}
+  {Pooled across twelve cities and thirty-four summers of Landsat thermal imagery.}
+
+\section{Implications}
+
+\begin{frame}{Three levers for cooler streets}
+  \vspace{4mm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.3\textwidth}
+      {\ttfamily\small\color{lsAccent}01\par}\vspace{1mm}\rule{\linewidth}{0.4pt}\par\vspace{2mm}
+      {\lssemibold Plant where it is hottest\par}\vspace{1mm}
+      {\footnotesize Target canopy at the 10\% of blocks with the highest anomaly; they
+      hold 31\% of residents over 65.\par}
+    \column{0.3\textwidth}
+      {\ttfamily\small\color{lsAccent}02\par}\vspace{1mm}\rule{\linewidth}{0.4pt}\par\vspace{2mm}
+      {\lssemibold Lighten the roofs\par}\vspace{1mm}
+      {\footnotesize Raising roof albedo by 0.1 recovers about half the effect of new
+      canopy, at a fraction of the cost.\par}
+    \column{0.3\textwidth}
+      {\ttfamily\small\color{lsAccent}03\par}\vspace{1mm}\rule{\linewidth}{0.4pt}\par\vspace{2mm}
+      {\lssemibold Measure from orbit\par}\vspace{1mm}
+      {\footnotesize The pipeline runs on public Landsat data, so any city can track its
+      heat island every summer.\par}
+  \end{columns}
+\end{frame}
+
+\section*{References}
+
+\begin{frame}{References}
+  \printbibliography[heading=none]
+\end{frame}
+
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \begin{scope}[shift={($(current page.north east)+(-72mm,-14mm-69mm)$)}]
+      \lsheatraster{15}{15}{4mm}{lsPaper}
+    \end{scope}
+    \node[anchor=north west,inner sep=0] at ($(current page.north west)+(14mm,-14mm)$)
+      {\lskicker{Questions}};
+    \node[anchor=west,inner sep=0] at ($(current page.west)+(14mm,4mm)$)
+      {\fontsize{40}{40}\lslight\selectfont\color{lsInk}Thank you};
+    \fill[lsAccent] ($(current page.south west)+(14mm,23mm)$) rectangle ++(16mm,0.8pt);
+    \node[anchor=north west,inner sep=0,text width=80mm]
+      at ($(current page.south west)+(14mm,19mm)$) {%
+      {\small\lssemibold maya.okafor@northfield.edu\par}
+      \vspace{1mm}{\scriptsize\ttfamily\color{lsMuted}data and code \enspace github.com/northfield-climate/cool-streets\par}};
+  \end{tikzpicture}
+\end{frame}
+
+\appendix
+
+\begin{frame}{Backup: robust to the emissivity scheme}
+  \begin{tikzpicture}
+    \begin{axis}[lsaxis, xbar, width=0.7\textwidth, height=30mm, scale only axis,
+        bar width=3.2mm, bar shift=0pt, xmin=0, xmax=2.4, enlarge y limits=0.18,
+        grid=none, xmajorgrids,
+        symbolic y coords={Fixed 0.97,Land-cover lookup,NDVI threshold,NDVI mixture},
+        ytick={Fixed 0.97,Land-cover lookup,NDVI threshold,NDVI mixture}, y tick label style={font=\scriptsize,text=lsInk},
+        xlabel={Cooling per +10 pp canopy (K)},
+        nodes near coords, nodes near coords align={horizontal},
+        every node near coord/.append style={font=\scriptsize\ttfamily,text=lsMuted}]
+      \addplot[fill=lsRule!70!lsMuted,draw=none] coordinates
+        {(1.62,Fixed 0.97) (1.79,Land-cover lookup) (1.84,NDVI threshold)};
+      \addplot[fill=lsAccent,draw=none] coordinates {(1.87,NDVI mixture)};
+    \end{axis}
+  \end{tikzpicture}\par
+  \vspace{2mm}
+  {\footnotesize\color{lsMuted}The main analysis uses the NDVI mixture scheme (highlighted).
+  Every alternative keeps canopy as the strongest cooling lever.\par}
+\end{frame}
+
+\end{document}

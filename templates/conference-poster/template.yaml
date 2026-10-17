@@ -1,0 +1,10 @@
+schema: 1
+id: conference-poster
+name: Conference Poster
+description: A0 portrait research poster on a strict three-column grid. A dark title band carries a thermal-raster motif, authors, affiliations and logo slots; below sit a key-finding highlight with one big number, three pgfplots charts, a TikZ method pipeline, a booktabs table, a QR code and a numbered biblatex references strip. One vermilion accent, Fira Sans and Fira Mono.
+category: poster
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

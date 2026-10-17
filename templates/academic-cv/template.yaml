@@ -1,0 +1,10 @@
+schema: 1
+id: academic-cv
+name: Academic CV
+description: Hand-built two-page academic CV on A4, set in EB Garamond with microtype. A letterspaced small-caps name header and a contact line with small FontAwesome icons; dates in tabular old-style figures on a narrow left column that keeps every section on one vertical grid. Sections for appointments, education, numbered journal, conference and preprint publications, grants, talks, teaching and service, with one sepia-brown accent and a running footer on page two.
+category: cv
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

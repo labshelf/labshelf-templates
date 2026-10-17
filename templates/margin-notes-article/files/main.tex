@@ -1,0 +1,269 @@
+% Margin Notes Article -- a single-column article with a wide outer margin.
+% Notes, citations and small figures live beside the text; the page design
+% (grid, fonts, accent colour, headings) is in margin-notes.sty.
+% Build with: latexmk -pdf main.tex
+\documentclass[11pt]{article}
+\usepackage{margin-notes}
+
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots,fillbetween}
+
+% Author-year references; every \sidecite also prints the full entry in the margin.
+\usepackage[backend=biber, style=authoryear, maxcitenames=2, maxbibnames=6,
+  giveninits=true, useprefix=true, uniquename=false, uniquelist=false, dashed=false]{biblatex}
+\addbibresource{refs.bib}
+\AtEveryBibitem{\clearfield{issn}\clearfield{doi}\clearfield{url}}
+\AtBeginBibliography{\renewcommand*{\mkbibnamefamily}[1]{\textsc{#1}}}
+\newcommand{\sidecite}[2][]{\sidenote{\fullcite[#1]{#2}.}}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+
+% ---- Title block: edit these ------------------------------------------------
+\title{Light before Dawn}
+\subtitle{Street lighting advances the first song of the day in four urban songbirds}
+\author{Mira Okafor, Tomás Lindqvist \& Hanne Verbeek}
+\affiliation{Halden Institute for Urban Ecology, Department of Behavioural Biology}
+\margininfo{\textcolor{accent}{\scshape\textls[60]{preprint}}\\
+  October 2026\\[4pt]
+  Correspondence to\\ \textit{m.okafor@halden-ecology.org}\\[4pt]
+  \textit{Keywords}: artificial light at night, dawn chorus, acoustic monitoring, mixed models}
+\shorttitle{Light before Dawn}
+\shortauthors{Okafor, Lindqvist \& Verbeek}
+
+\begin{document}
+\maketitle
+
+\epigraph{Before the light came, the blackbird had begun; it sang as though the
+  lamp outside the window were the first edge of morning.}
+  {field notebook, 14 April 2024}
+
+\begin{abstract}
+Songbirds time their first song of the day against the rising light, and the
+city adds light of its own. We analysed 4\,545 species-mornings at 38 sites along a
+measured gradient of street lighting and estimated, for four common species, how
+far the onset of song moves for each tenfold increase in ground-level
+illuminance. Robins and blackbirds sing more than ten minutes earlier per decade
+of light, great tits about four, and chaffinches barely at all. The ordering
+follows eye size, which suggests that the response is set by how much light a
+species needs to see, not by its place in the chorus.
+\end{abstract}
+
+\section{Introduction}
+
+The dawn chorus is among the most regular events in temperate ecology. Each
+species begins at a characteristic time before sunrise, and the order of
+entries is stable enough that field ornithologists once used it as a clock.%
+\sidecite{marler2004} The cue behind that regularity is light: as the sky
+brightens through civil twilight, each species starts once illuminance crosses
+a threshold of its own.
+
+Cities disturb the cue. A sodium or LED street lamp delivers several lux to a
+nearby perch through the whole night, which is brighter than the sky at the
+start of civil twilight. The best-known study of the effect found that males
+of several species close to street lights began singing earlier and fathered
+more extra-pair young \parencite{kempenaers2010}. Later work has shown that the
+spectrum of the lamp matters as much as its intensity\sidecite{hale2017} and
+that the size of a species' eye predicts how strongly it reacts.%
+\sidecite{moreau2022}
+
+Most of this evidence comes from a handful of sites, compared as lit against
+unlit. Light at night is not a binary treatment, however; it falls off with
+distance and is shaded by trees and walls.\footnote{A lamp ten metres away
+  delivers roughly a hundredth of the illuminance of one directly above the
+  perch, so two territories on the same street can differ by two orders of
+  magnitude.} We therefore treat light as a continuous dose and ask a simpler
+question: how many minutes earlier does each species start for each tenfold
+increase in light?
+
+\section{Methods}
+
+\subsection{Sites and light measurements}
+
+We placed autonomous recorders at 38 sites across a city of about 300\,000
+people and its rural edge, chosen to span five orders of magnitude of
+night-time illuminance. At each site we measured horizontal illuminance at
+perch height with a calibrated lux meter on three moonless nights, following an
+established ground protocol,\sidecite{dacosta2019} and used the median as the
+site value~$L_i$. Recording ran from 1 March to 31 May in two seasons.
+
+\subsection{Defining the onset of song}
+
+\begin{marginfigure}
+\begin{tikzpicture}
+\begin{axis}[
+    width=56mm, height=40mm, scale only axis=false,
+    axis lines=left, xmin=-90, xmax=10, ymin=0, ymax=1.08,
+    xtick={-80,-40,0}, ytick={0,0.25,1},
+    yticklabels={0,$\kappa$,1},
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    xlabel={minutes from civil dawn}, ylabel={$r(t)/r_{\max}$},
+    ylabel style={yshift=-6pt}, xlabel style={yshift=3pt},
+    tick align=outside, tick style={black!60}, axis line style={black!60},
+  ]
+  \addplot[domain=-90:10, samples=80, thick, accent] {1/(1+exp(-(x+38)/7))};
+  \draw[dashed, black!45] (axis cs:-90,0.25) -- (axis cs:10,0.25);
+  \draw[black!60] (axis cs:-45.7,0) -- (axis cs:-45.7,0.25);
+  \fill[accent] (axis cs:-45.7,0.25) circle (1.3pt);
+  \node[font=\scriptsize, anchor=south east] at (axis cs:-46,0.28) {$t^{\ast}$};
+\end{axis}
+\end{tikzpicture}
+\caption{Onset $t^{\ast}$ is the first minute at which the smoothed song rate
+  reaches a fraction $\kappa$ of its morning maximum.}
+\label{fig:onset}
+\end{marginfigure}
+For each species, morning and site we counted songs per minute with a
+classifier trained on our own annotated recordings\sidecite{verbeek2021} and
+smoothed the counts with a five-minute running mean $r(t)$. The onset of song
+is the first time at which this rate reaches a fixed fraction of its maximum
+for that morning (\cref{fig:onset}):
+\begin{equation}
+  t^{\ast} = \min\bigl\{\, t : r(t) \ge \kappa \, r_{\max} \bigr\},
+  \qquad \kappa = 0.25 .
+  \label{eq:onset}
+\end{equation}
+A threshold relative to the morning maximum makes the onset insensitive to
+how far a bird sings from the recorder. We express $t^{\ast}$ in minutes
+relative to the start of civil twilight, so that negative values mean song
+before civil dawn.
+
+\subsection{Model}
+
+We fitted one linear mixed model per species $j$, with onset for morning $i$
+explained by the logarithm of site illuminance, day of the season $D_i$ and a
+random intercept for site $s[i]$:
+\begin{equation}
+  t^{\ast}_{ij} = \alpha_j + \beta_j \log_{10}\!\left(L_{s[i]} + 1\right)
+    + \gamma_j D_i + u_{s[i]} + \varepsilon_{ij},
+  \qquad u_s \sim \mathcal{N}\!\left(0, \sigma_{u}^{2}\right).
+  \label{eq:model}
+\end{equation}
+The slope $\beta_j$ is the quantity of interest: the shift in onset, in
+minutes, for each tenfold increase in light. Adding one lux before the
+logarithm keeps unlit sites finite. Models were fitted in
+R,\sidecite{rcore2025} and intervals are 95\% profile likelihood intervals.
+
+\section{Results}
+
+\begin{table}[tb]
+\begin{sidecaptioned}{\caption{Shift in onset of song per tenfold increase in
+    illuminance, from \cref{eq:model}. Negative values are earlier song. The
+    last column is the predicted shift at 30~lux, a bright residential
+    street.}\label{tab:slopes}}
+\centering\small
+\begin{tabular}{@{}l r r r@{\hspace{0.6em}}l r@{}}
+  \toprule
+  Species & Sites & Mornings & \multicolumn{2}{c}{$\beta_j$ (min)} & 30 lux \\
+  \midrule
+  Robin      & 34 & 1\,288 & $-11.4$ & [$-13.1$, $-9.7$] & $-17.0$ \\
+  Blackbird    & 36 & 1\,344 & $-9.2$  & [$-10.6$, $-7.8$] & $-13.7$ \\
+  Great tit     & 31 & 1\,107 & $-4.1$  & [$-5.3$, $-2.9$]  & $-6.1$  \\
+  Chaffinch   & 22 &    806 & $-1.3$  & [$-2.6$, $0.0$]   & $-1.9$  \\
+  \bottomrule
+\end{tabular}
+\end{sidecaptioned}
+\end{table}
+
+All four species began singing earlier at brighter sites, but by very
+different amounts (\cref{tab:slopes}). Robins responded most strongly: at a
+site lit to 30~lux, a typical bright residential street, they started about
+seventeen minutes before robins at dark sites. Blackbirds were close behind.
+Great tits shifted by less than half as much, and the chaffinch slope was
+indistinguishable from zero.
+
+The relation is close to linear on the logarithmic scale across the whole
+gradient (\cref{fig:gradient}). We found no sign of a threshold below which
+light has no effect: even the dimmest lit sites, at a fraction of a lux, sat
+above the dark-site mean for robins and blackbirds.\footnote{A model with a
+  breakpoint in $\log_{10} L$ did not improve on the linear one for any
+  species ($\Delta\mathrm{AIC} < 2$).}
+
+\begin{widefigure}[t]
+\centering
+\begin{tikzpicture}
+\pgfmathsetseed{2026}
+\begin{groupplot}[
+    group style={group size=4 by 1, horizontal sep=7mm, yticklabels at=edge left},
+    width=46mm, height=44mm, scale only axis=false,
+    xmin=-0.05, xmax=1.65, ymin=-82, ymax=8,
+    xtick={0,0.5,1,1.5}, xticklabels={0,2,9,31},
+    ytick={-80,-60,-40,-20,0},
+    axis lines=left, tick align=outside,
+    tick style={black!55}, axis line style={black!55},
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    title style={font=\footnotesize\itshape, yshift=-4pt},
+    xlabel={illuminance (lux)},
+  ]
+  \nextgroupplot[title={Robin}, ylabel={onset (min from civil dawn)}]
+    \addplot[only marks, mark=*, mark size=0.9pt, black!40, samples=34, domain=0:1.6] {-52 - 11.4*x + 7*rand};
+    \addplot[name path=a1, draw=none, domain=0:1.6] {-52 - 13.1*x + 2.5};
+    \addplot[name path=b1, draw=none, domain=0:1.6] {-52 - 9.7*x - 2.5};
+    \addplot[accent!18] fill between[of=a1 and b1];
+    \addplot[accent, thick, domain=0:1.6] {-52 - 11.4*x};
+  \nextgroupplot[title={Blackbird}]
+    \addplot[only marks, mark=*, mark size=0.9pt, black!40, samples=36, domain=0:1.6] {-44 - 9.2*x + 7*rand};
+    \addplot[name path=a2, draw=none, domain=0:1.6] {-44 - 10.6*x + 2.3};
+    \addplot[name path=b2, draw=none, domain=0:1.6] {-44 - 7.8*x - 2.3};
+    \addplot[accent!18] fill between[of=a2 and b2];
+    \addplot[accent, thick, domain=0:1.6] {-44 - 9.2*x};
+  \nextgroupplot[title={Great tit}]
+    \addplot[only marks, mark=*, mark size=0.9pt, black!40, samples=31, domain=0:1.6] {-31 - 4.1*x + 6*rand};
+    \addplot[name path=a3, draw=none, domain=0:1.6] {-31 - 5.3*x + 2.2};
+    \addplot[name path=b3, draw=none, domain=0:1.6] {-31 - 2.9*x - 2.2};
+    \addplot[accent!18] fill between[of=a3 and b3];
+    \addplot[accent, thick, domain=0:1.6] {-31 - 4.1*x};
+  \nextgroupplot[title={Chaffinch}]
+    \addplot[only marks, mark=*, mark size=0.9pt, black!40, samples=22, domain=0:1.6] {-12 - 1.3*x + 6*rand};
+    \addplot[name path=a4, draw=none, domain=0:1.6] {-12 - 2.6*x + 2.6};
+    \addplot[name path=b4, draw=none, domain=0:1.6] {-12 - 0.0*x - 2.6};
+    \addplot[accent!18] fill between[of=a4 and b4];
+    \addplot[accent, thick, domain=0:1.6] {-12 - 1.3*x};
+\end{groupplot}
+\end{tikzpicture}
+\caption{Site-mean onset of song against night-time illuminance, on the
+  logarithmic scale of \cref{eq:model}. Lines are fitted slopes with 95\%
+  intervals; grey points are sites. The same axis is used for all species, so
+  the panels read from left to right in the order of the chorus.}
+\label{fig:gradient}
+\end{widefigure}
+
+\paragraph{Season} Onset advanced through the spring at a similar rate in all
+species, by 0.4 to 0.6 minutes a day, as civil dawn itself moved earlier. The
+light effect did not change with day of the season for any species, so the
+shift is not confined to the start of breeding.
+
+\paragraph{Spectrum} Fourteen sites were converted from sodium to white LED
+lamps between the two seasons. Holding illuminance fixed, robins at converted
+sites started a further 3.8 minutes earlier [1.2, 6.4], consistent with the
+greater sensitivity of passerine vision to short wavelengths.%
+\sidecite{hale2017}
+
+\section{Discussion}
+
+The ranking of the four species matches the ranking of their eye size
+relative to body mass, which is largest in robins and smallest in chaffinches.%
+\sidecite{moreau2022} A large eye collects more light, so a species with a
+large eye sees well enough to forage and defend a territory earlier in
+twilight, and a street lamp moves that moment earlier still. The response
+would then be a matter of vision rather than of position in the chorus, which
+is the explanation favoured in a broad review of night-light impacts
+\parencite{gaston2013}.
+
+Two cautions apply. Light and noise are correlated in cities, and although we
+measured traffic noise at every site, the two cannot be fully separated in an
+observational design. And an earlier start need not mean a longer day of song:
+whether lit birds also stop earlier in the evening is a question for the
+evening recordings, which we have not yet analysed.
+
+The practical message is simple. Because the effect is logarithmic, the first
+lux matters most: dimming a bright street from 30 to 10~lux recovers less of
+the dark-site timing than shielding a dark one from its first stray lamp.
+
+\paragraph{Acknowledgements} We thank the residents who hosted recorders in
+their gardens, and the city lighting department for switching schedules.
+
+\printbibliography[heading=bibintoc, title={References}]
+
+\end{document}

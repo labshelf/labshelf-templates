@@ -1,0 +1,10 @@
+schema: 1
+id: preprint-two-column
+name: Two-Column Preprint
+description: Crisp two-column preprint on A4 in the manner of a modern journal. A full-width title block with superscript affiliations and a correspondence note, an abstract on a light blue-grey panel with keywords, a running header with short title and page number, and Source Sans headings. Set in Source Serif with mathastext over newtxmath, one deep ink-blue accent, microtype and a balanced last page. Includes amsmath equations, booktabs tables, pgfplots and TikZ figures, cleveref and biblatex references.
+category: article
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

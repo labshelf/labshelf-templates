@@ -1,0 +1,296 @@
+% Conference Poster: an A0 portrait poster on a three-column grid, built with
+% geometry and TikZ. Edit the metadata and accent below, then the three columns.
+% Build with pdflatex and biber (latexmk -pdf main.tex).
+\documentclass{article}
+\usepackage[paperwidth=841mm,paperheight=1189mm,margin=0mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[sfdefault,lining]{FiraSans}
+\usepackage[scale=0.88,lining]{FiraMono}
+\usepackage{newtxsf}
+\usepackage[letterspace=140]{microtype}
+\usepackage{booktabs,tabularx,multicol,qrcode}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{calc,arrows.meta}
+\pgfplotsset{compat=1.18}
+\usepackage[style=numeric,sorting=none,maxbibnames=3,backend=biber]{biblatex}
+\addbibresource{refs.bib}
+
+% ---------------------------------------------------------------- accent
+% lsAccent recolours every highlight, chart and the title raster; keep the neutrals.
+\definecolor{lsAccent}{HTML}{D4471F}
+\definecolor{lsInk}{HTML}{1C2126}
+\definecolor{lsMuted}{HTML}{6B7179}
+\definecolor{lsRule}{HTML}{D9D4CA}
+\definecolor{lsPaper}{HTML}{FAF8F3}
+\colorlet{lsTint}{lsAccent!7!lsPaper}
+\pagecolor{lsPaper}\color{lsInk}
+
+% ---------------------------------------------------------------- metadata
+\newcommand{\postervenue}{Urban Climate Conference 2026 \enspace\textperiodcentered\enspace Lisbon \enspace\textperiodcentered\enspace Poster P-14}
+\newcommand{\postertitle}{Cool streets}
+\newcommand{\postersubtitle}{Three decades of urban heat islands in twelve European cities, seen from orbit}
+\newcommand{\posterauthors}{Maya Okafor\textsuperscript{1}\qquad Tom\'as Rivera\textsuperscript{1}\qquad Lena Hartmann\textsuperscript{2}}
+\newcommand{\posteraffiliations}{\textsuperscript{1}\,Institute for Urban Climate, Northfield University\qquad \textsuperscript{2}\,Centre for Earth Observation, Halden}
+\newcommand{\posterurl}{https://example.org/cool-streets}
+\newcommand{\postercontact}{m.okafor@example.org}
+
+% ---------------------------------------------------------------- type
+\renewcommand{\normalsize}{\fontsize{27}{38}\selectfont}
+\renewcommand{\small}{\fontsize{23}{32}\selectfont}
+\renewcommand{\footnotesize}{\fontsize{20}{27}\selectfont}
+\newcommand{\lslight}{\fontseries{l}\selectfont}
+\newcommand{\lssemibold}{\fontseries{sb}\selectfont}
+\newcommand{\lsdisplay}[1]{\fontsize{#1}{1.1\dimexpr#1pt\relax}\lslight\selectfont
+  \hyphenpenalty=10000\exhyphenpenalty=10000\raggedright
+  \spaceskip=0pt\xspaceskip=0pt}
+\newcommand{\lskicker}[1]{{\ttfamily\mdseries\fontsize{21}{26}\selectfont\textls{\MakeUppercase{#1}}}}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.55em}
+\pagestyle{empty}
+\renewcommand*{\bibfont}{\footnotesize}
+\setlength{\bibitemsep}{0.35em}
+
+% A numbered section opener: mono kicker, light heading, accent hairline.
+\newcommand{\lssection}[2]{%
+  \par\vspace{20mm}%
+  {\color{lsAccent}\lskicker{#1}}\par\vspace{3mm}%
+  {\lsdisplay{58}#2\par}\vspace{5mm}%
+  {\color{lsRule}\rule{\linewidth}{1.2pt}}\par\vspace{6mm}}
+\newcommand{\lscaption}[1]{\par\vspace{3mm}{\footnotesize\color{lsMuted}#1\par}}
+
+% ---------------------------------------------------------------- heat raster
+% A classed thermal grid drawn from a smooth field; it echoes a Landsat tile.
+% \lsheatraster{columns}{rows}{cell size}{background colour}{coldest class colour}
+\newcommand{\lsheatraster}[5]{%
+  \pgfmathsetmacro\lscols{#1-1}\pgfmathsetmacro\lsrows{#2-1}%
+  \foreach \i in {0,...,\lscols}{\foreach \j in {0,...,\lsrows}{%
+    \pgfmathsetmacro\u{\i/\lscols}\pgfmathsetmacro\v{\j/\lsrows}%
+    \pgfmathsetmacro\heat{exp(-((\u-0.38)^2+(\v-0.6)^2)/0.035)
+      +0.75*exp(-((\u-0.74)^2+(\v-0.28)^2)/0.02)
+      -0.7*exp(-((\v-0.15-0.7*\u)^2)/0.004)
+      +0.09*sin(37*\u r)*cos(23*\v r)+0.06}%
+    \pgfmathtruncatemacro\heatclass{20*round(5*max(0,min(1,\heat)))}%
+    \ifnum\heatclass=0 \def\lscell{#5}\else\def\lscell{lsAccent!\heatclass!#4}\fi
+    \fill[\lscell] (\i*#3,\j*#3) rectangle ++(0.84*#3,0.84*#3);
+  }}%
+}
+
+\pgfplotsset{lsaxis/.style={
+  axis lines=left, axis line style={lsMuted,line width=1pt},
+  tick style={lsMuted,line width=1pt}, major tick length=3mm,
+  tick label style={font=\footnotesize\ttfamily,text=lsMuted},
+  label style={font=\small,text=lsMuted},
+  grid=major, major grid style={lsRule,line width=0.8pt},
+  every axis plot/.append style={line width=2.4pt},
+  scale only axis, clip=false}}
+
+% Grid: 48 mm outer margins, three columns with 36 mm gutters.
+\newlength{\lsmargin}\setlength{\lsmargin}{48mm}
+\newlength{\lsgutter}\setlength{\lsgutter}{36mm}
+\newlength{\lscol}\setlength{\lscol}{\dimexpr(\paperwidth-2\lsmargin-2\lsgutter)/3\relax}
+\newlength{\lsband}\setlength{\lsband}{292mm}
+
+\begin{document}
+% ---------------------------------------------------------------- title band
+\begin{tikzpicture}[remember picture,overlay]
+  \coordinate (NW) at (current page.north west);
+  \fill[lsInk] (NW) rectangle ($(current page.north east)+(0,-\lsband)$);
+  \begin{scope}[shift={($(current page.north east)+(-\lsmargin-207mm,-40mm-161mm)$)}]
+    \lsheatraster{18}{14}{11.5mm}{lsInk}{lsMuted!28!lsInk}
+  \end{scope}
+  \node[anchor=north west,inner sep=0,text=lsAccent] at ($(NW)+(\lsmargin,-44mm)$)
+    {\lskicker{\postervenue}};
+  \node[anchor=north west,inner sep=0,text width=470mm,text=lsPaper] at ($(NW)+(\lsmargin,-72mm)$)
+    {\lsdisplay{150}\postertitle\par
+     \vspace{6mm}{\lsdisplay{46}\color{lsRule}\postersubtitle\par}};
+  \fill[lsAccent] ($(NW)+(\lsmargin,-208mm)$) rectangle ++(40mm,2pt);
+  \node[anchor=north west,inner sep=0,text width=480mm,text=lsPaper] at ($(NW)+(\lsmargin,-220mm)$)
+    {{\lssemibold\posterauthors\par}\vspace{3mm}
+     {\footnotesize\color{lsRule!70!lsMuted}\posteraffiliations\par}};
+  % Logo placeholders: replace each node with \includegraphics[height=...]{logo}.
+  \foreach \k/\name in {0/University logo,1/Partner logo}{
+    \draw[lsMuted,line width=1pt]
+      ($(current page.north east)+(-\lsmargin-207mm+\k*109mm,-218mm)$) rectangle ++(98mm,-44mm);
+    \node[text=lsRule!60!lsMuted,inner sep=0] at ($(current page.north east)+(-\lsmargin-158mm+\k*109mm,-240mm)$)
+      {\lskicker{\name}};}
+\end{tikzpicture}%
+\vspace*{\dimexpr\lsband+4mm\relax}
+
+\hspace*{\lsmargin}%
+% ---------------------------------------------------------------- column 1
+\begin{minipage}[t]{\lscol}\raggedright
+\lssection{01 \enspace Background}{Why streets get hot}
+Built surfaces store heat by day and release it slowly at night~\cite{oke1982}. The street,
+not the weather station, is where people feel it.
+
+\vspace{8mm}
+\begin{minipage}[t]{\dimexpr0.5\linewidth-6mm\relax}
+  {\lsdisplay{82}\color{lsAccent}61\,672\par}\vspace{2mm}
+  {\footnotesize heat-related deaths in Europe in the summer of 2022~\cite{ballester2023}\par}
+\end{minipage}\hfill
+\begin{minipage}[t]{\dimexpr0.5\linewidth-6mm\relax}
+  {\lsdisplay{82}\color{lsAccent}1 in 3\par}\vspace{2mm}
+  {\footnotesize Europeans live in a city of more than 100\,000 people\par}
+\end{minipage}
+
+\lssection{02 \enspace Data and method}{From orbit to street}
+Every cloud-free summer scene since 1990 goes through the same five steps.
+
+\vspace{6mm}
+\begin{tikzpicture}[x=1mm,y=1mm,
+    pstep/.style={anchor=north west,inner sep=0,text width=\lscol-34mm,align=left}]
+  \foreach \n/\head/\body [count=\k from 0] in {
+      01/{Landsat 5, 7, 8 and 9}/{1\,264 summer scenes, 1990 to 2024},
+      02/Cloud and quality mask/{QA band plus a buffer around every cloud},
+      03/Surface temperature/{Single-channel retrieval~\cite{jimenez2003}},
+      04/100\,m street grid/{4\,812 neighbourhoods, each with canopy and land cover},
+      05/Mixed-effects model/{Random intercept per city}}{
+    \coordinate (s\k) at (0,-\k*42);
+    \node[pstep] at ($(s\k)+(26,1.5)$) {{\lssemibold\head\par}\vspace{1mm}{\small\color{lsMuted}\body\par}};
+    \node[circle,draw=lsAccent,line width=2pt,fill=lsPaper,minimum size=15mm,inner sep=0,
+      font=\ttfamily\footnotesize,text=lsAccent] (d\k) at ($(s\k)+(7.5,-6)$) {\n};
+  }
+  \foreach \k [evaluate=\k as \kk using int(\k+1)] in {0,...,3}
+    \draw[lsAccent,line width=2pt,-{Latex[length=4mm,width=4mm]}] (d\k.south) -- (d\kk.north);
+\end{tikzpicture}
+
+\vspace{6mm}
+{\color{lsRule}\rule{\linewidth}{1.2pt}}\par\vspace{4mm}
+\[ T_s = \frac{T_B}{1 + (\lambda\, T_B/\rho)\,\ln\varepsilon} \qquad
+   \Delta T = \overline{T_s}^{\,\mathrm{urban}} - \overline{T_s}^{\,\mathrm{rural}} \]
+\lscaption{Brightness temperature $T_B$ at 10.9\,\textmu m, $\rho = hc/k_B$, and emissivity
+$\varepsilon$ from NDVI. The heat island $\Delta T$ is computed scene by scene.}
+
+\vspace{12mm}
+\begin{tikzpicture}[x=1mm,y=1mm]
+  \lsheatraster{20}{8}{11.2mm}{lsPaper}{lsRule!45!lsPaper}
+  \foreach \c [count=\k from 0] in {0,20,40,60,80,100}{
+    \fill[lsAccent!\c!lsPaper] (\k*22,-10) rectangle ++(20,-4);}
+  \node[anchor=north west,inner sep=0,font=\footnotesize\ttfamily,text=lsMuted] at (0,-18) {COOLER};
+  \node[anchor=north east,inner sep=0,font=\footnotesize\ttfamily,text=lsMuted] at (130,-18) {HOTTER};
+\end{tikzpicture}
+\lscaption{Land surface temperature, Madrid centre, 3 August 2024, in five classes.}
+\end{minipage}%
+\hspace{\lsgutter}%
+% ---------------------------------------------------------------- column 2
+\begin{minipage}[t]{\lscol}\raggedright
+\lssection{03 \enspace Key finding}{Trees beat every lever}
+\begin{tikzpicture}
+  \node[fill=lsAccent,text=lsPaper,inner xsep=14mm,inner ysep=14mm,text width=\lscol-28mm,
+    anchor=north west] at (0,0) {%
+    {\lskicker{Per ten points of tree canopy}\par}\vspace{6mm}
+    {\lsdisplay{230}$-$1.9\,K\par}\vspace{4mm}
+    {\lssemibold A street with ten more points of canopy is almost two degrees cooler,
+     more than any other factor a city controls.\par}};
+\end{tikzpicture}
+
+\vspace{12mm}
+{\lssemibold Canopy against surface anomaly\par}\vspace{5mm}
+\begin{tikzpicture}
+  \begin{axis}[lsaxis, width=\lscol-44mm, height=122mm,
+      xmin=0, xmax=48, ymin=-5, ymax=4, xtick={0,10,20,30,40}, ytick={-4,-2,0,2,4},
+      xlabel={Tree canopy cover (\%)}, ylabel={Anomaly (K)}]
+    \addplot[only marks,mark=*,mark size=6pt,lsAccent,fill opacity=0.55,draw opacity=0]
+      coordinates {(16.2,0.78)(5.2,3.06)(25.6,-1.59)(24.3,-1.08)(3.6,2.52)(6.0,2.35)
+      (20.7,-0.40)(11.8,0.90)(29.6,-1.54)(19.5,-0.53)(45.0,-4.10)(14.7,0.91)
+      (8.3,2.16)(37.9,-3.48)(10.0,0.83)(18.4,-0.48)(26.1,-1.38)(11.1,1.37)
+      (31.9,-3.10)(27.8,-1.67)(21.9,-1.07)(32.8,-1.89)(12.7,0.38)(40.5,-4.60)
+      (34.1,-3.44)(7.2,3.53)(20.4,-0.46)(23.5,-1.38)(3.7,2.23)(27.2,-2.59)
+      (40.5,-4.63)(28.2,-1.17)(27.5,-2.84)(43.6,-4.59)(22.9,-1.04)(32.9,-3.01)
+      (30.5,-1.37)(14.5,0.60)(19.0,-0.26)(22.3,-0.94)(9.4,1.76)(35.8,-3.27)
+      (7.7,1.95)(40.3,-3.72)(5.5,1.69)(40.9,-4.15)};
+    \addplot[lsInk,line width=2.4pt,domain=2:46,samples=2] {3.4-0.19*x};
+  \end{axis}
+\end{tikzpicture}
+\lscaption{Each dot bins 100 neighbourhoods from all twelve cities; the line is the
+pooled fit, in line with~\cite{schwaab2021}.}
+
+\vspace{10mm}
+{\lssemibold Heat island by year\par}\vspace{5mm}
+\begin{tikzpicture}
+  \begin{axis}[lsaxis, width=\lscol-66mm, height=112mm,
+      xmin=1990, xmax=2024, ymin=2, ymax=6, xtick={1990,2000,2010,2020}, ytick={2,3,4,5,6},
+      x tick label style={/pgf/number format/1000 sep={}}, ylabel={Surface heat island (K)}]
+    \addplot[lsRule!30!lsMuted] coordinates {(1990,2.4)(1994,2.4)(1998,2.6)(2002,2.8)(2006,2.9)(2010,3.0)(2014,3.2)(2018,3.3)(2022,3.5)(2024,3.6)}
+      node[right,font=\footnotesize,text=lsMuted] {Lisbon};
+    \addplot[lsRule!30!lsMuted] coordinates {(1990,2.8)(1994,3.0)(1998,3.2)(2002,3.3)(2006,3.6)(2010,3.8)(2014,4.0)(2018,4.3)(2022,4.5)(2024,4.6)}
+      node[right,font=\footnotesize,text=lsMuted] {Athens};
+    \addplot[lsAccent,line width=4pt] coordinates {(1990,3.1)(1992,3.3)(1994,3.2)(1996,3.5)(1998,3.6)(2000,3.6)(2002,3.9)(2004,4.0)(2006,4.1)(2008,4.3)(2010,4.2)(2012,4.5)(2014,4.7)(2016,4.6)(2018,4.9)(2020,5.1)(2022,5.2)(2024,5.4)}
+      node[right,font=\footnotesize\lssemibold,text=lsAccent] {Madrid};
+  \end{axis}
+\end{tikzpicture}
+\lscaption{Mean of all summer scenes per window. All twelve trends are positive at
+$p<0.01$, as in the global survey of~\cite{peng2012}.}
+\end{minipage}%
+\hspace{\lsgutter}%
+% ---------------------------------------------------------------- column 3
+\begin{minipage}[t]{\lscol}\raggedright
+\lssection{04 \enspace Results}{Twelve cities, one pattern}
+{\lssemibold Summer heat island, 2024\par}\vspace{5mm}
+\begin{tikzpicture}
+  \begin{axis}[lsaxis, xbar, width=\lscol-62mm, height=150mm, bar width=6mm,
+      xmin=0, xmax=6, xtick={0,2,4,6}, xlabel={Kelvin},
+      symbolic y coords={Lisbon,Dublin,Vienna,Prague,Warsaw,Berlin,Rome,Athens,Paris,Milan,Barcelona,Madrid},
+      ytick=data, axis y line*=left, y axis line style={draw=none}, major y tick style={draw=none},
+      y tick label style={font=\footnotesize,text=lsInk}, grid=none, xmajorgrids,
+      enlarge y limits=0.05, bar shift=0pt, every axis plot/.append style={line width=0pt}]
+    \addplot[fill=lsRule!60!lsMuted,draw=none] coordinates {(3.6,Lisbon)(3.7,Dublin)(3.9,Vienna)
+      (4.0,Prague)(4.1,Warsaw)(4.3,Berlin)(4.5,Rome)(4.6,Athens)(4.7,Paris)(4.8,Milan)(5.0,Barcelona)(5.4,Madrid)};
+    \addplot[fill=lsAccent,draw=none] coordinates {(5.4,Madrid)};
+  \end{axis}
+\end{tikzpicture}
+\lscaption{Urban mean minus rural-ring mean, all scenes of the 2024 summer.}
+
+\vspace{10mm}
+{\lssemibold What drives the anomaly\par}\vspace{4mm}
+{\small\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{@{}X r r@{}}
+  \toprule
+  {\lssemibold Driver} & {\lssemibold Effect (K)} & {\lssemibold Share} \\
+  \midrule
+  Impervious surface, +10\,pp & $+1.42$ & 38\% \\
+  Tree canopy, +10\,pp        & \textcolor{lsAccent}{$-1.87$} & 29\% \\
+  Roof albedo, +0.1           & $-0.94$ & 12\% \\
+  Building height, +5\,m      & $+0.36$ & 9\% \\
+  Distance to water, +1\,km   & $+0.21$ & 5\% \\
+  \bottomrule
+\end{tabularx}\par}
+\lscaption{Share of explained variance; $n = 4\,812$ neighbourhoods, $R^2 = 0.71$.}
+
+\lssection{05 \enspace Implications}{What a city can do}
+\foreach \n/\head/\body in {
+    01/Plant where it is hottest/{The hottest 10\% of blocks hold 31\% of residents over 65.},
+    02/Lighten the roofs/{Albedo $+0.1$ recovers half the effect of canopy, at a fraction of the cost.},
+    03/Measure from orbit/{Public Landsat data lets any city track its heat island every summer.}}{%
+  \begin{tabularx}{\linewidth}{@{}l@{\hspace{8mm}}X@{}}
+    {\ttfamily\color{lsAccent}\n} & {\lssemibold\head}\newline{\small\color{lsMuted}\body} \\
+  \end{tabularx}\par\vspace{4mm}}
+\end{minipage}
+
+% ---------------------------------------------------------------- references strip
+\vfill
+\hspace*{\lsmargin}%
+\begin{minipage}[b]{\dimexpr\paperwidth-2\lsmargin\relax}
+{\color{lsRule}\rule{\linewidth}{1.2pt}}\par\vspace{8mm}
+\begin{minipage}[t]{\dimexpr2\lscol+\lsgutter\relax}
+  {\color{lsAccent}\lskicker{References}}\par\vspace{4mm}
+  \setlength{\columnsep}{\lsgutter}
+  \begin{multicols}{2}
+    \printbibliography[heading=none]
+  \end{multicols}
+\end{minipage}%
+\hspace{\lsgutter}%
+\begin{minipage}[t]{\dimexpr\lscol-72mm\relax}
+  \raggedright
+  {\color{lsAccent}\lskicker{Data and code}}\par\vspace{4mm}
+  {\small\posterurl\par}\vspace{6mm}
+  {\color{lsAccent}\lskicker{Contact}}\par\vspace{4mm}
+  {\small\postercontact\par}
+\end{minipage}%
+\hfill
+\begin{minipage}[t]{62mm}
+  \vspace{0pt}\qrcode[height=62mm]{\posterurl}
+\end{minipage}
+\end{minipage}
+\vspace*{44mm}
+\end{document}

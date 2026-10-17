@@ -1,0 +1,10 @@
+schema: 1
+id: margin-notes-article
+name: Margin Notes Article
+description: Tufte-inspired single-column article on A4 with a wide outer margin. Numbered sidenotes, full citations and small figures sit beside the text; table captions sit in the margin and a full-width figure spans both columns. Set in Cochineal with old-style figures, small-caps headings and matching newtxmath, with one cochineal-red accent. Includes an epigraph, amsmath equations, a booktabs table, pgfplots figures and biblatex author-year references.
+category: article
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

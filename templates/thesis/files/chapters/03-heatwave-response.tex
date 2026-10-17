@@ -1,0 +1,148 @@
+% The optional title feeds the contents and running heads; the line
+% break balances the two lines of the opening.
+\chapter[Heatwave Response of Shoots and Sediment]{Heatwave Response\\ of Shoots and Sediment}
+\label{ch:heatwave-response}
+
+\section{A threshold in shoot density}
+\label{sec:threshold}
+
+Across the six summers from 2019 to 2024, the cumulative heat dose of
+\cref{eq:heat-dose} ranged from zero in the cool summer of 2021 to more
+than thirty degree-heating-days in the shallow meadows of 2022. To test
+whether shoot density responds gradually or abruptly, I compared a linear
+model with the segmented model of \textcite{vandermeer2016segmented},
+\begin{equation}
+  \log \frac{N_{\text{Oct}}}{N_{\text{Jun}}} =
+  \begin{cases}
+    \alpha + \beta_1 H, & H \le \tau,\\[0.4ex]
+    \alpha + \beta_1 \tau + \beta_2 (H - \tau), & H > \tau,
+  \end{cases}
+  \label{eq:segmented}
+\end{equation}
+where \(N\) is the mean shoot density of a meadow and \(\tau\) the
+breakpoint. The segmented model was strongly preferred
+(\(\Delta\mathrm{AIC} = 23.4\)), with a breakpoint at
+\(\tau = 14.2\) degree-heating-days (95\,\% interval 11.8--16.9).
+
+\begin{figure}[tb]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.92\linewidth, height=0.5\linewidth,
+        xmin=0, xmax=34, ymin=-2.5, ymax=0.4,
+        xlabel={Cumulative heat dose \(H\) (degree-heating-days)},
+        ylabel={\(\log(N_{\text{Oct}}/N_{\text{Jun}})\)},
+        xtick={0,5,...,30}, ytick={-2,-1.5,-1,-0.5,0},
+        axis x line*=bottom, axis y line*=left,
+        clip=false,
+      ]
+      \fill[accent!8] (axis cs:11.8,-2.5) rectangle (axis cs:16.9,0.4);
+      \addplot[only marks, mark=*, mark size=1.3pt, black!55] coordinates {
+        (0.0,0.12) (0.4,0.05) (1.2,0.09) (2.1,-0.02) (2.8,0.04)
+        (3.5,-0.06) (4.4,0.01) (5.1,-0.08) (6.0,-0.03) (6.8,-0.12)
+        (7.5,-0.07) (8.3,-0.15) (9.1,-0.10) (9.9,-0.18) (10.6,-0.13)
+        (11.4,-0.22) (12.3,-0.19) (13.0,-0.27) (13.8,-0.24) (14.6,-0.33)
+        (15.5,-0.40) (16.4,-0.58) (17.2,-0.60) (18.5,-0.82) (19.6,-0.86)
+        (20.8,-1.08) (22.1,-1.15) (23.5,-1.39) (25.0,-1.48) (26.7,-1.76)
+        (28.3,-1.86) (30.4,-2.18) (32.1,-2.31)
+      };
+      \addplot[accent, line width=1pt] coordinates {
+        (0,0.08) (14.2,-0.28) (32.5,-2.39)
+      };
+      \draw[accent, dashed, line width=0.4pt]
+        (axis cs:14.2,-2.5) -- (axis cs:14.2,0.4);
+      \node[accent, anchor=south west, font=\footnotesize]
+        at (axis cs:14.6,0.15) {\(\tau = 14.2\)};
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Change in shoot density over the summer against cumulative
+    heat dose, for all meadows and years. The line is the segmented fit of
+    \cref{eq:segmented}; the shaded band is the 95\,\% interval of the
+    breakpoint.}
+  \label{fig:threshold}
+\end{figure}
+
+\Cref{fig:threshold} shows the fit. Below the threshold the decline is
+slight, about two and a half per cent of shoots for each additional
+degree-heating-day, and is offset by recruitment in the following spring.
+Above it, the slope steepens almost fivefold. The threshold lies close to
+the dose at which \textcite{okafor2018thermal} observed the collapse of
+net photosynthesis in laboratory cultures, which suggests a physiological
+rather than a merely statistical boundary.\footnote{The chamber
+  experiment of \cref{sec:censuses} reproduced the breakpoint within its
+  confidence interval in two of three years; in the third, a storm
+  removed the chambers before the heat dose had accumulated.}
+
+\section{Loss of sediment carbon}
+\label{sec:carbon-loss}
+
+Cores taken one year after a summer above the threshold contained less
+organic carbon in their upper ten centimetres than cores from the same
+meadow before the event (\cref{tab:carbon}). Below ten centimetres no
+change could be detected, consistent with the depth to which oxygen
+penetrates once the rhizome mat has thinned
+\parencite{aagaard2021remineralisation}.
+
+\begin{table}[b]
+  \centering\small
+  \caption{Organic carbon in the upper 10 cm of sediment before and one
+    year after summers above the heat-dose threshold (mean of three cores
+    per meadow).}
+  \label{tab:carbon}
+  \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l r r r@{}}
+    \toprule
+    & \multicolumn{2}{c}{C stock (Mg ha\(^{-1}\))} & \\
+    \cmidrule(lr){2-3}
+    Meadows & Before & After & Loss (\%) \\
+    \midrule
+    1--3   & 16.2 & 11.2 & 30.9 \\
+    4--6   & 19.8 & 14.6 & 26.3 \\
+    7--9   & 22.4 & 18.4 & 17.9 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+Recovery was slow. \Cref{fig:recovery} follows the three shallowest
+meadows after the 2022 heatwave alongside a meadow that stayed below the
+threshold; shoot density returned to its pre-event level within one
+season in the latter, but had regained only two thirds of it after two
+years in the former, in line with observations from the open North Sea
+\parencite{sato2023recovery}.
+
+\begin{figure}[tb]
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        width=0.92\linewidth, height=0.44\linewidth,
+        xmin=-0.2, xmax=4.2, ymin=0, ymax=120,
+        xlabel={Years after the 2022 heatwave},
+        ylabel={Shoot density (\% of 2021)},
+        xtick={0,1,2,3,4}, ytick={0,25,50,75,100},
+        axis x line*=bottom, axis y line*=left,
+        legend pos=south east,
+      ]
+      \addplot[accent, line width=1pt, mark=*, mark size=1.2pt]
+        coordinates {(0,38) (1,49) (2,66) (3,81) (4,94)};
+      \addlegendentry{Meadows 1--3, above threshold}
+      \addplot[black!55, line width=0.8pt, mark=o, mark size=1.4pt]
+        coordinates {(0,86) (1,101) (2,99) (3,103) (4,100)};
+      \addlegendentry{Meadow 11, below threshold}
+    \end{axis}
+  \end{tikzpicture}
+  \caption{Recovery of shoot density after the 2022 heatwave in meadows
+    above and below the threshold.}
+  \label{fig:recovery}
+\end{figure}
+
+\section{Implications for carbon accounting}
+\label{sec:accounting}
+
+Scaling the losses in \cref{tab:carbon} by meadow area and by the
+frequency with which each meadow crossed the threshold between 2019 and
+2024 gives an average return of about \(0.6\) megagrams of carbon per
+hectare per year. Set against a mean burial rate of \(2.4\) megagrams
+\parencite{holmgren2019burial}, this means that current guidelines, which
+treat buried carbon as permanent \parencite{bcwg2023guidelines},
+overestimate the net benefit of the estuary's meadows by about a quarter.
+The summer heat dose, cheap to measure and available weeks before shoots
+decline, offers managers a direct way to anticipate those losses.

@@ -1,0 +1,320 @@
+% Research proposal for a grant or funding call.
+% Edit the metadata below, then replace the section text. Layout, fonts and
+% the accent colour live in style.tex. Build with pdflatex and biber.
+\documentclass[11pt]{article}
+
+% --- Metadata: change these for your proposal --------------------------------
+\newcommand{\ProjectTitle}{Community-Grounded Speech and Text Technology for Southern Quechua and Aymara}
+\newcommand{\ShortTitle}{Qillqa}
+\newcommand{\ProposalCall}{Language Futures Programme 2027}
+\newcommand{\PI}{Dr Inés Condori Huamán}
+\newcommand{\Institution}{Andes Institute for Language and Computation, Cusco}
+\newcommand{\Duration}{36 months, from 1 April 2027}
+\newcommand{\Amount}{EUR 1,060,000}
+
+\input{style.tex}
+
+\title{\ShortTitle: \ProjectTitle}
+\author{\PI}
+
+\begin{document}
+\thispagestyle{cover}
+
+% --- Cover block --------------------------------------------------------------
+\begingroup
+\noindent{\footnotesize\color{accent}\caps{Research proposal \quad\textperiodcentered\quad \ProposalCall}}\par
+\vspace{9mm}
+\noindent{\fontsize{30}{32}\selectfont\color{accent}\ShortTitle}\par
+\vspace{3mm}
+\noindent\begin{minipage}{0.86\linewidth}\raggedright
+  \fontsize{17}{22}\selectfont\ProjectTitle
+\end{minipage}\par
+\vspace{9mm}
+\noindent{\color{hairline}\rule{\linewidth}{0.4pt}}\par
+\vspace{3mm}
+\noindent\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.38\linewidth}
+    >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{0.22\linewidth}@{}}
+  {\scriptsize\color{muted}\caps{Principal investigator}} &
+  {\scriptsize\color{muted}\caps{Duration}} &
+  {\scriptsize\color{muted}\caps{Amount requested}} \\[-1pt]
+  \PI & \Duration & \Amount \\[5pt]
+  \multicolumn{3}{@{}l}{\scriptsize\color{muted}\caps{Host institution}} \\[-1pt]
+  \multicolumn{3}{@{}l}{\Institution} \\
+\end{tabularx}\par
+\vspace{2mm}
+\noindent{\color{hairline}\rule{\linewidth}{0.4pt}}\par
+\endgroup
+
+\begin{summarybox}
+Southern Quechua and Aymara are spoken by more than nine million people, yet
+neither has a speech recogniser, spell checker or machine translation system
+that its speakers would choose to use. \ShortTitle{} will build these tools
+together with three speaker communities in Cusco, Puno and La Paz. Over three
+years we will record and transcribe 600 hours of consented speech, release an
+open text corpus under community data governance, adapt multilingual models
+to both languages with less than a tenth of the data such models usually
+require, and evaluate every system with speakers rather than with automatic
+scores alone. The project ends with tools that run offline on an ordinary
+phone, and with a governance model that other indigenous language
+communities can adopt.
+\end{summarybox}
+
+\section{Background}\label{sec:background}
+
+Language technology now reaches most of the world's speakers, but not most
+of the world's languages. Of the roughly 7,000 languages in use, fewer than a
+hundred have the text and speech resources on which current systems are
+trained \parencite{ortega2024resource}. Quechua and Aymara are large by any
+demographic measure \parencite{adelaar2004languages}, yet they sit firmly on the wrong side of this divide:
+the largest public Quechua text collection holds under four million words,
+much of it translated religious material \parencite{huaman2023corpus}.
+
+Two recent developments make progress possible. First, massively multilingual
+models transfer surprisingly well to languages they have barely seen, provided
+the target language shares script and some vocabulary with the training
+mixture \parencite{lindqvist2025transfer}. Second, community-led data
+initiatives have shown that speakers will contribute recordings in large
+numbers when they keep control over how the data is used
+\parencite{tupa2022governance,carroll2020care}. What is missing is a project
+that joins the two: one that treats speakers as partners in design and
+evaluation, not only as a source of data.
+
+Evaluation is the weakest link. Automatic metrics such as word error rate say
+little about whether a transcription is usable, and they are unreliable for
+agglutinative languages, where a single morpheme error changes a whole word
+\parencite{mendoza2024metrics}. \ShortTitle{} therefore makes human evaluation
+by speakers a first-class part of the work plan (\cref{sec:workplan}).
+
+\section{Aims}\label{sec:aims}
+
+The project pursues three aims. Each is tied to one or more work packages in
+\cref{fig:gantt}, and each has objectives that a reviewer can check at the end
+of the grant.
+
+\begin{aim}{Build open, consented resources}\label{aim:data}
+  Create speech and text collections for both languages under a data
+  governance framework that the partner communities write and enforce.
+  \begin{objectives}
+    \item Sign data agreements with three community organisations before any
+          recording starts.\label{obj:agreements}
+    \item Record and transcribe 600 hours of speech across six dialect areas.
+    \item Release a 25-million-word text corpus with per-document provenance.
+  \end{objectives}
+\end{aim}
+
+\begin{aim}{Adapt models with little data}\label{aim:models}
+  Show that multilingual models can reach usable quality in Quechua and Aymara
+  with a fraction of the data they normally need.
+  \begin{objectives}
+    \item Reach a word error rate below 18\,\% on conversational speech.
+    \item Match a strong supervised baseline in translation to and from
+          Spanish using under 200,000 sentence pairs.
+    \item Distil every model to run offline on a phone with 4\,GB of memory.
+  \end{objectives}
+\end{aim}
+
+\begin{aim}{Evaluate with speakers}\label{aim:evaluation}
+  Replace automatic scores as the final judge with structured evaluation by
+  speakers of each dialect, and publish the protocol.
+  \begin{objectives}
+    \item Run four rounds of speaker evaluation, each with at least 60
+          participants.
+    \item Publish an evaluation protocol that other projects can reuse.
+  \end{objectives}
+\end{aim}
+
+\section{Methods}\label{sec:methods}
+
+\subsection{Data collection and governance}
+
+Recording follows the protocol of \textcite{tupa2022governance}: speakers
+choose the topics, keep the right to withdraw their recordings, and decide
+together which uses are permitted. Transcription is done by trained community
+research assistants, paid at the regional rate for skilled work, with a
+second assistant checking a random 10\,\% sample. No recording is collected
+before \cref{obj:agreements} is met.
+
+\subsection{Model adaptation}
+
+We start from an open multilingual speech encoder and an open translation
+model, and adapt both in two stages. The first stage continues pre-training on
+untranscribed audio and monolingual text. The second fine-tunes on labelled
+data with a loss that weights each dialect $d$ by the inverse of its share
+$p_d$ of the training set, so that minority dialects are not drowned out:
+\begin{equation}\label{eq:loss}
+  \mathcal{L} = \sum_{d \in D} \frac{p_d^{-\alpha}}{\sum_{d'} p_{d'}^{-\alpha}}
+  \; \mathbb{E}_{(x,y) \sim \mathcal{D}_d} \bigl[ -\log p_\theta(y \mid x) \bigr],
+\end{equation}
+where $\alpha \in [0,1]$ controls how strongly rare dialects are favoured
+\parencite{arivazhagan2019massively}. We tune $\alpha$ on held-out speakers,
+never on held-out sentences from speakers seen in training.
+
+\subsection{Evaluation}
+
+Each evaluation round pairs automatic metrics with a speaker study. Speakers
+rate transcriptions and translations for adequacy and naturalness on a
+five-point scale, and mark errors that would change the meaning. We report
+agreement between raters and between ratings and \cref{eq:loss}-trained model
+scores, following \textcite{mendoza2024metrics}.
+
+\section{Work plan}\label{sec:workplan}
+
+The work is organised in five work packages over twelve quarters
+(\cref{fig:gantt}). Governance runs through the whole project, because data
+agreements are revisited at every release.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[x=7.7mm,y=-6.6mm,font=\sffamily\footnotesize,
+    bar/.style={fill=accent,draw=none},
+    softbar/.style={fill=accentmid,draw=none},
+    milestone/.style={diamond,draw=accent,fill=white,line width=0.8pt,
+      inner sep=1.7pt}]
+  % label column ends at x = 0; quarters run from 0 to 12
+  \foreach \y/\yr in {1/{Year 1},2/{Year 2},3/{Year 3}}
+    \node[text=accent] at ({4*\y-2},-1.05) {\caps{\yr}};
+  \foreach \q in {1,...,12}{
+    \pgfmathtruncatemacro{\qq}{mod(\q-1,4)+1}
+    \node[text=muted,font=\sffamily\scriptsize] at (\q-0.5,-0.3) {Q\qq};
+  }
+  \foreach \x in {0,4,8,12}
+    \draw[hairline,line width=0.4pt] (\x,-1.45) -- (\x,5.6);
+  \foreach \x in {1,2,3,5,6,7,9,10,11}
+    \draw[black!8,line width=0.3pt] (\x,0.15) -- (\x,5.6);
+  \draw[black!60,line width=0.5pt] (-6.5,0.15) -- (12,0.15);
+  \draw[black!60,line width=0.5pt] (-6.5,5.6) -- (12,5.6);
+
+  \foreach \row/\wp/\name in {
+      1/WP1/{Governance and partnership},
+      2/WP2/{Speech and text collection},
+      3/WP3/{Model adaptation},
+      4/WP4/{Speaker evaluation},
+      5/WP5/{Release and dissemination}}{
+    \node[anchor=west,text=accent] at (-6.5,\row) {\wp};
+    \node[anchor=west] at (-5.5,\row) {\name};
+  }
+  \fill[softbar] (0,0.8) rectangle (12,1.2);
+  \fill[bar] (0,0.8) rectangle (2,1.2);
+  \fill[bar] (1,1.8) rectangle (7,2.2);
+  \fill[bar] (4,2.8) rectangle (10,3.2);
+  \fill[softbar] (6,3.8) rectangle (12,4.2);
+  \fill[bar] (6,3.8) rectangle (7,4.2);
+  \fill[bar] (8,3.8) rectangle (9,4.2);
+  \fill[bar] (10,3.8) rectangle (11,4.2);
+  \fill[bar] (11.5,3.8) rectangle (12,4.2);
+  \fill[bar] (8,4.8) rectangle (12,5.2);
+
+  \foreach \x/\row/\m in {2/1/M1,6/2/M2,8/3/M3,11/4/M4,12/5/M5}{
+    \node[milestone] at (\x,\row) {};
+    \node[anchor=south,text=accent,font=\sffamily\scriptsize]
+      at (\x,\row-0.26) {\m};
+  }
+\end{tikzpicture}
+\caption{Work plan by quarter. Dark bars mark intensive work and pale bars
+continuing work; in WP4 the dark blocks are the four speaker evaluation
+rounds. Diamonds mark the milestones listed in \cref{tab:milestones}.}
+\label{fig:gantt}
+\end{figure}
+
+\begin{table}[H]
+\centering\tablefont
+\caption{Milestones and the quarter in which each is due.}\label{tab:milestones}
+\begin{tabularx}{\linewidth}{@{}l L r@{}}
+  \toprule
+  \thead{Milestone} & \thead{Deliverable} & \thead{Due} \\
+  \midrule
+  M1 & Data agreements signed with all three partner communities & Q2 \\
+  M2 & First public release of the speech and text corpus & Q6 \\
+  M3 & Adapted speech and translation models reach the targets of \cref{aim:models} & Q8 \\
+  M4 & Fourth speaker evaluation round completed and analysed & Q11 \\
+  M5 & Offline tools, corpus and evaluation protocol released & Q12 \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Risks and mitigation}\label{sec:risks}
+
+\Cref{tab:risks} lists the risks we consider most likely to delay the
+project, with the step we take before each one occurs and the fallback if it
+does.
+
+\begin{table}[H]
+\centering\tablefont
+\caption{Main risks, their assessed likelihood and impact, and how each is
+mitigated.}\label{tab:risks}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.27\linewidth}
+    l l L@{}}
+  \toprule
+  \thead{Risk} & \thead{Likelihood} & \thead{Impact} & \thead{Mitigation} \\
+  \midrule
+  Data agreements take longer than planned & Medium & High &
+    Negotiation starts six months before the grant; WP3 can begin on
+    existing public text. \\
+  Too few speakers in one dialect area & Medium & Medium &
+    Recruit through radio stations and schools; merge with a neighbouring
+    area after Q4 if needed. \\
+  Models miss the error-rate target & Low & High &
+    Report the gap openly; shift effort from translation to speech, where
+    gains are largest. \\
+  Loss of a community research assistant & Medium & Low &
+    Train two assistants per site, so that each site keeps one trained
+    member at all times. \\
+  Compute costs rise during the project & Low & Medium &
+    Budget includes a 15\,\% contingency on compute; distilled models
+    reduce later training cost. \\
+  \bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Budget}\label{sec:budget}
+
+The amount requested is \Amount{} over three years (\cref{tab:budget}).
+Personnel makes up 74\,\% of direct costs; most of the rest pays speakers
+and community workshops, which we treat as part of the research, not as
+overhead.
+
+\begin{table}[H]
+\centering\tablefont
+\caption{Budget by year, in euros. Indirect costs are the programme's
+flat rate of 25\,\% of direct costs.}\label{tab:budget}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l
+    S[table-format=7.0] S[table-format=7.0] S[table-format=7.0]
+    S[table-format=7.0]@{}}
+  \toprule
+  \thead{Cost category} & {\thead{Year 1}} & {\thead{Year 2}} &
+    {\thead{Year 3}} & {\thead{Total}} \\
+  \midrule
+  Postdoctoral researchers (2.0 FTE)   & 118400 & 121900 & 125600 & 365900 \\
+  Doctoral researcher (1.0 FTE)        &  38200 &  39300 &  40500 & 118000 \\
+  Community research assistants        &  46800 &  48200 &  49600 & 144600 \\
+  Speaker compensation and workshops   &  22500 &  28000 &  18500 &  69000 \\
+  Recording equipment                  &  14800 &   2000 &      0 &  16800 \\
+  Travel and fieldwork                 &  18600 &  21400 &  16200 &  56200 \\
+  Compute and storage                  &   9500 &  24000 &  21500 &  55000 \\
+  Dissemination and open access        &   2000 &   6500 &  14000 &  22500 \\
+  \cmidrule(l){2-5}
+  Direct costs                         & 270800 & 291300 & 285900 & 848000 \\
+  Indirect costs (25\,\%)              &  67700 &  72825 &  71475 & 212000 \\
+  \midrule
+  {\color{accent}Total requested}      & 338500 & 364125 & 357375 & 1060000 \\
+  \bottomrule
+\end{tabular*}
+\end{table}
+
+\section{Expected impact}\label{sec:impact}
+
+For speakers, \ShortTitle{} delivers a speech recogniser, a spell checker and
+a translation aid that work without a network connection, in the dialects
+people actually speak. For the field, it provides the first evaluation
+protocol for these languages that is grounded in speaker judgement, and
+evidence on how far multilingual transfer can be pushed with community-scale
+data \parencite{nakamura2026distil}. For other indigenous language
+communities, the governance agreements and their record of use over three
+years offer a tested model, in the spirit of the CARE principles
+\parencite{carroll2020care}, that can be adopted without starting from
+nothing. All software is released under an open licence; the data is
+released under the terms each community sets in \cref{aim:data}.
+
+\printbibliography[heading=bibnumbered,title={References}]
+
+\end{document}

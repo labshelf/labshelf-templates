@@ -1,0 +1,10 @@
+schema: 1
+id: research-talk
+name: Research Talk
+description: 16:9 Beamer talk with a quiet custom theme in Fira Sans and Fira Mono, one vermilion accent and a hairline progress bar. Includes a title slide with a heat-raster motif, numbered section dividers, a dark statement slide, big-number stats, an annotated equation, pgfplots line, scatter and bar charts, a booktabs table, biblatex author-year references and backup slides.
+category: slides
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

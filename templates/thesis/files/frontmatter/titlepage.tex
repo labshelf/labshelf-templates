@@ -1,0 +1,47 @@
+% Title page: every line comes from the metadata in main.tex. It is
+% centred on the paper rather than on the asymmetric text block.
+\newgeometry{left=24mm, right=24mm, top=30mm, bottom=30mm}
+\begin{titlepage}
+  \centering
+  {\spacedsc{\thesisuniversity}\par}
+  \vspace{0.8ex}
+  {\small\itshape\thesisfaculty\par}
+  \vspace{\stretch{1.1}}
+  \begin{minipage}{0.66\linewidth}\centering
+    \fontsize{29}{35}\selectfont\thesistitle\par
+  \end{minipage}\par
+  \vspace{4.5ex}
+  {\color{accent}\rule[0.5ex]{3em}{0.4pt}\enspace
+    \tikz[baseline=-0.2ex]\fill[accent] (0,0.6ex) -- (0.6ex,0) -- (0,-0.6ex) -- (-0.6ex,0) -- cycle;%
+    \enspace\rule[0.5ex]{3em}{0.4pt}}\par
+  \vspace{4ex}
+  \begin{minipage}{0.74\linewidth}\centering
+    \linespread{1.15}\large\itshape\thesissubtitle\par
+  \end{minipage}\par
+  \vspace{\stretch{1}}
+  {\small\itshape by\par}
+  \vspace{1.2ex}
+  {\Large\spacedsc{\thesisauthor}\par}
+  \vspace{\stretch{1.6}}
+  {\small A thesis submitted in fulfilment of the requirements\\
+    for the degree of \thesisdegree\ in \thesisfield\par}
+  \vspace{3.5ex}
+  {\small
+    \begin{tabular}{@{}r@{\quad}l@{}}
+      \spacedsc{Supervisor}    & \thesissupervisor \\
+      \spacedsc{Co-supervisor} & \thesiscosupervisor
+    \end{tabular}\par}
+  \vspace{3.5ex}
+  {\small\spacedsc{\thesisdate}\par}
+\end{titlepage}
+\restoregeometry
+
+% Reverse of the title page: copyright and licence.
+\thispagestyle{empty}
+\vspace*{\fill}
+\begin{flushleft}\small
+  \copyright\ 2026 \thesisauthor\\[0.6ex]
+  This work is licensed under a Creative Commons Attribution 4.0
+  International Licence. Typeset in EB Garamond with \LaTeX.
+\end{flushleft}
+\cleardoublepage

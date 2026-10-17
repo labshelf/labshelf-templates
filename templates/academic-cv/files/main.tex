@@ -1,0 +1,171 @@
+% Academic CV: a two-page curriculum vitae on A4, set in EB Garamond.
+% Dates sit in a narrow left column; every entry hangs from the same grid.
+% Build with pdflatex (run twice, or use latexmk, for the page count).
+\RequirePackage{fix-cm}
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,top=20mm,bottom=24mm,left=21mm,right=21mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[osf]{ebgaramond}
+\usepackage[letterspace=120]{microtype}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fontawesome5}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
+
+% Accent colour: one warm sepia-brown for the name, headings and icons.
+\definecolor{accent}{RGB}{122,78,44}
+\definecolor{quiet}{gray}{0.38}
+
+% Name and contact details: edit these, the header and footer follow.
+\newcommand{\cvname}{Helena M. Varga}
+\newcommand{\cvrole}{Associate Professor of Computational Ecology}
+\newcommand{\cvplace}{Department of Ecology \& Evolution, University of Edinburgh}
+
+\hypersetup{pdftitle={Curriculum Vitae -- \cvname},pdfauthor={\cvname}}
+
+% Grid: the width of the date column and the gap after it.
+\newlength{\datecol}\setlength{\datecol}{22mm}
+\newlength{\dategap}\setlength{\dategap}{5mm}
+
+\setlength{\parindent}{0pt}
+\linespread{1.06}
+\frenchspacing
+
+% Dates use tabular old-style figures so year ranges line up down the page.
+\newcommand{\datefont}{\fontfamily{EBGaramond-TOsF}\selectfont\color{quiet}}
+
+\newcommand{\cvsection}[1]{%
+  \par\addvspace{4.2ex}\Needspace{5\baselineskip}%
+  \noindent\makebox[\dimexpr\datecol+\dategap\relax][l]{%
+    \color{accent}\rule[0.62ex]{\dimexpr\datecol-1.5mm\relax}{0.35pt}}%
+  {\color{accent}\textls[160]{\scshape\MakeLowercase{#1}}}%
+  \par\nopagebreak\vspace{1.1ex}}
+
+\newlist{entries}{description}{1}
+\setlist[entries]{leftmargin=\dimexpr\datecol+\dategap\relax,labelindent=0pt,
+  labelwidth=\datecol,labelsep=\dategap,itemsep=0.75ex,parsep=0pt,topsep=0pt,
+  font=\normalfont\datefont,align=left}
+
+% \entry{date}{title}{place}: a heading line with its place in italics.
+\newcommand{\entry}[3]{\item[#1] \textbf{#2}\ifx\relax#3\relax\else, \textit{#3}\fi\par}
+\newcommand{\detail}[1]{{\small\color{quiet}#1\par}}
+\newcommand{\pubgroup}[1]{\par\addvspace{1.2ex}\hspace*{\dimexpr\datecol+\dategap\relax}{\small\color{quiet}\textls[100]{\scshape\MakeLowercase{#1}}}\par\nopagebreak\vspace{0.5ex}}
+\newcommand{\me}{\textbf{H.\,M.~Varga}}
+\newcommand{\pub}[2]{\item[{\color{accent}#1}] #2}
+\newcommand{\icon}[1]{{\color{accent}\footnotesize#1}\hspace{0.45em}}
+\newcommand{\sep}{\hspace{1.1em}{\color{accent}\textperiodcentered}\hspace{1.1em}}
+
+\fancypagestyle{continued}{%
+  \fancyhf{}%
+  \renewcommand{\headrulewidth}{0pt}%
+  \fancyfoot[L]{\small\color{quiet}\textls[100]{\scshape\MakeLowercase{\cvname}}}%
+  \fancyfoot[R]{\small\color{quiet}\textit{page \thepage\ of \pageref*{LastPage}}}}
+
+\pagestyle{continued}
+\begin{document}
+\thispagestyle{empty}
+
+\begin{center}
+  {\fontsize{25}{28}\selectfont\color{accent}\textls[200]{\scshape\MakeLowercase{\cvname}}}\par
+  \vspace{1.6ex}
+  {\large\itshape \cvrole}\par
+  \vspace{0.5ex}
+  {\color{quiet}\cvplace}\par
+  \vspace{1.6ex}
+  {\small
+  \icon{\faEnvelope[regular]}\href{mailto:h.varga@ed.ac.uk}{h.varga@ed.ac.uk}\sep
+  \icon{\faPhone}+44\,131\,650\,2741\sep
+  \icon{\faGlobe}\href{https://hvarga.org}{hvarga.org}\sep
+  \icon{\faOrcid}0000-0002-4813-7790\sep
+  \icon{\faGithub}hmvarga}\par
+\end{center}
+
+\cvsection{Appointments}
+\begin{entries}
+  \entry{2022 -- now}{Associate Professor of Computational Ecology}{University of Edinburgh}
+  \detail{Lead of the Landscape Dynamics Group: six doctoral students, two postdoctoral fellows.}
+  \entry{2018 -- 2022}{Lecturer in Quantitative Ecology}{University of Edinburgh}
+  \entry{2015 -- 2018}{Postdoctoral Research Fellow}{Swiss Federal Research Institute WSL, Birmensdorf}
+  \detail{Process-based models of alpine treeline shifts under warming; host: Prof.\ N.~Zimmermann.}
+\end{entries}
+
+\cvsection{Education}
+\begin{entries}
+  \entry{2011 -- 2015}{PhD in Ecology}{University of Cambridge}
+  \detail{Thesis: \textit{Seed dispersal and the spatial structure of fragmented woodland}. Advisor: Prof.\ D.~Coomes.}
+  \entry{2010 -- 2011}{MSc in Applied Statistics, with distinction}{University of Oxford}
+  \entry{2007 -- 2010}{BSc in Biology, first class}{E\"otv\"os Lor\'and University, Budapest}
+\end{entries}
+
+\cvsection{Publications}
+\pubgroup{Journal articles}
+\begin{entries}
+  \pub{J6}{\me, R.~Okafor and L.~Chen (2025). Early-warning signals of forest dieback from Sentinel-2 time series. \textit{Nature Ecology \& Evolution} 9, 412--423.}
+  \pub{J5}{T.~Lindqvist and \me\ (2024). Stochastic dispersal kernels recover range-shift lags in European beech. \textit{Ecology Letters} 27, e14318.}
+  \pub{J4}{\me\ and N.~E.~Zimmermann (2022). Thermal debt at the alpine treeline: a process-based synthesis. \textit{Global Change Biology} 28, 5503--5517.}
+  \pub{J3}{A.~Moreau, \me\ and S.~Patel (2021). Bayesian occupancy models for camera-trap networks with imperfect detection. \textit{Methods in Ecology and Evolution} 12, 1879--1891.}
+  \pub{J2}{\me, D.~A.~Coomes (2017). Fragment size and the seed shadow of wind-dispersed trees. \textit{Journal of Ecology} 105, 1102--1114.}
+  \pub{J1}{\me\ (2015). Connectivity thresholds in fragmented woodland. \textit{Landscape Ecology} 30, 1745--1758.}
+\end{entries}
+\pubgroup{Conference papers}
+\begin{entries}
+  \pub{C2}{R.~Okafor and \me\ (2024). Self-supervised canopy segmentation for sparse field labels. \textit{Proc.\ ICLR Workshop on Tackling Climate Change with Machine Learning}.}
+  \pub{C1}{\me\ and J.~Hartmann (2020). Scalable agent-based simulation of seed dispersal on GPUs. \textit{Proc.\ International Congress on Environmental Modelling and Software}, 211--218.}
+\end{entries}
+\pubgroup{Preprints}
+\begin{entries}
+  \pub{P1}{\me, L.~Chen and M.~Rossi (2026). A common currency for resilience: comparing recovery rates across biomes. \textit{bioRxiv} 2026.03.11.584102.}
+\end{entries}
+
+\cvsection{Grants \& Awards}
+\begin{entries}
+  \entry{2024 -- 2029}{ERC Consolidator Grant, \textsc{dieback}}{\texteuro\,1.98\,M, principal investigator}
+  \entry{2021 -- 2024}{NERC Standard Grant NE/V009214/1}{\pounds\,612\,k, principal investigator}
+  \entry{2023}{British Ecological Society Founders' Prize}{}
+  \entry{2016}{Marie Sk\l{}odowska-Curie Individual Fellowship}{\texteuro\,175\,k}
+  \entry{2015}{Harper Prize for the best doctoral thesis}{British Ecological Society}
+\end{entries}
+
+\cvsection{Invited Talks}
+\begin{entries}
+  \entry{2025}{Reading the forest's pulse from orbit}{Keynote, Ecological Society of America, Baltimore}
+  \entry{2024}{Why range shifts lag behind climate}{Max Planck Institute for Biogeochemistry, Jena}
+  \entry{2023}{Models that ecologists can argue with}{Department of Zoology, University of Oxford}
+  \entry{2022}{Seed shadows in a warming world}{Swiss Ecology Meeting, Lausanne}
+  \entry{2021}{Occupancy at scale}{Plenary, EURING Analytical Meeting, online}
+  \entry{2019}{Treelines as natural experiments}{Department of Plant Sciences, University of Cambridge}
+\end{entries}
+
+\cvsection{Software \& Data}
+\begin{entries}
+  \entry{2021 -- now}{dispersr}{R package for simulating seed dispersal kernels on real landscapes, on CRAN}
+  \detail{About 4\,000 downloads a month; used in courses at five universities.}
+  \entry{2024}{Scottish Woodland Dieback Atlas}{open data set of 1.2\,M annotated canopy tiles, Zenodo}
+\end{entries}
+
+\cvsection{Teaching}
+\begin{entries}
+  \entry{2019 -- now}{Ecological Modelling}{honours course, 60 students per year, course organiser}
+  \entry{2018 -- now}{Statistics for the Life Sciences}{second-year core course, co-lecturer}
+  \entry{2022 -- now}{Doctoral supervision}{four students graduated, six current}
+\end{entries}
+
+\cvsection{Service}
+\begin{entries}
+  \entry{2023 -- now}{Associate Editor}{Methods in Ecology and Evolution}
+  \entry{2022 -- now}{Panel member}{NERC Discovery Science, Peer Review College}
+  \entry{2020 -- 2023}{Equality, Diversity and Inclusion Committee}{School of Biological Sciences}
+  \entry{2019 -- 2021}{Co-organiser}{Symposium on Spatial Ecology, British Ecological Society Annual Meeting}
+  \entry{ }{Reviewer}{Nature, Ecology Letters, Global Change Biology, PNAS, Remote Sensing of Environment}
+\end{entries}
+
+\cvsection{References}
+\begin{entries}
+  \item[] \textit{Available on request.}
+\end{entries}
+
+\end{document}

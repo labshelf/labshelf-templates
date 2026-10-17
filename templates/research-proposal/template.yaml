@@ -1,0 +1,10 @@
+schema: 1
+id: research-proposal
+name: Research Proposal
+description: Grant proposal on A4 in Source Serif and Source Sans with a deep teal accent. Cover block with title, PI, institution, duration and amount, a tinted summary panel, styled aims with objectives, a TikZ Gantt chart with milestones, booktabs risk and budget tables, page x of y header, and biblatex references.
+category: other
+format: latex
+engine: pdflatex
+main: main.tex
+license: MIT-0
+authors: ["LabShelf contributors"]

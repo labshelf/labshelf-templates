@@ -1,0 +1,315 @@
+% Two-Column Preprint -- a two-column article with a full-width title block.
+% The page design (grid, fonts, accent colour, headings, header) is in
+% preprint.sty; this file holds the content and the title metadata.
+% Build with: latexmk -pdf main.tex
+\documentclass[10pt, twoside]{article}
+\usepackage{preprint}
+
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{positioning, arrows.meta}
+\usepackage{siunitx}
+\sisetup{mode=text, detect-weight, group-minimum-digits=4}
+
+% Numeric references, compressed into ranges in the text.
+\usepackage[backend=biber, style=numeric-comp, sorting=none, maxbibnames=4,
+  giveninits=true, doi=false, url=false, isbn=false]{biblatex}
+\addbibresource{refs.bib}
+\renewcommand*{\bibfont}{\small}
+
+\usepackage[hidelinks]{hyperref}
+\usepackage[capitalise, noabbrev]{cleveref}
+
+% Shared look for every plot: greys for baselines, the accent for our model.
+\pgfplotsset{every axis/.append style={
+  font=\sffamily\scriptsize, axis line style={black!45}, tick style={black!45},
+  grid=major, grid style={black!8},
+  legend style={draw=none, fill=none, font=\sffamily\scriptsize},
+  every axis plot/.append style={line width=.9pt}}}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+% ---- Title metadata --------------------------------------------------------
+\title{Citation-Aware Dense Retrieval\\for Scientific Literature Search}
+\shorttitle{Citation-Aware Dense Retrieval}
+\preprintkind{Preprint \enspace\textbullet\enspace Information Retrieval}
+\preprintdate{October 2026}
+\authors{Mira Okafor\affil{1,*}, Tomás Lindgren\affil{1}, Hana Sato\affil{2}
+  and Daniel Ruiz-Brandt\affil{1,2}}
+\affiliations{\affil{1}Department of Computer Science, University of Utrecht,
+  The Netherlands \quad \affil{2}Institute for Language Technology,
+  Kyoto University, Japan}
+\correspondence{\affil{*}Correspondence: \texttt{m.okafor@example.org}.
+  Code and indices will be released on publication.}
+\keywords{dense retrieval, scientific literature, citation graphs,
+  contrastive learning, hard negatives}
+
+\begin{abstract}
+Researchers rarely search for papers with the vocabulary of the papers they
+need. Lexical rankers such as BM25 reward term overlap and miss work phrased in
+the conventions of a neighbouring field, while general-purpose dense retrievers
+are trained on web questions and transfer poorly to technical prose. We present
+\textsc{Cadre}, a dual-encoder retriever that treats the citation graph as
+supervision: co-cited papers become positives, and papers that share
+vocabulary but are never cited together become hard negatives. On three
+literature-search benchmarks \textsc{Cadre} improves nDCG@10 by 4.1 points
+over the strongest dense baseline and recovers 91\% of the relevant papers in
+the top 100, at the latency of a single nearest-neighbour lookup.
+\end{abstract}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+\label{sec:intro}
+
+A literature search is a recall problem with a precision budget. A reader
+drafting a related-work section wants every paper that bears on the claim, but
+will read only the first page of results. Classical rankers built on the
+probabilistic relevance framework~\cite{robertson2009bm25,manning2008ir}
+remain strong on this task because scientific queries are full of rare,
+discriminative terms. They fail when the same idea is named differently:
+\emph{contrastive pre-training} in one community is \emph{metric learning} in
+another, and a query in one dialect ranks the other far below the fold.
+
+Dense retrievers map queries and documents into a shared vector space and
+score them by inner product~\cite{halvorsen2021dual}. Their quality depends
+almost entirely on the training pairs. Web-scale question--passage pairs teach
+a model what a good answer to a factoid question looks like, not what a
+relevant prior study looks like. Scientific text, however, comes with its own
+relevance judgements: authors cite what they consider related. We exploit this
+signal directly, building on earlier work that used citation contexts as weak
+supervision for document embeddings~\cite{duval2020citation}.
+
+Our contributions are threefold. First, we define positives and negatives
+from the citation graph in a way that avoids the false negatives that plague
+mined hard examples~\cite{oyelaran2022hardneg}. Second, we combine the
+graph-derived loss with distillation from a cross-encoder~\cite{brennan2023distill}.
+Third, we evaluate on three benchmarks drawn from twelve
+fields~\cite{castellano2023scibench} and report where the model still fails
+(\cref{sec:results}).
+
+% Full-width floats are placed one page ahead of where they appear.
+\begin{table*}[t]
+  \centering
+  \caption{Retrieval quality on the three SciRank splits. nDCG@10 and
+  Recall@100 in percent; latency in milliseconds per query. The best score in
+  each column is set in bold.}
+  \label{tab:main}
+  \small
+  \begin{tabular}{@{}l S[table-format=2.1] S[table-format=2.1]
+      S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]
+      S[table-format=2.1] S[table-format=3.0]@{}}
+    \toprule
+    & \multicolumn{2}{c}{Bio} & \multicolumn{2}{c}{Phys}
+    & \multicolumn{2}{c}{CS} & \\
+    \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+    Model & {nDCG@10} & {R@100} & {nDCG@10} & {R@100}
+          & {nDCG@10} & {R@100} & {ms} \\
+    \midrule
+    BM25                        & 38.2 & 71.4 & 41.0 & 74.9 & 36.5 & 69.8 & 18 \\
+    Dense, web pairs            & 35.7 & 76.3 & 37.9 & 77.2 & 39.1 & 80.4 & 9 \\
+    Dense, mined negatives      & 40.8 & 81.0 & 42.6 & 82.5 & 43.3 & 84.7 & 9 \\
+    Late interaction            & 43.5 & 84.2 & 44.9 & 85.1 & \bfseries 46.8 & 87.9 & 112 \\
+    \midrule
+    \textsc{Cadre} (ours)       & \bfseries 47.9 & \bfseries 90.6 & \bfseries 48.7
+      & \bfseries 91.2 & 46.2 & \bfseries 91.4 & 9 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\begin{figure*}[t]
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[group style={group size=3 by 1, horizontal sep=12mm},
+        width=0.345\textwidth, height=44mm, xmode=log, log basis x=10,
+        xmin=1, xmax=1000, ymin=0, ymax=100,
+        xlabel={cut-off $k$}, ylabel={Recall@$k$ (\%)}]
+      \nextgroupplot[title={Bio}]
+        \addplot[black!35, dashed] coordinates {(1,9) (5,26) (10,37) (20,48) (50,62) (100,71) (200,79) (500,86) (1000,90)};
+        \addplot[black!60] coordinates {(1,11) (5,31) (10,43) (20,55) (50,71) (100,81) (200,87) (500,92) (1000,95)};
+        \addplot[accent] coordinates {(1,14) (5,38) (10,52) (20,65) (50,81) (100,91) (200,94) (500,97) (1000,98)};
+      \nextgroupplot[title={Phys}, ylabel={}]
+        \addplot[black!35, dashed] coordinates {(1,10) (5,28) (10,40) (20,51) (50,65) (100,75) (200,82) (500,88) (1000,91)};
+        \addplot[black!60] coordinates {(1,12) (5,33) (10,45) (20,57) (50,73) (100,83) (200,88) (500,93) (1000,95)};
+        \addplot[accent] coordinates {(1,15) (5,39) (10,53) (20,66) (50,82) (100,91) (200,95) (500,97) (1000,98)};
+      \nextgroupplot[title={CS}, ylabel={},
+          legend to name=recall-legend, legend columns=3,
+          legend style={/tikz/every even column/.append style={column sep=4mm}}]
+        \addplot[black!35, dashed] coordinates {(1,8) (5,24) (10,35) (20,46) (50,60) (100,70) (200,78) (500,85) (1000,89)};
+        \addplot[black!60] coordinates {(1,12) (5,34) (10,47) (20,59) (50,76) (100,85) (200,90) (500,94) (1000,96)};
+        \addplot[accent] coordinates {(1,14) (5,37) (10,51) (20,64) (50,81) (100,91) (200,95) (500,97) (1000,98)};
+        \legend{BM25, Dense with mined negatives, \textsc{Cadre}}
+    \end{groupplot}
+  \end{tikzpicture}
+
+  \vspace{2pt}
+  \pgfplotslegendfromname{recall-legend}
+  \caption{Recall as a function of the cut-off $k$ on a logarithmic axis.
+  The gap between \textsc{Cadre} and the lexical baseline is widest between
+  $k = 20$ and $k = 100$, the range a reader or re-ranker actually inspects.}
+  \label{fig:recall}
+\end{figure*}
+
+\section{Method}
+\label{sec:method}
+
+\subsection{Dual-encoder scoring}
+
+Let $q$ be a query and $d$ a document, represented by its title and abstract.
+Two encoders $f_\theta$ and $g_\phi$ with shared weights map them to unit
+vectors in $\mathbb{R}^{k}$, and the relevance score is their inner product,
+\begin{equation}
+  s(q, d) = \frac{f_\theta(q)^{\top} g_\phi(d)}{\tau},
+  \label{eq:score}
+\end{equation}
+where $\tau > 0$ is a learned temperature. Because $g_\phi(d)$ does not depend
+on the query, every document is encoded once and stored in an approximate
+nearest-neighbour index~\cite{varga2024ann}; retrieval then costs one encoder
+pass and one index lookup.
+
+\subsection{Citation-derived training pairs}
+
+For a paper $p$ with reference list $R(p)$, we treat two papers as related when
+they are cited together by at least $m$ later papers. The positive set of a
+query paper $p$ is
+\begin{equation}
+  P(p) = \bigl\{\, d \;:\; \lvert C(p) \cap C(d) \rvert \ge m \,\bigr\},
+  \label{eq:positives}
+\end{equation}
+where $C(\cdot)$ is the set of papers citing its argument. Hard negatives are
+drawn from the top BM25 results for the title of $p$, excluding any paper
+within two hops of $p$ in the citation graph. This exclusion is what keeps
+lexically similar but genuinely related work out of the negative set.
+
+\subsection{Training objective}
+
+Given a batch of $B$ queries, each with one positive $d^{+}_i$ and a set
+$N_i$ of hard negatives, we minimise the contrastive loss
+\begin{equation}
+  \mathcal{L}_{\text{c}} = -\frac{1}{B}\sum_{i=1}^{B}
+  \log \frac{e^{s(q_i, d^{+}_i)}}
+  {e^{s(q_i, d^{+}_i)} + \sum_{d \in N_i \cup D^{-}_i} e^{s(q_i, d)}},
+  \label{eq:loss}
+\end{equation}
+where $D^{-}_i$ contains the positives of the other queries in the batch. We
+add a distillation term $\mathcal{L}_{\text{kd}}$ that matches the score
+distribution of a cross-encoder teacher on the same candidates, and train on
+$\mathcal{L} = \mathcal{L}_{\text{c}} + \lambda\,\mathcal{L}_{\text{kd}}$ with
+$\lambda = 0.5$. \Cref{fig:arch} summarises the pipeline.
+
+\begin{figure}[t]
+  \centering
+  \begin{tikzpicture}[font=\sffamily\scriptsize, node distance=5mm and 7mm,
+      box/.style={draw=black!40, rounded corners=2pt, minimum height=7mm,
+        minimum width=19mm, align=center, fill=white},
+      key/.style={box, draw=accent, fill=accentpanel},
+      arr/.style={-{Stealth[length=4pt]}, black!55, line width=.6pt}]
+    \node[box] (q) {Query\\title or prompt};
+    \node[box, below=of q] (d) {Document\\title + abstract};
+    \node[key, right=of q] (fq) {Encoder $f_\theta$};
+    \node[key, right=of d] (gd) {Encoder $g_\phi$};
+    \node[box, right=11mm of $(fq)!.5!(gd)$] (s) {Score\\$s(q,d)$};
+    \node[box, below=of gd, minimum width=30mm] (g) {Citation graph\\positives and negatives};
+    \draw[arr] (q) -- (fq);
+    \draw[arr] (d) -- (gd);
+    \draw[arr] (fq) -- (s);
+    \draw[arr] (gd) -- (s);
+    \draw[arr, accent] (g.east) -| (s.south);
+    \draw[black!40, dashed] (fq) -- node[right, black!55] {shared} (gd);
+  \end{tikzpicture}
+  \caption{Training pipeline. Both encoders share weights; the citation graph
+  supplies the positive and negative documents for each query.}
+  \label{fig:arch}
+\end{figure}
+
+\section{Experimental setup}
+\label{sec:setup}
+
+\paragraph{Corpora}
+We pre-train on 9.6 million papers with their reference lists and evaluate on
+the three SciRank splits~\cite{castellano2023scibench}: \emph{Bio} (life
+sciences), \emph{Phys} (physics and astronomy) and \emph{CS} (computer
+science). Each query is a paragraph from a related-work section, and the
+relevant documents are the papers it cites.
+
+\paragraph{Baselines}
+We compare against BM25, a general dense retriever trained on web
+questions~\cite{halvorsen2021dual}, the same retriever with mined hard
+negatives~\cite{oyelaran2022hardneg}, and a late-interaction model that stores
+one vector per token~\cite{sorensen2022lateinter}.
+
+\paragraph{Metrics}
+We report nDCG@10 for the first page and Recall@100 for the candidate set a
+reader or a re-ranker would see. Latency is the median over \num{10000}
+queries on one GPU, including the index lookup.
+
+
+\section{Results}
+\label{sec:results}
+
+\Cref{tab:main} reports the main comparison. \textsc{Cadre} is the best model
+on five of the six quality columns and matches the latency of the other
+single-vector retrievers. Its largest gains are on Bio and Phys, where
+vocabulary differs most between subfields; on CS, the late-interaction model
+is 0.6 points ahead in nDCG@10 but answers twelve times more slowly and needs
+an index roughly forty times larger.
+
+\Cref{fig:recall} shows recall across cut-offs. At $k = 1$ all models are
+close, because the top result is usually the paper whose title repeats the
+query. The gap opens as $k$ grows: the papers that \textsc{Cadre} recovers and
+BM25 misses are the ones phrased in another field's terms.
+
+\paragraph{Ablation}
+\Cref{tab:ablation} removes one component at a time on the Bio split. The
+two-hop exclusion in \cref{eq:positives} matters most: without it, a quarter
+of the mined negatives are papers the query actually cites, and the
+contrastive loss in \cref{eq:loss} pushes them away.
+
+\begin{table}[t]
+  \centering
+  \caption{Ablation on the Bio split. Each row removes one component from the
+  full model.}
+  \label{tab:ablation}
+  \small
+  \begin{tabular}{@{}l S[table-format=2.1] r@{}}
+    \toprule
+    Variant & {nDCG@10} & $\Delta$ \\
+    \midrule
+    Full model                     & 47.9 & -- \\
+    No two-hop exclusion           & 43.1 & $-4.8$ \\
+    No distillation ($\lambda = 0$) & 45.6 & $-2.3$ \\
+    In-batch negatives only        & 44.0 & $-3.9$ \\
+    Co-citation threshold $m = 1$  & 46.4 & $-1.5$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Failure cases}
+Most remaining errors involve very recent papers. A paper published after the
+citation snapshot has no co-citations, so its embedding is shaped only by its
+text; on queries whose relevant set is dominated by such papers, nDCG@10 drops
+to the level of the mined-negative baseline. Refreshing the graph monthly
+closes most of this gap at modest cost, since only the encoder for new
+documents needs to run.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Citations are the most abundant relevance judgements in science, and they come
+for free. Using them to choose positives, and the citation graph to keep false
+negatives out of the training batch, gives a single-vector retriever that
+outperforms both lexical and general dense baselines on literature search
+without a latency cost. The obvious next step is to weight citations by the
+sentence they appear in, so that a citation of a method and a citation of a
+contradicting result no longer count the same.
+
+\paragraph{Acknowledgements}
+We thank the maintainers of the open citation snapshots used in this work and
+the anonymous reviewers of an earlier draft for their comments.
+
+\printbibliography
+
+\end{document}

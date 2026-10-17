@@ -1,0 +1,111 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+\chapterepigraph{The sea, once it casts its spell, holds one in its net of
+wonder forever.}{Jacques-Yves Cousteau}
+
+\section{Blue carbon and the question of permanence}
+\label{sec:permanence}
+
+Vegetated coastal ecosystems occupy less than half a per cent of the sea
+floor, yet they account for a disproportionate share of the organic
+carbon buried in marine sediments \parencite{rowan2017seagrass}. Seagrass
+meadows are the most extensive of these systems in temperate waters. Their
+canopies slow the water, trap suspended particles and bury both their own
+detritus and material imported from land; low oxygen beneath the rhizome
+mat then slows decomposition to a crawl. The result is a sediment store
+that, in sheltered Scandinavian estuaries, has accumulated without
+interruption for at least two centuries \parencite{holmgren2019burial}.
+
+This store has become the basis of an emerging market in \enquote{blue
+carbon} credits, in which the restoration or protection of a meadow is
+credited with the carbon it buries. National inventory guidelines treat
+that carbon as permanently removed once it lies below the surface mixed
+layer \parencite{bcwg2023guidelines}. The assumption is convenient but
+largely untested. A meadow that loses its canopy also loses the
+mechanism that protects its sediment, and a recent review found that
+disturbance can return between a tenth and a half of the upper sediment
+carbon to the water column within a few years
+\parencite{fairbairn2022permanence}.
+
+The long-term balance of a meadow can be written as a simple budget. If
+\(B\) is the burial flux, \(R\) the remineralisation flux and \(E\) the
+loss by erosion, the change in the sediment carbon stock \(C\) per unit
+area is
+\begin{equation}
+  \frac{\mathrm{d}C}{\mathrm{d}t} = B(t) - R(t, T) - E(t),
+  \label{eq:budget}
+\end{equation}
+where the explicit dependence of \(R\) on water temperature \(T\) is the
+subject of this thesis. Under a stable canopy \(B\) dominates and the
+store grows; the question is what happens to the sign of
+\cref{eq:budget} when the canopy collapses during a heatwave.
+
+\section{Marine heatwaves in shallow seas}
+\label{sec:heatwaves}
+
+Marine heatwaves, periods of at least five days in which sea temperature
+exceeds the ninetieth percentile of its seasonal climatology, have become
+both longer and more frequent across the shallow seas of northern Europe
+\parencite{marsh2021heatwaves}. Shallow estuaries are particularly
+exposed: their small volume warms quickly under calm, sunny weather, and
+the eelgrass that grows there already lives close to its upper thermal
+limit in late summer \parencite{okafor2018thermal}.
+
+\begin{figure}[tb]
+  \centering
+  \begin{tikzpicture}[x=1mm, y=1mm, font=\footnotesize,
+      flux/.style={-{Stealth[length=2mm]}, line width=0.6pt}]
+    % water and sediment
+    \fill[accent!6] (0,0) rectangle (100,30);
+    \fill[black!8] (0,-22) rectangle (100,0);
+    \draw[hairline, line width=0.4pt] (0,0) -- (100,0);
+    \draw[hairline, decorate, decoration={snake, amplitude=0.6mm,
+      segment length=8mm}] (0,30) -- (100,30);
+    % shoots
+    \foreach \x in {14,20,...,62} {
+      \draw[accent!70!black, line width=0.7pt]
+        (\x,0) .. controls (\x-1,8) and (\x+2,14) .. (\x+1,20);
+    }
+    \draw[black!45, line width=0.5pt] (10,-3) -- (66,-3);
+    % fluxes
+    \draw[flux] (82,26) -- (82,2) node[pos=0.1, right] {deposition};
+    \draw[flux, accent] (38,-6) -- (38,-18) node[midway, right] {burial \(B\)};
+    \draw[flux] (76,-14) -- (76,-2) node[midway, right] {remineralisation \(R\)};
+    \draw[flux] (6,2) -- (6,12) node[midway, right] {erosion \(E\)};
+    \node[anchor=west] at (68,22) {canopy};
+    \node[anchor=west, black!60] at (2,-19) {sediment};
+  \end{tikzpicture}
+  \caption{The carbon budget of a seagrass meadow. The canopy traps
+    particles and the rhizome mat protects buried carbon; both
+    mechanisms weaken when shoot density falls.}
+  \label{fig:budget}
+\end{figure}
+
+\Cref{fig:budget} summarises the mechanisms involved. When a heatwave
+thins the canopy, deposition falls, the sediment surface is exposed to
+waves and the oxygenated layer deepens, so all three terms of
+\cref{eq:budget} move against the store at once. Whether this happens
+gradually, in proportion to the heat received, or abruptly once a
+threshold is crossed matters a great deal for management: a threshold
+offers a target that can be monitored, while a gradual response does
+not.
+
+\section{Aims and structure of the thesis}
+\label{sec:aims}
+
+The thesis pursues three aims:
+\begin{enumerate}
+  \item to quantify how eelgrass shoot density responds to the cumulative
+        heat dose of a summer, and to test for a threshold in that
+        response;
+  \item to measure the loss of sediment organic carbon that follows
+        canopy decline, and its depth distribution;
+  \item to estimate the consequences for blue-carbon accounting in the
+        estuary as a whole.
+\end{enumerate}
+\Cref{ch:study-system} introduces the Westhaven estuary, the twelve
+monitored meadows and the methods common to all chapters.
+\Cref{ch:heatwave-response} reports the shoot and sediment responses and
+the threshold model. Field protocols are collected in
+\cref{app:protocols}.

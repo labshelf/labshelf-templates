@@ -1,0 +1,69 @@
+% Doctoral or master's thesis set in EB Garamond on a B5 page.
+% Edit the metadata below, write chapters in chapters/, and keep the
+% typographic machinery in style.tex. Build with latexmk (pdflatex + biber).
+\documentclass[
+  fontsize=11pt,
+  paper=b5,          % 176 x 250 mm; switch to a4 and widen the margins in style.tex
+  twoside,
+  openright,
+  cleardoublepage=empty,
+  headings=normal,
+  numbers=noenddot,
+  bibliography=totoc,
+  listof=totoc,
+  captions=tableheading,
+  captions=nooneline,
+]{scrbook}
+
+% Fonts: EB Garamond with old-style figures and true small caps,
+% matching newtxmath for equations. To use Palatino instead, replace
+% both lines with \usepackage[osf,sc]{newpxtext} and \usepackage{newpxmath}.
+\usepackage[osf]{ebgaramond}
+\usepackage[ebgaramond,vvarbb]{newtxmath}
+\usepackage[T1]{fontenc}
+
+% Accent colour: used only for chapter numbers and a few rules.
+\usepackage{xcolor}
+\definecolor{accent}{HTML}{7A2B26}
+\definecolor{hairline}{gray}{0.55}
+
+\input{style}
+
+\addbibresource{refs.bib}
+
+% Metadata: used on the title page and in the PDF properties.
+\newcommand{\thesistitle}{Thermal Thresholds of Seagrass Carbon}
+\newcommand{\thesissubtitle}{Eelgrass meadows, marine heatwaves and the fate of buried organic matter in a temperate estuary}
+\newcommand{\thesisauthor}{Margarethe Lindqvist}
+\newcommand{\thesisdegree}{Doctor of Philosophy}
+\newcommand{\thesisfield}{Marine Ecology}
+\newcommand{\thesisuniversity}{University of Westhaven}
+\newcommand{\thesisfaculty}{School of Ocean and Earth Sciences}
+\newcommand{\thesissupervisor}{Prof.\ Anders Holmgren}
+\newcommand{\thesiscosupervisor}{Dr Imogen Tetley}
+\newcommand{\thesisdate}{October 2026}
+
+\hypersetup{pdftitle={\thesistitle}, pdfauthor={\thesisauthor}}
+
+\begin{document}
+
+\frontmatter
+\input{frontmatter/titlepage}
+\input{frontmatter/dedication}
+\input{frontmatter/abstract}
+\input{frontmatter/acknowledgements}
+\tableofcontents
+\listoffigures
+
+\mainmatter
+\input{chapters/01-introduction}
+\input{chapters/02-study-system}
+\input{chapters/03-heatwave-response}
+
+\appendix
+\input{appendix/a-field-protocols}
+
+\backmatter
+\printbibliography[title={Bibliography}]
+
+\end{document}

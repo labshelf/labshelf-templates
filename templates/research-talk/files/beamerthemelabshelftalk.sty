@@ -1,0 +1,198 @@
+% LabShelf talk theme: a quiet 16:9 Beamer theme with one accent colour,
+% Fira Sans and Fira Mono, a hairline progress bar and full-bleed divider slides.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemelabshelftalk}[2026/10/17 LabShelf talk theme]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[sfdefault,lining]{FiraSans}
+\RequirePackage[scale=0.88,lining]{FiraMono}
+\RequirePackage{newtxsf}
+\RequirePackage[letterspace=120]{microtype}
+\RequirePackage{tikz}
+\RequirePackage{appendixnumberbeamer}
+\usetikzlibrary{calc,tikzmark}
+
+% ---------------------------------------------------------------- palette
+% The accent colour drives every highlight, chart series and divider.
+% Change lsAccent to recolour the whole deck; keep the neutrals.
+\definecolor{lsAccent}{HTML}{D4471F}
+\definecolor{lsInk}{HTML}{1C2126}
+\definecolor{lsMuted}{HTML}{6B7179}
+\definecolor{lsRule}{HTML}{D9D4CA}
+\definecolor{lsPaper}{HTML}{FAF8F3}
+\colorlet{lsTint}{lsAccent!8!lsPaper}
+
+\usefonttheme{professionalfonts}
+\beamer@centeredfalse
+\setbeamertemplate{navigation symbols}{}
+% \appendix puts a \translate token in the PDF bookmarks.
+\pdfstringdefDisableCommands{\def\translate#1{#1}}
+
+\setbeamercolor{normal text}{fg=lsInk,bg=lsPaper}
+\setbeamercolor{background canvas}{bg=lsPaper}
+\setbeamercolor{structure}{fg=lsAccent}
+\setbeamercolor{alerted text}{fg=lsAccent}
+\setbeamercolor{frametitle}{fg=lsInk}
+\setbeamercolor{kicker}{fg=lsAccent}
+\setbeamercolor{footline}{fg=lsMuted}
+\setbeamercolor{itemize item}{fg=lsAccent}
+\setbeamercolor{enumerate item}{fg=lsAccent}
+\setbeamercolor{bibliography entry author}{fg=lsInk}
+\setbeamercolor{bibliography entry title}{fg=lsInk}
+\setbeamercolor{bibliography entry location}{fg=lsMuted}
+\setbeamercolor{bibliography entry note}{fg=lsMuted}
+
+% ---------------------------------------------------------------- type
+% Fira Sans Light has a narrow word space that closes up at display sizes.
+\newcommand{\lslight}{\fontseries{l}\selectfont\spaceskip=0.3em plus 0.1em minus 0.05em\relax}
+\newcommand{\lssemibold}{\fontseries{sb}\selectfont}
+\newcommand{\lskicker}[1]{{\usebeamercolor[fg]{kicker}\fontseries{\mddefault}\ttfamily\scriptsize\textls{\MakeUppercase{#1}}}}
+
+\setbeamerfont{frametitle}{size=\LARGE,series=\lslight}
+\setbeamerfont{normal text}{size=\normalsize}
+\setbeamerfont{footline}{size=\tiny,family=\ttfamily}
+\setbeamerfont{item}{series=\lssemibold}
+
+\setbeamersize{text margin left=14mm,text margin right=14mm}
+
+% Large display type never hyphenates.
+\newcommand{\lsdisplay}[1]{\fontsize{#1}{1.15\dimexpr#1pt\relax}\lslight\selectfont\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000}
+
+% ---------------------------------------------------------------- lists
+\setbeamertemplate{itemize item}{\raisebox{0.28ex}{\rule{0.42em}{0.42em}}}
+\setbeamertemplate{itemize subitem}{\raisebox{0.4ex}{\rule{0.5em}{0.5pt}}}
+\setbeamertemplate{enumerate item}{{\fontseries{\mddefault}\ttfamily\footnotesize\insertenumlabel}}
+\setbeamertemplate{bibliography item}{}
+\setlength{\leftmargini}{1.2em}
+\addtobeamertemplate{itemize/enumerate body begin}{}{\setlength{\itemsep}{0.55em}}
+
+% ---------------------------------------------------------------- frame title
+% The current section sits above every title as a small mono kicker.
+\setbeamertemplate{frametitle}{%
+  \vspace*{7mm}%
+  \ifx\insertsection\empty\else\lskicker{\insertsection}\par\vspace{1.2mm}\fi
+  {\usebeamerfont{frametitle}\usebeamercolor[fg]{frametitle}\insertframetitle\par}%
+  \ifx\insertframesubtitle\empty\else
+    \vspace{0.8mm}{\small\color{lsMuted}\insertframesubtitle\par}%
+  \fi
+  \vspace*{1mm}%
+}
+
+% ---------------------------------------------------------------- footline
+% A hairline between the margins fills with the accent as the talk advances.
+\newif\iflsbackup
+\g@addto@macro\appendix{\global\lsbackuptrue}
+\setbeamertemplate{footline}{%
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\paperwidth,9mm);
+    \coordinate (L) at (14mm,6.2mm);
+    \coordinate (R) at ($(\paperwidth,6.2mm)-(14mm,0)$);
+    \fill[lsRule] (L) rectangle ($(R)+(0,0.4pt)$);
+    \iflsbackup\else\ifnum\inserttotalframenumber>0
+      \pgfmathsetmacro\lsprogress{min(1,\insertframenumber/\inserttotalframenumber)}
+      \fill[lsAccent] (L) rectangle ($(L)!\lsprogress!(R)+(0,0.4pt)$);
+    \fi\fi
+    \node[anchor=base west,inner sep=0,font=\usebeamerfont{footline},text=lsMuted]
+      at (14mm,2.6mm) {\textls{\MakeUppercase{\insertshortauthor}}\hspace{3mm}\insertshorttitle};
+    \node[anchor=base east,inner sep=0,font=\usebeamerfont{footline},text=lsMuted]
+      at ($(\paperwidth,2.6mm)-(14mm,0)$)
+      {\iflsbackup\textls{BACKUP}\hspace{2mm}\insertframenumber
+       \else\insertframenumber\,/\,\inserttotalframenumber\fi};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- heat raster
+% A classed thermal grid, drawn from a smooth field; it echoes a Landsat tile.
+% \lsheatraster{columns}{rows}{cell size}{background colour}
+\newcommand{\lsheatraster}[4]{%
+  \pgfmathsetmacro\lscols{#1-1}\pgfmathsetmacro\lsrows{#2-1}%
+  \foreach \i in {0,...,\lscols}{\foreach \j in {0,...,\lsrows}{%
+    \pgfmathsetmacro\u{\i/\lscols}\pgfmathsetmacro\v{\j/\lsrows}%
+    \pgfmathsetmacro\heat{exp(-((\u-0.38)^2+(\v-0.6)^2)/0.035)
+      +0.75*exp(-((\u-0.74)^2+(\v-0.28)^2)/0.02)
+      -0.7*exp(-((\v-0.15-0.7*\u)^2)/0.004)
+      +0.09*sin(37*\u r)*cos(23*\v r)+0.06}%
+    \pgfmathtruncatemacro\heatclass{20*round(5*max(0,min(1,\heat)))}%
+    \ifnum\heatclass=0 \def\lscell{lsRule!45!#4}\else\def\lscell{lsAccent!\heatclass!#4}\fi
+    \fill[\lscell] (\i*#3,\j*#3) rectangle ++(0.86*#3,0.86*#3);
+  }}%
+}
+
+% ---------------------------------------------------------------- title page
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \begin{scope}[shift={($(current page.north east)+(-72mm,-14mm-69mm)$)}]
+      \lsheatraster{15}{15}{4mm}{lsPaper}
+    \end{scope}
+    \node[anchor=north west,inner sep=0] at ($(current page.north west)+(14mm,-14mm)$)
+      {\lskicker{\insertdate}};
+    \node[anchor=south west,inner sep=0,text width=68mm]
+      at ($(current page.south west)+(14mm,29mm)$) {%
+      {\lsdisplay{38}\color{lsInk}\inserttitle\par}
+      \vspace{3mm}
+      {\lsdisplay{13}\color{lsMuted}\insertsubtitle\par}};
+    \fill[lsAccent] ($(current page.south west)+(14mm,23mm)$) rectangle ++(16mm,0.8pt);
+    \node[anchor=north west,inner sep=0,text width=88mm]
+      at ($(current page.south west)+(14mm,19mm)$) {%
+      {\small\lssemibold\color{lsInk}\insertauthor\par}
+      \vspace{1mm}{\scriptsize\color{lsMuted}\insertinstitute\par}};
+  \end{tikzpicture}%
+}
+
+% ---------------------------------------------------------------- section divider
+\setbeamertemplate{section in toc}{%
+  {\fontseries{\mddefault}\ttfamily\footnotesize\color{lsAccent}0\inserttocsectionnumber}\hspace{3mm}\inserttocsection\par}
+\setbeamertemplate{section in toc shaded}[default][100]
+\setbeamercolor{section in toc}{fg=lsInk}
+\setbeamercolor{section in toc shaded}{fg=lsRule!60!lsMuted}
+
+% Unnumbered sections (References) get no divider.
+\AtBeginSection[]{%
+  \begin{frame}[plain,noframenumbering]
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=north west,inner sep=0] at ($(current page.north west)+(14mm,-16mm)$)
+        {\fontsize{64}{64}\lslight\selectfont\color{lsAccent}0\insertsectionnumber};
+      \node[anchor=south west,inner sep=0,text width=80mm]
+        at ($(current page.south west)+(14mm,18mm)$)
+        {\fontsize{30}{33}\lslight\selectfont\color{lsInk}\insertsectionhead};
+      \draw[lsRule,line width=0.4pt] ($(current page.north west)+(104mm,-16mm)$)
+        -- ($(current page.south west)+(104mm,18mm)$);
+      \node[anchor=south west,inner sep=0,text width=46mm]
+        at ($(current page.south west)+(110mm,18mm)$)
+        {\small\setlength{\parskip}{1.6mm}\tableofcontents[currentsection,hideallsubsections]};
+    \end{tikzpicture}
+  \end{frame}
+}
+
+% ---------------------------------------------------------------- statement slide
+% \lsstatement{kicker}{statement}{supporting line}: one idea on a dark field.
+\newcommand{\lsstatement}[3]{%
+  {\setbeamercolor{background canvas}{bg=lsInk}%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[anchor=north west,inner sep=0] at ($(current page.north west)+(14mm,-16mm)$)
+        {\lskicker{#1}};
+      \node[anchor=west,inner sep=0,text width=118mm]
+        at ($(current page.west)+(14mm,2mm)$)
+        {\lsdisplay{25}\color{lsPaper}#2\par};
+      \fill[lsAccent] ($(current page.south west)+(14mm,22mm)$) rectangle ++(16mm,0.8pt);
+      \node[anchor=north west,inner sep=0,text width=118mm]
+        at ($(current page.south west)+(14mm,18mm)$)
+        {\small\color{lsRule!70!lsMuted}#3};
+    \end{tikzpicture}
+  \end{frame}}%
+}
+
+% ---------------------------------------------------------------- charts
+\RequirePackage{pgfplots}
+\pgfplotsset{compat=1.18,
+  lsaxis/.style={
+    axis lines=left, axis line style={lsRule,line width=0.5pt},
+    tick style={lsRule}, major tick length=1.2mm,
+    tick label style={font=\scriptsize\ttfamily,text=lsMuted},
+    label style={font=\scriptsize,text=lsMuted},
+    grid=major, major grid style={lsRule!45,line width=0.3pt},
+    every axis plot/.append style={line width=1pt},
+    scale only axis, clip=false}}
+
+\endinput

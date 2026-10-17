@@ -1,0 +1,100 @@
+\chapter{Study System and Methods}
+\label{ch:study-system}
+
+\section{The Westhaven estuary}
+\label{sec:estuary}
+
+The Westhaven estuary is a shallow, micro-tidal inlet of about
+\(38\) square kilometres on a sheltered stretch of coast. Its mean depth
+is \(2.4\) metres, the tidal range rarely exceeds forty centimetres, and
+salinity rises from about \(14\) at the river mouth to \(26\) at the
+seaward sill. Eelgrass covers roughly a fifth of the sea floor, in
+meadows that range from a few hundred square metres to more than a
+square kilometre \parencite{aagaard2021remineralisation}.
+
+\begin{figure}[tb]
+  \centering
+  \begin{tikzpicture}[x=1mm, y=1mm, font=\footnotesize]
+    \fill[accent!5] (0,0) rectangle (104,58);
+    \fill[black!10]
+      (0,58) -- (0,36) .. controls (14,40) and (22,30) .. (34,34)
+      .. controls (46,38) and (52,28) .. (64,30)
+      .. controls (76,32) and (84,44) .. (104,42) -- (104,58) -- cycle;
+    \fill[black!10]
+      (0,0) -- (0,14) .. controls (18,10) and (30,20) .. (46,16)
+      .. controls (60,12) and (72,18) .. (104,10) -- (104,0) -- cycle;
+    \draw[black!35] (0,36) .. controls (14,40) and (22,30) .. (34,34)
+      .. controls (46,38) and (52,28) .. (64,30)
+      .. controls (76,32) and (84,44) .. (104,42);
+    \draw[black!35] (0,14) .. controls (18,10) and (30,20) .. (46,16)
+      .. controls (60,12) and (72,18) .. (104,10);
+    \foreach \x/\y/\n in {8/30/1, 15/22/2, 22/28/3, 30/19/4, 38/30/5,
+        46/21/6, 55/27/7, 62/19/8, 70/26/9, 78/20/10, 86/31/11, 94/23/12} {
+      \fill[accent] (\x,\y) circle (0.9);
+      \node[anchor=south, inner sep=0pt, yshift=1.5mm, black!75] at (\x,\y) {\tablefigures\n};
+    }
+    \node[black!60, anchor=west] at (2,52) {\itshape river mouth};
+    \node[black!60, anchor=east] at (102,5) {\itshape seaward sill};
+    \draw[black!60] (80,49) -- (100,49);
+    \foreach \x in {80,90,100} \draw[black!60] (\x,48.2) -- (\x,49.8);
+    \node[black!60, anchor=south] at (90,49.5) {2 km};
+  \end{tikzpicture}
+  \caption{Schematic plan of the Westhaven estuary with the twelve
+    monitored meadows, numbered from the river mouth to the sill.}
+  \label{fig:map}
+\end{figure}
+
+The twelve meadows shown in \cref{fig:map} were chosen to span the
+salinity and depth gradients of the estuary. \Cref{tab:sites} lists their
+main characteristics; meadows nearer the river mouth are shallower, more
+turbid and, as \cref{ch:heatwave-response} shows, warmer in summer.
+
+\begin{table}[tb]
+  \centering\small
+  \caption{Characteristics of the monitored meadows. Depth is relative to
+    mean sea level; carbon stock refers to the upper 30 cm of sediment.}
+  \label{tab:sites}
+  \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}l r r r r@{}}
+    \toprule
+    Meadow & Depth (m) & Area (ha) & Salinity & C stock (Mg ha\(^{-1}\)) \\
+    \midrule
+    1--3   & 1.1 & 18.4 & 15.2 & 41.7 \\
+    4--6   & 1.6 & 36.9 & 18.8 & 52.3 \\
+    7--9   & 2.2 & 61.0 & 22.1 & 58.9 \\
+    10--12 & 2.9 & 44.5 & 25.4 & 47.6 \\
+    \midrule
+    All    & 2.0 & 160.8 & 20.4 & 51.8 \\
+    \bottomrule
+  \end{tabular*}
+\end{table}
+
+\section{Measuring heat dose}
+\label{sec:heat-dose}
+
+Temperature loggers fixed ten centimetres above the canopy recorded water
+temperature every fifteen minutes. Following \textcite{marsh2021heatwaves},
+the heat received by a meadow in a summer is summarised as its
+cumulative degree-heating-days,
+\begin{equation}
+  H = \sum_{d \in \mathcal{S}} \max\bigl(0,\; \bar T_d - T_{90}(d)\bigr),
+  \label{eq:heat-dose}
+\end{equation}
+where \(\bar T_d\) is the daily mean temperature, \(T_{90}(d)\) the
+ninetieth percentile of the 1990--2019 climatology for that calendar day,
+and \(\mathcal{S}\) the period from June to September. Only days within a
+heatwave, as defined in \cref{sec:heatwaves}, contribute to the sum.
+
+\section{Shoot censuses and sediment cores}
+\label{sec:censuses}
+
+Shoot density was counted every month from April to October in ten
+fixed quadrats of \(0.25\) square metres per meadow. Sediment cores of
+fifty centimetres were taken each October with a piston corer, sliced at
+two-centimetre intervals and analysed for organic carbon after
+acidification. Ages were assigned by excess lead-210 using the protocol of
+\textcite{tetley2020dating}; detailed procedures for both methods are
+given in \cref{app:protocols}.
+
+Warming experiments used the open-top chambers described by
+\textcite{lindqvist2024chambers}, which raise canopy temperature by
+\(2.1 \pm 0.3\)\,\textdegree C without shading the plants.

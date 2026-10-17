@@ -1,0 +1,155 @@
+% margin-notes.sty -- page design for the Margin Notes Article template.
+% A single text column with a wide outer margin for sidenotes, margin
+% citations, margin figures and side captions, in the spirit of Tufte.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{margin-notes}[2026/10/17 Margin Notes Article]
+
+% ---- Page grid -------------------------------------------------------------
+% A 108 mm column keeps the measure near 65 characters; the margin column
+% holds everything that would otherwise be a footnote or a float caption.
+\RequirePackage[a4paper,
+  top=27mm, bottom=30mm, left=24mm,
+  textwidth=108mm, marginparsep=8mm, marginparwidth=50mm,
+  headheight=14pt, headsep=10mm, footskip=12mm]{geometry}
+\newlength{\mn@extra}
+\setlength{\mn@extra}{\dimexpr\marginparwidth+\marginparsep\relax}
+
+% ---- Type ------------------------------------------------------------------
+% Cochineal with old-style figures and true small caps; newtxmath is drawn
+% to match it. To change the face, swap these two lines together.
+\RequirePackage[T1]{fontenc}
+\RequirePackage[osf]{cochineal}
+\RequirePackage[cochineal,vvarbb]{newtxmath}
+\RequirePackage[scaled=0.84]{beramono}
+\linespread{1.08}
+\RequirePackage[protrusion=true,expansion=true,tracking=true,
+  final]{microtype}
+\SetTracking{encoding=*,shape=sc}{40}
+\RequirePackage{ragged2e}
+\setlength{\parindent}{1.2em}
+\frenchspacing
+\widowpenalty=10000
+\clubpenalty=10000
+
+% ---- Colour ----------------------------------------------------------------
+% The single accent colour: section numbers, note numbers, caption labels.
+\RequirePackage{xcolor}
+\definecolor{accent}{HTML}{8F2D2A}
+\definecolor{quiet}{gray}{0.38}
+
+% ---- Margin material -------------------------------------------------------
+\RequirePackage{marginfix}
+\setlength{\marginparpush}{7pt}
+\RequirePackage{changepage}
+\newcommand{\mn@marginstyle}{%
+  \footnotesize\linespread{1.04}\selectfont\RaggedRight
+  \setlength{\parindent}{0pt}\setlength{\parskip}{3pt}}
+
+% Numbered sidenotes. The number hangs in the gutter so note text stays flush.
+\newcounter{sidenote}
+\newcommand{\sidenote}[1]{%
+  \refstepcounter{sidenote}%
+  \ifhmode\unskip\fi\textsu{\thesidenote}%
+  \marginpar{\mn@marginstyle
+    \leavevmode\llap{\textcolor{accent}{\thesidenote}\hspace{0.45em}}#1}}
+\let\footnote\sidenote
+
+% Unnumbered note in the margin, beside the current line.
+\newcommand{\marginnote}[1]{\marginpar{\mn@marginstyle #1}}
+
+% Figure set entirely in the margin, caption below it.
+\newsavebox{\mn@box}
+\newenvironment{marginfigure}
+  {\begin{lrbox}{\mn@box}\begin{minipage}{\marginparwidth}%
+   \captionsetup{type=figure}\mn@marginstyle\centering}
+  {\end{minipage}\end{lrbox}\marginpar{\usebox{\mn@box}}}
+
+% Float body in the text column with its caption in the margin, top-aligned.
+% Usage: \begin{sidecaptioned}{\caption{...}\label{...}} body \end{sidecaptioned}
+\NewDocumentEnvironment{sidecaptioned}{m +b}
+  {\noindent\makebox[\textwidth][l]{%
+     \begin{minipage}[t]{\textwidth}\vspace{0pt}#2\end{minipage}%
+     \hspace{\marginparsep}%
+     \begin{minipage}[t]{\marginparwidth}\vspace{0pt}%
+       \captionsetup{skip=0pt}\mn@marginstyle #1\end{minipage}}}
+  {}
+
+% Float spanning text column and margin; the caption keeps to the column.
+\NewDocumentEnvironment{widefigure}{O{tbp}}
+  {\begin{figure}[#1]\begin{adjustwidth}{0pt}{-\mn@extra}%
+   \captionsetup{margin={0pt,\mn@extra}}}
+  {\end{adjustwidth}\end{figure}}
+
+% ---- Captions --------------------------------------------------------------
+\RequirePackage{caption}
+\DeclareCaptionFont{accent}{\color{accent}}
+\captionsetup{font={footnotesize}, labelfont={sc,accent}, labelsep=quad,
+  justification=RaggedRight, singlelinecheck=false, skip=8pt}
+
+% ---- Headings --------------------------------------------------------------
+% Lower-case small caps, letterspaced; the number hangs in the left margin.
+\RequirePackage[explicit]{titlesec}
+\titleformat{\section}{\normalfont\large}
+  {\llap{\textcolor{accent}{\thesection}\hspace{1.1em}}}{0pt}
+  {\scshape\textls[90]{\MakeLowercase{#1}}}
+\titleformat{name=\section,numberless}{\normalfont\large}{}{0pt}
+  {\scshape\textls[90]{\MakeLowercase{#1}}}
+\titleformat{\subsection}{\normalfont\itshape}
+  {\llap{\upshape\textcolor{accent}{\thesubsection}\hspace{1.1em}}}{0pt}{#1}
+\titleformat{\paragraph}[runin]{\normalfont\scshape}{}{0pt}{#1.}
+\titlespacing*{\section}{0pt}{4.2ex plus 1ex minus .4ex}{1.6ex plus .2ex}
+\titlespacing*{\subsection}{0pt}{2.8ex plus .8ex minus .3ex}{1ex plus .2ex}
+\titlespacing*{\paragraph}{0pt}{1.6ex plus .5ex}{0.6em}
+
+% ---- Running head ----------------------------------------------------------
+\RequirePackage{fancyhdr}
+\newcommand{\shorttitle}[1]{\def\mn@shorttitle{#1}}
+\newcommand{\shortauthors}[1]{\def\mn@shortauthors{#1}}
+\shorttitle{}\shortauthors{}
+\fancypagestyle{main}{%
+  \fancyhf{}\fancyhfoffset[R]{\mn@extra}%
+  \fancyhead[L]{\footnotesize\itshape\mn@shortauthors}%
+  \fancyhead[R]{\footnotesize\scshape\textls[60]{\MakeLowercase{\mn@shorttitle}}%
+    \hspace{1.2em}\textcolor{accent}{\upshape\thepage}}%
+  \renewcommand{\headrulewidth}{0pt}}
+\fancypagestyle{opening}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}}
+\pagestyle{main}
+
+% ---- Title block -----------------------------------------------------------
+\newcommand{\subtitle}[1]{\def\mn@subtitle{#1}}
+\newcommand{\affiliation}[1]{\def\mn@affiliation{#1}}
+\newcommand{\margininfo}[1]{\def\mn@margininfo{#1}}
+\subtitle{}\affiliation{}\margininfo{}
+\renewcommand{\maketitle}{%
+  \thispagestyle{opening}%
+  \begingroup\setlength{\parindent}{0pt}%
+  {\fontsize{24}{28}\selectfont\RaggedRight\@title\par}%
+  \ifx\mn@subtitle\@empty\else
+    \vspace{6pt}{\Large\itshape\RaggedRight\mn@subtitle\par}\fi
+  \vspace{16pt}%
+  {\scshape\textls[60]{\MakeLowercase{\@author}}%
+    \marginnote{\mn@margininfo}\par}%
+  \vspace{3pt}{\small\itshape\mn@affiliation\par}%
+  \vspace{22pt}\endgroup}
+
+% Epigraph: a quotation set to the right, attributed in small caps.
+\newcommand{\epigraph}[2]{%
+  \begingroup\setlength{\parindent}{0pt}%
+  \hfill\begin{minipage}{0.74\textwidth}\itshape\RaggedRight #1\par
+    \vspace{4pt}\raggedleft\upshape\footnotesize---\,%
+    \scshape\textls[40]{#2}\par\end{minipage}\par
+  \vspace{20pt}\endgroup}
+
+\renewenvironment{abstract}
+  {\begingroup\small\setlength{\parindent}{0pt}%
+   \textcolor{accent}{\scshape\textls[90]{abstract}}\enspace\ignorespaces}
+  {\par\endgroup\vspace{10pt}%
+   \noindent\textcolor{accent}{\rule{2.4em}{0.4pt}}\par\vspace{6pt}}
+
+% ---- Lists and tables ------------------------------------------------------
+\RequirePackage{enumitem}
+\setlist{itemsep=2pt, topsep=4pt, leftmargin=1.4em}
+\RequirePackage{booktabs}
+\setlength{\aboverulesep}{0.5ex}
+\setlength{\belowrulesep}{0.7ex}
+\endinput
