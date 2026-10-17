@@ -1,7 +1,35 @@
 {
   "schema": 1,
-  "commit": "9f81ccf31b4af161e2e64d953a86d0c0530a6a10",
+  "commit": "bc0b4cc969c41c52bd65257fef9ca360b72a3ec3",
   "templates": [
+    {
+      "id": "academic-cv",
+      "name": "Academic CV",
+      "description": "Hand-built two-page academic CV on A4, set in EB Garamond with microtype. A letterspaced small-caps name header and a contact line with small FontAwesome icons; dates in tabular old-style figures on a narrow left column that keeps every section on one vertical grid. Sections for appointments, education, numbered journal, conference and preprint publications, grants, talks, teaching and service, with one sepia-brown accent and a running footer on page two.",
+      "category": "cv",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 8478,
+          "sha256": "e9263d93ca13abb725be054fe77678fd685f65a62875f84214761a656a59d9e7"
+        }
+      ],
+      "thumbnail": {
+        "size": 334346,
+        "sha256": "33500473cbac2773bd3399f5bc9c04c8eccdf0f0ba1dc7f48f106a8d20d861c4"
+      },
+      "sample": {
+        "size": 135308,
+        "sha256": "59b65e1668106ca69896c6fc72ab86b5b8ed22e5fe1cab6a2d773918a09b50d1"
+      }
+    },
     {
       "id": "article",
       "name": "Article",
@@ -64,6 +92,39 @@
       }
     },
     {
+      "id": "conference-poster",
+      "name": "Conference Poster",
+      "description": "A0 portrait research poster on a strict three-column grid. A dark title band carries a thermal-raster motif, authors, affiliations and logo slots; below sit a key-finding highlight with one big number, three pgfplots charts, a TikZ method pipeline, a booktabs table, a QR code and a numbered biblatex references strip. One vermilion accent, Fira Sans and Fira Mono.",
+      "category": "poster",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 15392,
+          "sha256": "f00eba525fc0c972184919d4c7344b80ed2b409ea6e1e48b80b49be6512816ec"
+        },
+        {
+          "path": "refs.bib",
+          "size": 2028,
+          "sha256": "5b2c5b0fcde58f3c4b9c0af94a82039d5b8215a7a7cb5412661b550759986822"
+        }
+      ],
+      "thumbnail": {
+        "size": 329923,
+        "sha256": "f61d1b29bedce8bc2c5ba139983b0733aaeec6389bbbd90c0467f066385be88e"
+      },
+      "sample": {
+        "size": 284708,
+        "sha256": "eac4ceb87f7b98529be85bc228608f74ef5d4cfcb95f6940e1b8157895480513"
+      }
+    },
+    {
       "id": "cv",
       "name": "One-page CV",
       "description": "Compact one-page curriculum vitae with education, experience, projects and skills, in plain LaTeX.",
@@ -89,6 +150,236 @@
       "sample": {
         "size": 122229,
         "sha256": "5819a6930809072e209c1bf1c7e1bf9be8954458b3dcba28bee22e32f63ed041"
+      }
+    },
+    {
+      "id": "margin-notes-article",
+      "name": "Margin Notes Article",
+      "description": "Tufte-inspired single-column article on A4 with a wide outer margin. Numbered sidenotes, full citations and small figures sit beside the text; table captions sit in the margin and a full-width figure spans both columns. Set in Cochineal with old-style figures, small-caps headings and matching newtxmath, with one cochineal-red accent. Includes an epigraph, amsmath equations, a booktabs table, pgfplots figures and biblatex author-year references.",
+      "category": "article",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 13288,
+          "sha256": "ca648a6e482339b426fb049d4ccac7ea15f232b0051bb433d771f907599e3abe"
+        },
+        {
+          "path": "margin-notes.sty",
+          "size": 6725,
+          "sha256": "4d8d99c94973ad5594cb3b9d468df50712c9a9f953304f6fba91a9096112a3b4"
+        },
+        {
+          "path": "refs.bib",
+          "size": 2361,
+          "sha256": "64a96207ce899c8450db6ff7f6d3a3abe748fe424c47c0774988cee2135096cd"
+        }
+      ],
+      "thumbnail": {
+        "size": 355830,
+        "sha256": "7c3972afbc7da133d0f80e0b1f65ff8ac3f77a835abb734df561f9a5e562d2b9"
+      },
+      "sample": {
+        "size": 176098,
+        "sha256": "4f9a7df8f57dd9e01fd5af75e200f9202bb380b5b8fd43e643da4c23eefc1abb"
+      }
+    },
+    {
+      "id": "preprint-two-column",
+      "name": "Two-Column Preprint",
+      "description": "Crisp two-column preprint on A4 in the manner of a modern journal. A full-width title block with superscript affiliations and a correspondence note, an abstract on a light blue-grey panel with keywords, a running header with short title and page number, and Source Sans headings. Set in Source Serif with mathastext over newtxmath, one deep ink-blue accent, microtype and a balanced last page. Includes amsmath equations, booktabs tables, pgfplots and TikZ figures, cleveref and biblatex references.",
+      "category": "article",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 14882,
+          "sha256": "1d12e1f589f92b064efb481d1d49348d4eb6e0c63fdd50608a06c56ec6146f8a"
+        },
+        {
+          "path": "preprint.sty",
+          "size": 5762,
+          "sha256": "0df4d20d11e932b13231bc9116f4689200c6982a9f55195c8855c70e78728b90"
+        },
+        {
+          "path": "refs.bib",
+          "size": 2967,
+          "sha256": "02062cdd5537a2363d9a3ea3043c2de7fc285f96dc95258d7d06c55967f281fc"
+        }
+      ],
+      "thumbnail": {
+        "size": 466061,
+        "sha256": "dddefb64476f36da89dfcc619834b632b25e7e4b1afea0bb8b791764edf7b64e"
+      },
+      "sample": {
+        "size": 388470,
+        "sha256": "a52c7f5420f63d432fd7221b82e822ebb9d1c4573abade366c86c5f74e284168"
+      }
+    },
+    {
+      "id": "research-proposal",
+      "name": "Research Proposal",
+      "description": "Grant proposal on A4 in Source Serif and Source Sans with a deep teal accent. Cover block with title, PI, institution, duration and amount, a tinted summary panel, styled aims with objectives, a TikZ Gantt chart with milestones, booktabs risk and budget tables, page x of y header, and biblatex references.",
+      "category": "other",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "main.tex",
+          "size": 14621,
+          "sha256": "a50ae97f2204be5f156fe8c128794ffac14052149419bc9af2c35468d1dc9fe3"
+        },
+        {
+          "path": "refs.bib",
+          "size": 3338,
+          "sha256": "47c482fb4693090ef8abb0398d15e69ea70118c0d1ba82aac09a9ff3400d37da"
+        },
+        {
+          "path": "style.tex",
+          "size": 5230,
+          "sha256": "0a986c10df33db4c7f8fb1585835e1661a4a11ff291f25d05b6b2fab29a74e62"
+        }
+      ],
+      "thumbnail": {
+        "size": 276183,
+        "sha256": "dc25bebfbd39985f41a312b810819e18ce6e1c850eb2c77acc29386fb5a5e8ba"
+      },
+      "sample": {
+        "size": 247300,
+        "sha256": "c43a083a73a0bfe5834a59b9b3229be227bf7d6f13a2cb30b75f2c608c80d07d"
+      }
+    },
+    {
+      "id": "research-talk",
+      "name": "Research Talk",
+      "description": "16:9 Beamer talk with a quiet custom theme in Fira Sans and Fira Mono, one vermilion accent and a hairline progress bar. Includes a title slide with a heat-raster motif, numbered section dividers, a dark statement slide, big-number stats, an annotated equation, pgfplots line, scatter and bar charts, a booktabs table, biblatex author-year references and backup slides.",
+      "category": "slides",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "beamerthemelabshelftalk.sty",
+          "size": 9335,
+          "sha256": "cf18f5dd41c5a189e85e3678a5d5640673530d9cdd76a1e5ae67b4a742d8b582"
+        },
+        {
+          "path": "main.tex",
+          "size": 12579,
+          "sha256": "928f9b2e09982b4a17ad41cbe4f02d1f191120c12f832bb7938185979209c18d"
+        },
+        {
+          "path": "refs.bib",
+          "size": 2027,
+          "sha256": "db9270ec48186bd9c7747c6c5d9c0ceba499f4989589069ba3c40c9e7b412e65"
+        }
+      ],
+      "thumbnail": {
+        "size": 51833,
+        "sha256": "26072aa6236f46edd89b9d29081baaf855c07e63990347580d7929607debd227"
+      },
+      "sample": {
+        "size": 309303,
+        "sha256": "e15a050ce8a1f19f1238dba336f24ceb4fd635082f69dbf27f603d5ce243f5be"
+      }
+    },
+    {
+      "id": "thesis",
+      "name": "Thesis",
+      "description": "Book-style thesis on B5 paper set in EB Garamond with old-style figures and a single oxblood accent. Chapters open with a large number flush right over a hairline and a letterspaced small-caps title; small-caps running heads, a centred title page with a rule-and-lozenge ornament. Includes dedication, abstract, acknowledgements, contents, list of figures, three chapters with equations, TikZ plots, booktabs tables and an appendix, plus a biblatex author-year bibliography.",
+      "category": "thesis",
+      "format": "latex",
+      "engine": "pdflatex",
+      "main": "main.tex",
+      "license": "MIT-0",
+      "authors": [
+        "LabShelf contributors"
+      ],
+      "files": [
+        {
+          "path": "appendix/a-field-protocols.tex",
+          "size": 1562,
+          "sha256": "bf7df90ce43f223e827ae89b57e15a8407dfdb54fe1f6e9f36c820c3380ec243"
+        },
+        {
+          "path": "chapters/01-introduction.tex",
+          "size": 5255,
+          "sha256": "076d39ed424eb84d6e9698a0be64700d7b52249b9b20596ecc62d9413f6d66f4"
+        },
+        {
+          "path": "chapters/02-study-system.tex",
+          "size": 4488,
+          "sha256": "75dad6a0415f73bcf5973412c073348dea9997bec997472b2a38f78872f8f43d"
+        },
+        {
+          "path": "chapters/03-heatwave-response.tex",
+          "size": 6537,
+          "sha256": "d91c596d28544acd6b1bc5a59c89b334d87fac6d40ca514d66399a49ef53b4f1"
+        },
+        {
+          "path": "frontmatter/abstract.tex",
+          "size": 1288,
+          "sha256": "db0cf2cd4bb436cf5391241f90192f786550cbd9dd29d7852d56e51033c88752"
+        },
+        {
+          "path": "frontmatter/acknowledgements.tex",
+          "size": 1053,
+          "sha256": "82069549eb3c136bd75601453e084814dce8c0f1441c4c5db4ac0bdac1c9ef95"
+        },
+        {
+          "path": "frontmatter/dedication.tex",
+          "size": 237,
+          "sha256": "a46ca686c632e4bbfc270233a232b654577295f507ff837561753d056cb746d8"
+        },
+        {
+          "path": "frontmatter/titlepage.tex",
+          "size": 1652,
+          "sha256": "224500cd6107385e8dc8ee27ef8360df0d2dfff2a68321e5657a7430b1b3d38f"
+        },
+        {
+          "path": "main.tex",
+          "size": 2164,
+          "sha256": "f191cffe2e1464edc88ada79257d2868ec7520baf61cc5829cf5546edc5f989e"
+        },
+        {
+          "path": "refs.bib",
+          "size": 3470,
+          "sha256": "6dacf5f9785efadb8fefa94eaa566e6697b578bb3e4c5139dec1bbda7579447a"
+        },
+        {
+          "path": "style.tex",
+          "size": 5310,
+          "sha256": "65a820c02b6739499001d3c144ce34570eb89049cadbc82f9b2c3a80e9c14744"
+        }
+      ],
+      "thumbnail": {
+        "size": 95099,
+        "sha256": "70f7350892a69532f99a4f950554fea3362099f3e096ae6d79939178f42ae9c1"
+      },
+      "sample": {
+        "size": 174657,
+        "sha256": "b10ee464dc60a45cca365d1fa9b3569c9d908e8a48ffd0c13b8f44d5c48b788a"
       }
     }
   ]
