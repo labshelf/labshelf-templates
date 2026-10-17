@@ -139,12 +139,15 @@
 
 % "Key idea": hairlines above and below, label set in the margin.
 \newenvironment{keyidea}
-  {\par\vspace{0.8\baselineskip}\noindent{\color{accent}\rule{\textwidth}{0.5pt}}%
-   \par\nobreak\vspace{0.1\baselineskip}\noindent
+  {\par\addvspace{0.8\baselineskip}\noindent
+   \begin{minipage}[t]{\textwidth}%
+   % INVARIANT: fixed kerns and struts, so the gaps never depend on context.
+   {\color{accent}\rule{\textwidth}{0.5pt}}\par\nointerlineskip\kern0.45\baselineskip
+   \noindent\strut
    \marginnote{\footnotesize\color{accent}\latosemi\caps{Key idea}}[0.15\baselineskip]%
-   \begin{minipage}[t]{\textwidth}\itshape\color{black!88}}
-  {\end{minipage}\par\vspace{0.55\baselineskip}\noindent
-   {\color{accent}\rule{\textwidth}{0.5pt}}\par\vspace{0.8\baselineskip}}
+   \itshape\color{black!88}\ignorespaces}
+  {\unskip\strut\par\nointerlineskip\kern0.45\baselineskip\noindent
+   {\color{accent}\rule{\textwidth}{0.5pt}}\end{minipage}\par\addvspace{0.8\baselineskip}}
 
 % --- Figures with captions in the margin ------------------------------------
 \usepackage{pgfplots}

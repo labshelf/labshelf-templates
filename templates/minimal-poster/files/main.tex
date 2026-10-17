@@ -1,6 +1,7 @@
 % Minimal Poster: an A1 portrait "one big message" poster. The main finding sits in a
 % wide central band as one plain sentence; the conventional sections live in two
 % narrow sidebars. Edit the metadata and the accent below. Build: latexmk -pdf main.tex
+\RequirePackage{fix-cm}% scalable Computer Modern for the custom sizes
 \documentclass{article}
 \usepackage[paperwidth=594mm,paperheight=841mm,margin=0mm]{geometry}
 \usepackage[T1]{fontenc}
@@ -8,7 +9,7 @@
 % Inter's hyphen narrow; \lstabular switches to tabular figures for the table.
 \IfFileExists{inter.sty}
   {\usepackage[sfdefault,proportional]{inter}\newcommand{\lstabular}{\fontfamily{Inter-TLF}\selectfont}}
-  {\usepackage[default]{lato}\newcommand{\lstabular}{}}
+  {\usepackage[default,lining]{lato}\newcommand{\lstabular}{\fontfamily{lato-TLF}\selectfont}}
 \usepackage[letterspace=100]{microtype}
 \usepackage{booktabs,qrcode,xcolor}
 \usepackage[absolute,overlay]{textpos}

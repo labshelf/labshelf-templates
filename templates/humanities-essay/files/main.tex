@@ -9,6 +9,7 @@
 \usepackage[english]{babel}
 \usepackage[autostyle]{csquotes}
 \usepackage{tikz}
+\usepackage{needspace}
 
 % Chicago notes: the first citation is a full note, later ones are short,
 % and the bibliography at the end lists every work cited.
@@ -185,8 +186,8 @@ less like a rupture when seen from Saint-Gervais. The language of owed and
 repaid hours was already there; what the factory changed was who kept the
 account.\autocite[63--70]{thompson1967}
 
-% The bibliography starts on its own page, as in a printed essay.
-\clearpage
+% The bibliography follows the text; its heading never ends a page alone.
+\needspace{5\baselineskip}
 \printbibliography[title=Bibliography]
 
 \end{document}

@@ -67,7 +67,7 @@
 \renewcommand\thercomment{R\arabic{reviewer}.\arabic{rcomment}}
 
 \newcommand\reviewer[1]{%
-  \needspace{14\baselineskip}% never strand a heading and its first comment at a page foot
+  \needspace{10\baselineskip}% never strand a heading and its first comment at a page foot
   \refstepcounter{reviewer}%
   \section{Reviewer \arabic{reviewer}}
   {\color{muted}\small\itshape #1\par}}
@@ -79,7 +79,7 @@
   before upper={{\labelfont\color{accent}#1}\hspace{0.8em}}}
 
 \newcommand\revcomment[2][]{%
-  \needspace{7\baselineskip}% keep a comment and the start of its reply together
+  \needspace{6\baselineskip}% keep a comment and the start of its reply together
   \refstepcounter{rcomment}%
   \if\relax\detokenize{#1}\relax\else\label{#1}\fi
   \begin{commentbox}{\thercomment}#2\end{commentbox}\nopagebreak}
@@ -87,15 +87,18 @@
 \newcommand\response{{\labelfont\color{accent}Response.}\enspace}
 
 % Quoted changes: accent bar on the left, accent text, location above.
-\newtcolorbox{changebox}{enhanced,breakable,frame hidden,colback=white,
+% Unbreakable: a breakable tcolorbox ejects the page when little room is left,
+% which ignores the \nopagebreak in \change and strands the quote from its reply.
+\newtcolorbox{changebox}{enhanced,frame hidden,colback=white,
   borderline west={1.6pt}{0pt}{accent},sharp corners,
   left=11pt,right=0pt,top=1pt,bottom=1pt,
   before skip=0.4\baselineskip,after skip=0.7\baselineskip,
   fontupper=\small\color{accent}}
 
 \newcommand\change[2]{%
+  \par\nopagebreak% a quoted change never starts a page apart from its response
   \begin{changebox}%
-    {\sffamily\footnotesize\color{muted}Revised manuscript, #1}\par\smallskip
+    {\sffamily\footnotesize\color{muted}Revised manuscript, #1}\par\nopagebreak\smallskip
     #2%
   \end{changebox}}
 
@@ -118,20 +121,15 @@
 % ---- Letter to the editor ------------------------------------------------
 Dear Dr Lindqvist,
 
-Thank you for handling our manuscript and for the opportunity to submit a
-revised version. We are grateful to both reviewers for their careful reading.
-Their comments led us to extend the validation from five to seven melt seasons,
-to separate wet-snow detection from the onset date itself, and to report how the
-method behaves under forest cover, which we had previously left implicit.
+Thank you for handling our manuscript. The reviewers' comments led us to extend
+the validation from five to seven melt seasons, to separate wet-snow detection
+from the onset date itself, and to report how the method behaves under forest
+cover.
 
-The main changes are summarised in the table below. In the point-by-point
-replies that follow, each reviewer comment is shown in a tinted box, our response
-follows it, and every passage quoted from the revised manuscript is marked with a
-coloured bar together with its page and line numbers. A version with tracked
-changes is uploaded as a supplementary file.
-
-We hope that the revised manuscript is now suitable for publication in the
-\emph{\journal}.
+The table below summarises the main changes. In the replies, each reviewer
+comment is in a tinted box, and quoted manuscript passages carry a coloured bar
+with their page and line numbers. A tracked-changes version is a supplementary
+file. We hope the manuscript is now suitable for the \emph{\journal}.
 
 Yours sincerely,\\[2pt]
 Elena Marchetti, on behalf of all authors\\

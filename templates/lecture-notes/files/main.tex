@@ -237,6 +237,19 @@ Let $g(x)=f(x-h)$. Express the complex coefficients of $g$ in terms of those
 of $f$, and explain why $|c_n|$ does not depend on $h$.
 \end{exercise}
 
+\begin{exercise}{Sawtooth}{sawtooth}
+Find the Fourier series of $f(x)=x$ on $(-\pi,\pi)$. Evaluate it at
+$x=\pi/2$ to obtain $1-\frac13+\frac15-\cdots=\frac{\pi}{4}$, and say what the
+series converges to at $x=\pi$.
+\end{exercise}
+
+\begin{keyidea}
+Summary of Lecture~3: a $2\pi$-periodic function is read through its
+coefficients $a_n$, $b_n$ or $c_n$, computed by orthogonality. Real and
+complex forms carry the same information, and how fast the coefficients decay
+tells how smooth the function is.
+\end{keyidea}
+
 % ============================================================================
 \lecture{4}{Convergence and Parseval}{Thursday 8 October}
 
@@ -264,11 +277,12 @@ is a weighted average of $f$ near $x$.
 \sidecaption{%
 \begin{tikzpicture}
 \begin{axis}[width=\textwidth,height=46mm,
-  axis x line=middle,axis y line=left,xmin=-3.1416,xmax=3.4,ymin=-5,ymax=23,
-  xtick={-1.5708,1.5708},xticklabels={$-\frac{\pi}{2}$,$\frac{\pi}{2}$},
-  xticklabel style={fill=white,inner sep=1pt,yshift=-2pt},
+  axis lines=left,xmin=-3.1416,xmax=3.4,ymin=-5,ymax=23,
+  xtick={-3.1416,-1.5708,0,1.5708,3.1416},
+  xticklabels={$-\pi$,$-\frac{\pi}{2}$,$0$,$\frac{\pi}{2}$,$\pi$},
   ytick={0,11,21},tick label style={font=\footnotesize},
   every axis plot/.append style={samples=500,smooth,domain=-3.1416:3.1416}]
+\draw[black!30,very thin] (axis cs:-3.1416,0) -- (axis cs:3.4,0);
 \addplot[thmcol,thin] {sin(deg(5.5*x))/sin(deg(x/2))};
 \addplot[accent,semithick] {sin(deg(10.5*x))/sin(deg(x/2))};
 \end{axis}

@@ -44,4 +44,23 @@ placement reaches the mapping error of random placement with roughly
   LiDAR building heights, census vulnerability index \\
 \end{tabularx}
 \end{summarypanel}
+
+% At a glance: key numbers, filling the page below the panel.
+\vspace{1em}
+\noindent{\sffamily\small\color{accent}\textsc{at a glance}\par}
+\vspace{.1em}
+\noindent{\color{accent!50}\rule{\linewidth}{.3pt}}
+\vspace{.5em}
+
+\newcommand*{\glancefigure}[2]{%
+  {\sffamily\Large\color{accent}#1\par}%
+  {\footnotesize\raggedright #2\par}}
+\noindent{\renewcommand{\arraystretch}{1}%
+\begin{tabularx}{\linewidth}{@{}*{4}{>{\raggedright\arraybackslash}X}@{}}
+\glancefigure{214}{municipal sensors behind the preliminary model} &
+\glancefigure{0.82\,K}{leave-one-out RMSE on summer afternoons} &
+\glancefigure{40\,\%}{fewer sensors for the error of random placement} &
+\glancefigure{60}{mobile units in the 2027 field campaign} \\
+\end{tabularx}\par}
+\vfill
 \clearpage
